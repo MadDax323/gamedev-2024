@@ -4,13 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Color Change on Key Press</title>
     <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <h1>Press "C" to Change Background Color</h1>
-    <script src="script.js"></script>
-</body>
-</html>
-body {
+    body {
     font-family: Arial, sans-serif;
     text-align: center;
     padding: 50px;
@@ -27,4 +21,9 @@ function changeBackgroundColor() {
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
     document.body.style.backgroundColor = randomColor;
 }
-
+</head>
+<body>
+    <h1>Press "C" to Change Background Color</h1>
+    <script src="script.js"></script>
+</body>
+</html>
