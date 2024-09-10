@@ -4,13 +4,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Color Change on Key Press</title>
     <link rel="stylesheet" href="styles.css">
-    body {
+   <css>body {
     font-family: Arial, sans-serif;
     text-align: center;
     padding: 50px;
     transition: background-color 0.5s;
-}
-document.addEventListener('keydown', function(event) {
+}</css>
+<script>document.addEventListener('keydown', function(event) {
     if (event.key === 'c' || event.key === 'C') {
         changeBackgroundColor();
     }
@@ -20,7 +20,7 @@ function changeBackgroundColor() {
     const colors = ['#FF5733', '#33FF57', '#3357FF', '#F3FF33', '#FF33F3'];
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
     document.body.style.backgroundColor = randomColor;
-}
+}</script>
 </head>
 <body>
     <h1>Press "C" to Change Background Color</h1>
