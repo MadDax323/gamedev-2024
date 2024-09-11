@@ -10,7 +10,7 @@
     <h1>Simple Baseball Game</h1>
     <button id="hitButton">Hit the Ball!</button>
     <p id="result"></p>
-    <script src="script.js">document.getElementById('hitButton').addEventListener('click', function() {
+    <script> src="script.js">document.getElementById('hitButton').addEventListener('click', function() {
     const outcomes = ['Home Run!', 'Strike!', 'Single!', 'Double!', 'Triple!'];
     const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
     document.getElementById('result').textContent = randomOutcome;
