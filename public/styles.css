@@ -1,0 +1,15 @@
+/* Make everything purple */
+body, h1, p, button, footer {
+    background-color: purple;
+    color: white;
+    border: 1px solid white;
+}
+
+button {
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #800080; /* Darker shade of purple */
+}
