@@ -1,1 +1,48 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcam Capture</title>
+</head>
+<body>
+    <div class="camera">
+        <video id="video" width="640" height="480" autoplay></video>
+        <button id="capture">Capture Photo</button>
+    </div>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <div class="output">
+        <img id="photo" alt="Captured Image">
+    </div>
 
+    <script src="script.js">document.addEventListener("DOMContentLoaded", function() {
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const photo = document.getElementById('photo');
+    const captureButton = document.getElementById('capture');
+    const context = canvas.getContext('2d');
+
+    // Access the webcam
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+            video.srcObject = stream;
+            video.play();
+        })
+        .catch(function(err) {
+            console.error("Error accessing webcam: " + err);
+        });
+
+    // Capture the photo
+    captureButton.addEventListener('click', function() {
+        const width = video.videoWidth;
+        const height = video.videoHeight;
+        canvas.width = width;
+        canvas.height = height;
+        context.drawImage(video, 0, 0, width, height);
+
+        // Convert the canvas to a JPEG image
+        const data = canvas.toDataURL('image/jpeg');
+        photo.setAttribute('src', data);
+    });
+});</script>
+</body>
+</html>
