@@ -9,6 +9,33 @@
      body {
   background-image: url("https://images.freecreatives.com/wp-content/uploads/2016/04/Website-Backgrounds-For-Desktop.jpg");
 }
+     {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.fly-text {
+    font-size: 2em;
+    font-weight: bold;
+    position: absolute;
+    white-space: nowrap;
+    animation: fly 10s linear infinite;
+}
+
+@keyframes fly {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
     </style>
   </head>
   <p style="color:white;backround-color:red;">Make sure to check the code for hidden text ;)</p>
@@ -17,3 +44,4 @@
 <p style="font-size: 140px;color:white;backround-color:red;">I'm big text</p>
   <p style="font-size: 7px;color:white;backround-color:red;">And I'm small text</p>
   <h1>I have border</h1>
+      <div class="fly-text">This text will fly across the page!</div>
