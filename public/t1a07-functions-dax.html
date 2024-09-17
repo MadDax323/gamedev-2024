@@ -1,3 +1,7 @@
+<head>
+    <title>Functions</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
 <h1 align=center>Functions</h1>
 
 <script>
@@ -13,7 +17,7 @@ Input:<input type=text id="myFirstName" value="fred">
   myVar('myDiv01').innerHTML = 'Your name is ' + myVar('myFirstName').value
 
   }">
-<div>
+<div class="form-container">
     <h1>Sort List Example</h1>
   <ul id="myList">
     <li data-index="3">Item 3</li>
@@ -34,3 +38,16 @@ Input:<input type=text id="myFirstName" value="fred">
     }
   </script>
   </div>
+<div class="form-container">
+<h1>Welcome to the Flip Page Example!</h1>
+  <button onclick="flipPage()">Flip Page</button>
+
+  <script>
+    function flipPage() {
+      document.body.classList.add('flipped');
+      setTimeout(() => {
+        document.body.classList.remove('flipped');
+      }, 2000); // Adjust the delay as needed
+    }
+  </script>
+</div>
