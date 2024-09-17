@@ -27,19 +27,6 @@
 </head>
 <h1 align=center>Functions</h1>
 
-<script>
-  function myVar(myIn){
-    return document.getElementById(myIn)
-
-}
-</script>
-
-Input:<input type=text id="myFirstName" value="fred">
-<input type=button value="Show on page" onclick="{
-
-  myVar('myDiv01').innerHTML = 'Your name is ' + myVar('myFirstName').value
-
-  }">
 <div class="form-container">
     <h1>Sort List Example</h1>
   <ul id="myList">
@@ -94,6 +81,32 @@ Input:<input type=text id="myFirstName" value="fred">
       if (effect) {
         outputText.classList.add(effect);
       }
+    }
+  </script>
+</div>
+<div class="form-container">
+ <h1>Welcome to the Dynamic Background Color Page!</h1>
+  <button onclick="startColorChange()">Start Color Change</button>
+  <button onclick="stopColorChange()">Stop Color Change</button>
+
+  <script>
+    let colorInterval;
+
+    function startColorChange() {
+      if (!colorInterval) {
+        colorInterval = setInterval(changeBackgroundColor, 1000);
+      }
+    }
+
+    function stopColorChange() {
+      clearInterval(colorInterval);
+      colorInterval = null;
+    }
+
+    function changeBackgroundColor() {
+      const colors = ['#FF5733', '#33FF57', '#3357FF', '#F333FF', '#FF33A1'];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      document.body.style.backgroundColor = randomColor;
     }
   </script>
 </div>
