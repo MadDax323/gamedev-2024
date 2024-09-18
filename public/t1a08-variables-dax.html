@@ -57,5 +57,30 @@
         }
         moveElement();
     </script>
+     <form id="emailForm">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email">
+        <button type="button" onclick="validateEmail()">Submit</button>
+    </form>
+    <script>
+        function validateEmail() {
+            let email = document.getElementById("email").value;
+            if (email.includes("@")) {
+                console.log("Valid email address");
+            } else {
+                console.log("Invalid email address");
+            }
+        }
+    </script>
+        <script>
+        let theme = "dark";
+        if (theme === "dark") {
+            document.body.style.backgroundColor = "#333";
+            document.body.style.color = "#fff";
+        } else {
+            document.body.style.backgroundColor = "#fff";
+            document.body.style.color = "#000";
+        }
+    </script>
 </body>
 </html>
