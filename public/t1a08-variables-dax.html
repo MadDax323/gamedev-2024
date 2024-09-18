@@ -18,6 +18,20 @@
             height: 50px;
             background-color: red;
         }
+        .calculator {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            max-width: 200px;
+            margin: auto;
+        }
+        .calculator input, .calculator button {
+            padding: 20px;
+            font-size: 1.5em;
+            margin: 5px;
+        }
+        .calculator input {
+            grid-column: span 4;
+        }
     </style>
 </head>
 <body>
@@ -94,6 +108,84 @@
     System.out.println(myNum);
   }
 }
+    </script>
+    <div class="calculator">
+        <input type="text" id="display" disabled>
+        <button onclick="clearDisplay()">C</button>
+        <button onclick="appendToDisplay('7')">7</button>
+        <button onclick="appendToDisplay('8')">8</button>
+        <button onclick="appendToDisplay('9')">9</button>
+        <button onclick="appendToDisplay('/')">/</button>
+        <button onclick="appendToDisplay('4')">4</button>
+        <button onclick="appendToDisplay('5')">5</button>
+        <button onclick="appendToDisplay('6')">6</button>
+        <button onclick="appendToDisplay('*')">*</button>
+        <button onclick="appendToDisplay('1')">1</button>
+        <button onclick="appendToDisplay('2')">2</button>
+        <button onclick="appendToDisplay('3')">3</button>
+        <button onclick="appendToDisplay('-')">-</button>
+        <button onclick="appendToDisplay('0')">0</button>
+        <button onclick="appendToDisplay('.')">.</button>
+        <button onclick="calculate()">=</button>
+        <button onclick="appendToDisplay('+')">+</button>
+    </div>
+    <script> 
+        let display = document.getElementById('display');
+let currentInput = '';
+let operator = '';
+let previousInput = '';
+
+function appendToDisplay(value) {
+    currentInput += value;
+    display.value = currentInput;
+}
+
+function clearDisplay() {
+    currentInput = '';
+    operator = '';
+    previousInput = '';
+    display.value = '';
+}
+
+function calculate() {
+    if (operator && previousInput !== '') {
+        let result;
+        switch (operator) {
+            case '+':
+                result = parseFloat(previousInput) + parseFloat(currentInput);
+                break;
+            case '-':
+                result = parseFloat(previousInput) - parseFloat(currentInput);
+                break;
+            case '*':
+                result = parseFloat(previousInput) * parseFloat(currentInput);
+                break;
+            case '/':
+                result = parseFloat(previousInput) / parseFloat(currentInput);
+                break;
+        }
+        display.value = result;
+        currentInput = result;
+        operator = '';
+        previousInput = '';
+    }
+}
+
+document.querySelectorAll('.calculator button').forEach(button => {
+    button.addEventListener('click', () => {
+        if (button.innerText === '=') {
+            calculate();
+        } else if (button.innerText === 'C') {
+            clearDisplay();
+        } else if (['+', '-', '*', '/'].includes(button.innerText)) {
+            operator = button.innerText;
+            previousInput = currentInput;
+            currentInput = '';
+        } else {
+            appendToDisplay(button.innerText);
+        }
+    });
+});
     </script>
 </body>
 </html>
