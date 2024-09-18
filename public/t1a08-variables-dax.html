@@ -130,7 +130,7 @@
         <button onclick="appendToDisplay('+')">+</button>
     </div>
     <script> 
-        let display = document.getElementById('display');
+    let display = document.getElementById('display');
 let currentInput = '';
 let operator = '';
 let previousInput = '';
@@ -173,19 +173,21 @@ function calculate() {
 
 document.querySelectorAll('.calculator button').forEach(button => {
     button.addEventListener('click', () => {
-        if (button.innerText === '=') {
+        const value = button.innerText;
+        if (value === '=') {
             calculate();
-        } else if (button.innerText === 'C') {
+        } else if (value === 'C') {
             clearDisplay();
-        } else if (['+', '-', '*', '/'].includes(button.innerText)) {
-            operator = button.innerText;
+        } else if (['+', '-', '*', '/'].includes(value)) {
+            operator = value;
             previousInput = currentInput;
             currentInput = '';
         } else {
-            appendToDisplay(button.innerText);
+            appendToDisplay(value);
         }
     });
 });
+
     </script>
 </body>
 </html>
