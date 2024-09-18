@@ -12,6 +12,12 @@
             margin-top: 10px;
             font-weight: bold;
         }
+         #animatedElement {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: red;
+        }
     </style>
 </head>
 <body>
@@ -35,6 +41,21 @@
             const area = width * height;
             document.getElementById('result').textContent = `The area of the rectangle is: ${area}`;
         }
+    </script>
+    <h1 id="welcomeMessage">Hello, Guest!</h1>
+    <script>
+        let userName = "John";
+        document.getElementById("welcomeMessage").innerText = `Hello, ${userName}!`;
+    </script>
+      <div id="animatedElement"></div>
+    <script>
+        let position = 0;
+        function moveElement() {
+            position += 5;
+            document.getElementById("animatedElement").style.left = position + 'px';
+            requestAnimationFrame(moveElement);
+        }
+        moveElement();
     </script>
 </body>
 </html>
