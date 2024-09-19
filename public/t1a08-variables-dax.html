@@ -189,5 +189,83 @@ document.querySelectorAll('.calculator button').forEach(button => {
 });
 
     </script>
+     <h1>Quick Quiz</h1>
+    <div id="quiz-container">
+        <div id="question"></div>
+        <button id="answer1"></button>
+        <button id="answer2"></button>
+        <button id="answer3"></button>
+        <button id="answer4"></button>
+    </div>
+    <div id="result" class="hidden"></div>
+    <button id="restart" class="hidden">Restart Quiz</button>
+    
+    <script>
+        const quizData = [
+    {
+        question: "What is the capital of France?",
+        answers: ["Berlin", "Madrid", "Paris", "Rome"],
+        correct: 2
+    },
+    {
+        question: "What is 2 + 2?",
+        answers: ["3", "4", "5", "6"],
+        correct: 1
+    },
+    {
+        question: "What is the largest planet in our solar system?",
+        answers: ["Earth", "Mars", "Jupiter", "Saturn"],
+        correct: 2
+    }
+];
+
+let currentQuestionIndex = 0;
+let score = 0;
+
+const questionElement = document.getElementById("question");
+const answerButtons = Array.from(document.querySelectorAll("button[id^='answer']"));
+const resultElement = document.getElementById("result");
+const restartButton = document.getElementById("restart");
+
+function loadQuestion() {
+    const currentQuestion = quizData[currentQuestionIndex];
+    questionElement.innerText = currentQuestion.question;
+    answerButtons.forEach((button, index) => {
+        button.innerText = currentQuestion.answers[index];
+        button.onclick = () => selectAnswer(index);
+    });
+}
+
+function selectAnswer(index) {
+    if (index === quizData[currentQuestionIndex].correct) {
+        score++;
+    }
+    currentQuestionIndex++;
+    if (currentQuestionIndex < quizData.length) {
+        loadQuestion();
+    } else {
+        showResult();
+    }
+}
+
+function showResult() {
+    questionElement.classList.add("hidden");
+    answerButtons.forEach(button => button.classList.add("hidden"));
+    resultElement.innerText = `You scored ${score} out of ${quizData.length}!`;
+    resultElement.classList.remove("hidden");
+    restartButton.classList.remove("hidden");
+}
+
+restartButton.onclick = () => {
+    currentQuestionIndex = 0;
+    score = 0;
+    resultElement.classList.add("hidden");
+    restartButton.classList.add("hidden");
+    questionElement.classList.remove("hidden");
+    answerButtons.forEach(button => button.classList.remove("hidden"));
+    loadQuestion();
+};
+
+loadQuestion();</script>
 </body>
 </html>
