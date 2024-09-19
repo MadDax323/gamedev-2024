@@ -7,12 +7,14 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-color: #333; /* Default dark theme */
+            color: #fff; /* Default text color */
         }
         .result {
             margin-top: 10px;
             font-weight: bold;
         }
-         #animatedElement {
+        #animatedElement {
             position: absolute;
             width: 50px;
             height: 50px;
@@ -32,10 +34,13 @@
         .calculator input {
             grid-column: span 4;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-   <p>The area of a triangle is: 1/2 x <var>b</var> x <var>h</var>, where <var>b</var> is the base, and <var>h</var> is the height.</p>
+
     <h1>Rectangle Area Calculator</h1>
     <form id="areaForm">
         <label for="width">Width (<var>w</var>):</label>
@@ -48,67 +53,16 @@
     </form>
     <p class="result" id="result"></p>
 
-    <script>
-        function calculateArea() {
-            const width = document.getElementById('width').value;
-            const height = document.getElementById('height').value;
-            const area = width * height;
-            document.getElementById('result').textContent = `The area of the rectangle is: ${area}`;
-        }
-    </script>
     <h1 id="welcomeMessage">Hello, Guest!</h1>
-    <script>
-        let userName = "Dax";
-        document.getElementById("welcomeMessage").innerText = `Hello, ${userName}!`;
-    </script>
-      <div id="animatedElement"></div>
-    <script>
-        let position = 0;
-        function moveElement() {
-            position += 5;
-            document.getElementById("animatedElement").style.left = position + 'px';
-            requestAnimationFrame(moveElement);
-        }
-        moveElement();
-    </script>
-    <br>
-    <br>
-    <br>
-    <br>
-     <form id="emailForm">
+    
+    <div id="animatedElement"></div>
+
+    <form id="emailForm">
         <label for="email">Email:</label>
         <input type="email" id="email" name="email">
         <button type="button" onclick="validateEmail()">Submit</button>
     </form>
-    <script>
-        function validateEmail() {
-            let email = document.getElementById("email").value;
-            if (email.includes("@")) {
-                console.log("Valid email address");
-            } else {
-                console.log("Invalid email address");
-            }
-        }
-    </script>
-        <script>
-        let theme = "dark";
-        if (theme === "dark") {
-            document.body.style.backgroundColor = "#333";
-            document.body.style.color = "#fff";
-        } else {
-            document.body.style.backgroundColor = "#fff";
-            document.body.style.color = "#000";
-        }
-    </script>
-    <script>
-        public class Main {
-  public static void main(String[] args) {
-    int myNum = 15;
-    myNum = 20;  // myNum is now 20
-    System.out.println(myNum);
-  }
-}
-    </script>
+
     <div class="calculator">
         <input type="text" id="display" disabled>
         <button onclick="clearDisplay()">C</button>
@@ -129,67 +83,8 @@
         <button onclick="calculate()">=</button>
         <button onclick="appendToDisplay('+')">+</button>
     </div>
-    <script> 
-    let display = document.getElementById('display');
-let currentInput = '';
-let operator = '';
-let previousInput = '';
 
-function appendToDisplay(value) {
-    currentInput += value;
-    display.value = currentInput;
-}
-
-function clearDisplay() {
-    currentInput = '';
-    operator = '';
-    previousInput = '';
-    display.value = '';
-}
-
-function calculate() {
-    if (operator && previousInput !== '') {
-        let result;
-        switch (operator) {
-            case '+':
-                result = parseFloat(previousInput) + parseFloat(currentInput);
-                break;
-            case '-':
-                result = parseFloat(previousInput) - parseFloat(currentInput);
-                break;
-            case '*':
-                result = parseFloat(previousInput) * parseFloat(currentInput);
-                break;
-            case '/':
-                result = parseFloat(previousInput) / parseFloat(currentInput);
-                break;
-        }
-        display.value = result;
-        currentInput = result;
-        operator = '';
-        previousInput = '';
-    }
-}
-
-document.querySelectorAll('.calculator button').forEach(button => {
-    button.addEventListener('click', () => {
-        const value = button.innerText;
-        if (value === '=') {
-            calculate();
-        } else if (value === 'C') {
-            clearDisplay();
-        } else if (['+', '-', '*', '/'].includes(value)) {
-            operator = value;
-            previousInput = currentInput;
-            currentInput = '';
-        } else {
-            appendToDisplay(value);
-        }
-    });
-});
-
-    </script>
-     <h1>Quick Quiz</h1>
+    <h1>Quick Quiz</h1>
     <div id="quiz-container">
         <div id="question"></div>
         <button id="answer1"></button>
@@ -199,74 +94,173 @@ document.querySelectorAll('.calculator button').forEach(button => {
     </div>
     <div id="result" class="hidden"></div>
     <button id="restart" class="hidden">Restart Quiz</button>
-    
+
     <script>
+        // Area Calculator
+        function calculateArea() {
+            const width = document.getElementById('width').value;
+            const height = document.getElementById('height').value;
+            const area = width * height;
+            document.getElementById('result').textContent = `The area of the rectangle is: ${area}`;
+        }
+
+        // Welcome Message
+        let userName = "Dax";
+        document.getElementById("welcomeMessage").innerText = `Hello, ${userName}!`;
+
+        // Animated Element
+        let position = 0;
+        function moveElement() {
+            position += 5;
+            document.getElementById("animatedElement").style.left = position + 'px';
+            requestAnimationFrame(moveElement);
+        }
+        moveElement();
+
+        // Email Validation
+        function validateEmail() {
+            let email = document.getElementById("email").value;
+            if (email.includes("@")) {
+                console.log("Valid email address");
+            } else {
+                console.log("Invalid email address");
+            }
+        }
+
+        // Dark Theme
+        let theme = "dark";
+        if (theme === "dark") {
+            document.body.style.backgroundColor = "#333";
+            document.body.style.color = "#fff";
+        }
+
+        // Calculator Functionality
+        let display = document.getElementById('display');
+        let currentInput = '';
+        let operator = '';
+        let previousInput = '';
+
+        function appendToDisplay(value) {
+            currentInput += value;
+            display.value = currentInput;
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            operator = '';
+            previousInput = '';
+            display.value = '';
+        }
+
+        function calculate() {
+            if (operator && previousInput !== '') {
+                let result;
+                switch (operator) {
+                    case '+':
+                        result = parseFloat(previousInput) + parseFloat(currentInput);
+                        break;
+                    case '-':
+                        result = parseFloat(previousInput) - parseFloat(currentInput);
+                        break;
+                    case '*':
+                        result = parseFloat(previousInput) * parseFloat(currentInput);
+                        break;
+                    case '/':
+                        result = parseFloat(previousInput) / parseFloat(currentInput);
+                        break;
+                }
+                display.value = result;
+                currentInput = result;
+                operator = '';
+                previousInput = '';
+            }
+        }
+
+        document.querySelectorAll('.calculator button').forEach(button => {
+            button.addEventListener('click', () => {
+                const value = button.innerText;
+                if (value === '=') {
+                    calculate();
+                } else if (value === 'C') {
+                    clearDisplay();
+                } else if (['+', '-', '*', '/'].includes(value)) {
+                    operator = value;
+                    previousInput = currentInput;
+                    currentInput = '';
+                } else {
+                    appendToDisplay(value);
+                }
+            });
+        });
+
+        // Quick Quiz
         const quizData = [
-    {
-        question: "What is the capital of France?",
-        answers: ["Berlin", "Madrid", "Paris", "Rome"],
-        correct: 2
-    },
-    {
-        question: "What is 2 + 2?",
-        answers: ["3", "4", "5", "6"],
-        correct: 1
-    },
-    {
-        question: "What is the largest planet in our solar system?",
-        answers: ["Earth", "Mars", "Jupiter", "Saturn"],
-        correct: 2
-    }
-];
+            {
+                question: "What is the capital of France?",
+                answers: ["Berlin", "Madrid", "Paris", "Rome"],
+                correct: 2
+            },
+            {
+                question: "What is 2 + 2?",
+                answers: ["3", "4", "5", "6"],
+                correct: 1
+            },
+            {
+                question: "What is the largest planet in our solar system?",
+                answers: ["Earth", "Mars", "Jupiter", "Saturn"],
+                correct: 2
+            }
+        ];
 
-let currentQuestionIndex = 0;
-let score = 0;
+        let currentQuestionIndex = 0;
+        let score = 0;
 
-const questionElement = document.getElementById("question");
-const answerButtons = Array.from(document.querySelectorAll("button[id^='answer']"));
-const resultElement = document.getElementById("result");
-const restartButton = document.getElementById("restart");
+        const questionElement = document.getElementById("question");
+        const answerButtons = Array.from(document.querySelectorAll("button[id^='answer']"));
+        const resultElement = document.getElementById("result");
+        const restartButton = document.getElementById("restart");
 
-function loadQuestion() {
-    const currentQuestion = quizData[currentQuestionIndex];
-    questionElement.innerText = currentQuestion.question;
-    answerButtons.forEach((button, index) => {
-        button.innerText = currentQuestion.answers[index];
-        button.onclick = () => selectAnswer(index);
-    });
-}
+        function loadQuestion() {
+            const currentQuestion = quizData[currentQuestionIndex];
+            questionElement.innerText = currentQuestion.question;
+            answerButtons.forEach((button, index) => {
+                button.innerText = currentQuestion.answers[index];
+                button.onclick = () => selectAnswer(index);
+            });
+        }
 
-function selectAnswer(index) {
-    if (index === quizData[currentQuestionIndex].correct) {
-        score++;
-    }
-    currentQuestionIndex++;
-    if (currentQuestionIndex < quizData.length) {
+        function selectAnswer(index) {
+            if (index === quizData[currentQuestionIndex].correct) {
+                score++;
+            }
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            questionElement.classList.add("hidden");
+            answerButtons.forEach(button => button.classList.add("hidden"));
+            resultElement.innerText = `You scored ${score} out of ${quizData.length}!`;
+            resultElement.classList.remove("hidden");
+            restartButton.classList.remove("hidden");
+        }
+
+        restartButton.onclick = () => {
+            currentQuestionIndex = 0;
+            score = 0;
+            resultElement.classList.add("hidden");
+            restartButton.classList.add("hidden");
+            questionElement.classList.remove("hidden");
+            answerButtons.forEach(button => button.classList.remove("hidden"));
+            loadQuestion();
+        };
+
         loadQuestion();
-    } else {
-        showResult();
-    }
-}
+    </script>
 
-function showResult() {
-    questionElement.classList.add("hidden");
-    answerButtons.forEach(button => button.classList.add("hidden"));
-    resultElement.innerText = `You scored ${score} out of ${quizData.length}!`;
-    resultElement.classList.remove("hidden");
-    restartButton.classList.remove("hidden");
-}
-
-restartButton.onclick = () => {
-    currentQuestionIndex = 0;
-    score = 0;
-    resultElement.classList.add("hidden");
-    restartButton.classList.add("hidden");
-    questionElement.classList.remove("hidden");
-    answerButtons.forEach(button => button.classList.remove("hidden"));
-    loadQuestion();
-};
-
-loadQuestion();</script>
-     <p class="result" id="result"></p>
 </body>
 </html>
