@@ -3,46 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Baseball Game</title>
-    <link rel="stylesheet" href="styles.css">
-        <style>
-        #animatedElement {
-            position: absolute;
+    <title>Change Background Color</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.5s;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+        }
+        input[type="color"] {
             width: 50px;
             height: 50px;
-            background-color: red;
+            border: none;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1>Simple Baseball Game</h1>
-    <button id="hitButton">Hit the Ball!</button>
-    <p id="result"></p>
-    <script> src="script.js">document.getElementById('hitButton').addEventListener('click', function() {
-    const outcomes = ['Home Run!', 'Strike!', 'Single!', 'Double!', 'Triple!'];
-    const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
-    document.getElementById('result').textContent = randomOutcome;
-});</script>
-<b>I am blue text</b>
-    <b style="color:blue;backround-color:red;">(I am actually red)</b>
-        <div id="animatedElement"></div>
-    <input type="range" id="speedSlider" min="1" max="20" value="5">
+
+    <h1>Change Background Color</h1>
+    <div>
+        <button onclick="setBackgroundColor('red')">Red</button>
+        <button onclick="setBackgroundColor('green')">Green</button>
+        <button onclick="setBackgroundColor('blue')">Blue</button>
+        <button onclick="setBackgroundColor('yellow')">Yellow</button>
+        <input type="color" id="colorPicker" onchange="setBackgroundColor(this.value)">
+    </div>
+
     <script>
-        let position = 0;
-let speed = 5; // Initial speed
-
-const slider = document.getElementById('speedSlider');
-slider.addEventListener('input', (event) => {
-    speed = parseInt(event.target.value);
-});
-
-function moveElement() {
-    position += speed;
-    document.getElementById("animatedElement").style.left = position + 'px';
-    requestAnimationFrame(moveElement);
-}
-
-moveElement();
+        function setBackgroundColor(color) {
+            document.body.style.backgroundColor = color;
+        }
     </script>
+
 </body>
 </html>
