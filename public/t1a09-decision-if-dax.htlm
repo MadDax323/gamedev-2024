@@ -1,1 +1,74 @@
 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Would You Rather</h1>
+<p id="question">Would you rather...</p>
+<button id="option1"></button>
+<button id="option2"></button>
+
+<script>
+    const questions = [
+        {
+            question: "be able to fly?",
+            options: ["fly", "be invisible"]
+        },
+        {
+            question: "live in the ocean?",
+            options: ["underwater", "in space"]
+        },
+        {
+            question: "never have to sleep?",
+            options: ["never sleep", "never eat"]
+        }
+    ];
+
+    let currentQuestion = 0;
+
+    function loadQuestion() {
+        const q = questions[currentQuestion];
+        document.getElementById('question').textContent = q.question;
+        document.getElementById('option1').textContent = q.options[0];
+        document.getElementById('option2').textContent = q.options[1];
+    }
+
+    document.getElementById('option1').onclick = function() {
+        alert(`You chose to ${this.textContent}!`);
+        currentQuestion = (currentQuestion + 1) % questions.length;
+        loadQuestion();
+    };
+
+    document.getElementById('option2').onclick = function() {
+        alert(`You chose to ${this.textContent}!`);
+        currentQuestion = (currentQuestion + 1) % questions.length;
+        loadQuestion();
+    };
+
+    // Load the first question on page load
+    loadQuestion();
+</script>
+
+</body>
+</html>
