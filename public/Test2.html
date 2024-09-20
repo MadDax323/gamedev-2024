@@ -10,7 +10,8 @@
             font-family: 'Press Start 2P', cursive; /* Minecraft-like font */
             margin: 0;
             padding: 0;
-            background-color: #87CEEB; /* Sky blue */
+            background: url('https://www.minecraft.net/en-us/assets/images/background.png') no-repeat center center fixed; /* Minecraft background */
+            background-size: cover;
             color: #000;
             display: flex;
             flex-direction: column;
@@ -30,6 +31,8 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            position: relative;
+            z-index: 1; /* Ensures the container appears above the background */
         }
 
         .block {
