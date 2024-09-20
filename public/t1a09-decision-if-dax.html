@@ -36,6 +36,9 @@
         }
         button {
             margin-top: 20px;
+        } 
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -118,6 +121,92 @@
         }
         document.getElementById('result').innerText = resultText;
     }
+</script>
+    
+<div class="quiz-container" id="quiz-container">
+    <h2 id="question"></h2>
+    <div id="options"></div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "You find a mysterious door in the forest. Do you:",
+            options: [
+                { text: "Open the door", next: 1 },
+                { text: "Walk away", next: 2 }
+            ]
+        },
+        {
+            question: "Inside, you see a treasure chest. Do you:",
+            options: [
+                { text: "Open the chest", next: 3 },
+                { text: "Leave it closed", next: 4 }
+            ]
+        },
+        {
+            question: "You walk away and feel a sense of peace. The end.",
+            options: []
+        },
+        {
+            question: "You find gold coins! Do you:",
+            options: [
+                { text: "Take some coins", next: 5 },
+                { text: "Leave them", next: 6 }
+            ]
+        },
+        {
+            question: "You leave the chest and find a path home. The end.",
+            options: []
+        },
+        {
+            question: "You are now wealthy! What will you do with your riches?",
+            options: [
+                { text: "Share with others", next: 7 },
+                { text: "Keep it all", next: 8 }
+            ]
+        },
+        {
+            question: "You leave the coins behind but discover a magical item. The end.",
+            options: []
+        },
+        {
+            question: "You become a hero in your town. The end.",
+            options: []
+        },
+        {
+            question: "You live a life of luxury, but feel lonely. The end.",
+            options: []
+        }
+    ];
+
+    let currentQuestion = 0;
+
+    function showQuestion(index) {
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+
+        // Clear previous options
+        optionsElement.innerHTML = '';
+
+        const questionData = questions[index];
+        questionElement.innerText = questionData.question;
+
+        questionData.options.forEach(option => {
+            const button = document.createElement('button');
+            button.innerText = option.text;
+            button.onclick = () => showQuestion(option.next);
+            optionsElement.appendChild(button);
+        });
+
+        // If there are no options, hide the quiz
+        if (questionData.options.length === 0) {
+            optionsElement.innerHTML = "<p>Thank you for playing!</p>";
+        }
+    }
+
+    // Start the quiz
+    showQuestion(currentQuestion);
 </script>
 </body>
 </html>
