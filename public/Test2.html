@@ -87,6 +87,7 @@
         let clickValue = 1;
         let autoClickers = 0;
         let totalCookies = 0;
+        let cookieMultiplier = 1;
         let stage = 1;
         const stageThresholds = [0, 100, 1000, 10000];
         const achievements = {};
@@ -121,6 +122,8 @@
                         clickValue += increment;
                     } else if (type === 'auto') {
                         autoClickers++;
+                    } else if (type === 'multiplier') {
+                        cookieMultiplier *= increment;
                     }
                     updateScore();
                     upgradeButton.innerText = `${name} (Cost: ${Math.floor(cost * 1.5)} cookies)`;
@@ -135,7 +138,7 @@
         // Create upgrades
         createUpgrade("Upgrade Click Value", 10, 1, 'click');
         createUpgrade("Auto-Clicker (1 per second)", 50, 0, 'auto');
-        createUpgrade("Cookie Multiplier", 100, 1, 'click');
+        createUpgrade("Cookie Multiplier (x2)", 100, 2, 'multiplier');
 
         // Unlockable features
         function unlockableFeature(name, requirement, effect) {
@@ -148,6 +151,8 @@
                     autoClickers += effect.value;
                 } else if (effect.type === "bonusCookies") {
                     cookies += effect.value;
+                } else if (effect.type === "changeClickValue") {
+                    clickValue = effect.value;
                 }
                 unlockableButton.innerText = `${name} (Unlocked!)`;
                 unlockableButton.disabled = true; // Disable after unlocking
@@ -165,8 +170,9 @@
         // Auto-clicker functionality
         setInterval(() => {
             if (autoClickers > 0) {
-                cookies += autoClickers;
-                totalCookies += autoClickers;
+                const cookiesFromAutoClickers = autoClickers * clickValue * cookieMultiplier;
+                cookies += cookiesFromAutoClickers;
+                totalCookies += cookiesFromAutoClickers;
                 updateScore();
             }
             checkUnlockables();
@@ -241,6 +247,7 @@
             cookies = 0;
             clickValue = 1;
             autoClickers = 0;
+            cookieMultiplier = 1;
             stage = 1;
             Object.keys(achievements).forEach(key => delete achievements[key]);
             unlockablesElement.innerHTML = "";
@@ -255,7 +262,7 @@
             // Recreate upgrades
             createUpgrade("Upgrade Click Value", 10, 1, 'click');
             createUpgrade("Auto-Clicker (1 per second)", 50, 0, 'auto');
-            createUpgrade("Cookie Multiplier", 100, 1, 'click');
+            createUpgrade("Cookie Multiplier (x2)", 100, 2, 'multiplier');
             // Recreate unlockables
             unlockables = {};
             unlockableFeature("Cookie Factory (1 cookie per second)", 500, { type: "addAutoClicker", value: 1 });
@@ -267,6 +274,7 @@
             cookies = 0;
             clickValue = 1;
             autoClickers = 0;
+            cookieMultiplier = 1;
             stage = 1;
             Object.keys(achievements).forEach(key => delete achievements[key]);
             unlockablesElement.innerHTML = "";
@@ -281,7 +289,7 @@
             // Recreate upgrades
             createUpgrade("Upgrade Click Value", 10, 1, 'click');
             createUpgrade("Auto-Clicker (1 per second)", 50, 0, 'auto');
-            createUpgrade("Cookie Multiplier", 100, 1, 'click');
+            createUpgrade("Cookie Multiplier (x2)", 100, 2, 'multiplier');
             // Recreate unlockables
             unlockables = {};
             unlockableFeature("Cookie Factory (1 cookie per second)", 500, { type: "addAutoClicker", value: 1 });
