@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, content="width=device-width, initial-scale=1.0">
     <title>Ultimate Cookie Clicker</title>
     <style>
         body {
@@ -23,6 +23,11 @@
             box-shadow: 0 0 15px rgba(0,0,0,0.5);
             position: relative;
             transition: transform 0.2s;
+            animation: bounce 1s infinite alternate;
+        }
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
         }
         #cookie:hover {
             transform: scale(1.1);
@@ -86,6 +91,8 @@
         let cookies = 0;
         let clickValue = 1;
         let autoClickers = 0;
+        let grandmothers = 0;
+        let cookiePlants = 0;
         let totalCookies = 0;
         let cookieMultiplier = 1;
         let stage = 1;
@@ -122,6 +129,10 @@
                         clickValue += increment;
                     } else if (type === 'auto') {
                         autoClickers++;
+                    } else if (type === 'grandmother') {
+                        grandmothers++;
+                    } else if (type === 'plant') {
+                        cookiePlants++;
                     } else if (type === 'multiplier') {
                         cookieMultiplier *= increment;
                     }
@@ -138,6 +149,8 @@
         // Create upgrades
         createUpgrade("Upgrade Click Value", 10, 1, 'click');
         createUpgrade("Auto-Clicker (1 per second)", 50, 0, 'auto');
+        createUpgrade("Grandmother (2 cookies per second)", 100, 0, 'grandmother');
+        createUpgrade("Cookie Plant (5 cookies per second)", 200, 0, 'plant');
         createUpgrade("Cookie Multiplier (x2)", 100, 2, 'multiplier');
 
         // Unlockable features
@@ -169,12 +182,13 @@
 
         // Auto-clicker functionality
         setInterval(() => {
-            if (autoClickers > 0) {
-                const cookiesFromAutoClickers = autoClickers * clickValue * cookieMultiplier;
-                cookies += cookiesFromAutoClickers;
-                totalCookies += cookiesFromAutoClickers;
-                updateScore();
-            }
+            let cookiesFromAutoClickers = autoClickers * clickValue * cookieMultiplier;
+            let cookiesFromGrandmothers = grandmothers * 2 * cookieMultiplier;
+            let cookiesFromPlants = cookiePlants * 5 * cookieMultiplier;
+
+            cookies += (cookiesFromAutoClickers + cookiesFromGrandmothers + cookiesFromPlants);
+            totalCookies += (cookiesFromAutoClickers + cookiesFromGrandmothers + cookiesFromPlants);
+            updateScore();
             checkUnlockables();
         }, 1000);
 
@@ -237,9 +251,9 @@
             if (stage === 2) {
                 createUpgrade("Double Click Value", 100, 2, 'click');
             } else if (stage === 3) {
-                createUpgrade("Advanced Auto-Clicker (2 per second)", 200, 0, 'auto');
+                createUpgrade("Advanced Auto-Clicker (2 cookies per second)", 200, 0, 'auto');
             } else if (stage === 4) {
-                createUpgrade("Mega Auto-Clicker (5 per second)", 500, 0, 'auto');
+                createUpgrade("Mega Auto-Clicker (5 cookies per second)", 500, 0, 'auto');
             }
         }
 
@@ -247,6 +261,8 @@
             cookies = 0;
             clickValue = 1;
             autoClickers = 0;
+            grandmothers = 0;
+            cookiePlants = 0;
             cookieMultiplier = 1;
             stage = 1;
             Object.keys(achievements).forEach(key => delete achievements[key]);
@@ -262,6 +278,8 @@
             // Recreate upgrades
             createUpgrade("Upgrade Click Value", 10, 1, 'click');
             createUpgrade("Auto-Clicker (1 per second)", 50, 0, 'auto');
+            createUpgrade("Grandmother (2 cookies per second)", 100, 0, 'grandmother');
+            createUpgrade("Cookie Plant (5 cookies per second)", 200, 0, 'plant');
             createUpgrade("Cookie Multiplier (x2)", 100, 2, 'multiplier');
             // Recreate unlockables
             unlockables = {};
@@ -274,6 +292,8 @@
             cookies = 0;
             clickValue = 1;
             autoClickers = 0;
+            grandmothers = 0;
+            cookiePlants = 0;
             cookieMultiplier = 1;
             stage = 1;
             Object.keys(achievements).forEach(key => delete achievements[key]);
@@ -289,6 +309,8 @@
             // Recreate upgrades
             createUpgrade("Upgrade Click Value", 10, 1, 'click');
             createUpgrade("Auto-Clicker (1 per second)", 50, 0, 'auto');
+            createUpgrade("Grandmother (2 cookies per second)", 100, 0, 'grandmother');
+            createUpgrade("Cookie Plant (5 cookies per second)", 200, 0, 'plant');
             createUpgrade("Cookie Multiplier (x2)", 100, 2, 'multiplier');
             // Recreate unlockables
             unlockables = {};
