@@ -3,36 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Cookie Clicker</title>
+    <title>Advanced Cookie Clicker with Graphics</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #f5f5f5;
+            background: linear-gradient(to bottom, #f5f5f5, #e0e0e0);
+            margin: 0;
+            padding: 20px;
         }
         #cookie {
             width: 200px;
             height: 200px;
-            background-color: #d2691e;
+            background: radial-gradient(circle at 50% 50%, #d2691e, #8b4513);
             border-radius: 50%;
             display: inline-block;
             margin: 20px;
             cursor: pointer;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
             position: relative;
+            transition: transform 0.2s;
+        }
+        #cookie:hover {
+            transform: scale(1.1);
         }
         #score {
             font-size: 24px;
             margin: 20px;
+            font-weight: bold;
         }
         #upgrades, #achievements {
             margin-top: 20px;
         }
         .upgrade, .achievement {
             margin: 5px;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .upgrade:hover, .achievement {
+            background-color: #45a049;
         }
         .hidden {
             display: none;
+        }
+        #stage {
+            font-size: 20px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        @keyframes achievement {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .achievement {
+            animation: achievement 0.5s ease-in;
         }
     </style>
 </head>
@@ -41,6 +71,7 @@
     <div id="score">Cookies: 0</div>
     <div id="upgrades"></div>
     <div id="achievements" class="hidden"></div>
+    <div id="stage" class="hidden">Stage: 1</div>
     <button id="reset">Reset Game</button>
 
     <script>
@@ -48,12 +79,15 @@
         let clickValue = 1;
         let autoClickers = 0;
         let upgradeCost = 10;
-        let achievements = {};
+        let stage = 1;
+        const stageThresholds = [0, 100, 1000, 10000]; // Cookies required for each stage
+        const achievements = {};
 
         const cookieElement = document.getElementById("cookie");
         const scoreElement = document.getElementById("score");
         const upgradesElement = document.getElementById("upgrades");
         const achievementsElement = document.getElementById("achievements");
+        const stageElement = document.getElementById("stage");
         const resetButton = document.getElementById("reset");
 
         cookieElement.addEventListener("click", () => {
@@ -76,7 +110,7 @@
                     }
                     updateScore();
                     upgradeButton.innerText = `${name} (Cost: ${Math.floor(cost * 1.5)} cookies)`;
-                    cost = Math.floor(cost * 1.5); // Increase cost for next upgrade
+                    cost = Math.floor(cost * 1.5);
                 } else {
                     alert("Not enough cookies!");
                 }
@@ -99,6 +133,7 @@
         function updateScore() {
             scoreElement.innerText = `Cookies: ${cookies}`;
             checkAchievements("cookies");
+            checkStage();
         }
 
         function checkAchievements(type) {
@@ -126,15 +161,37 @@
             achievementsElement.classList.remove("hidden");
         }
 
+        function checkStage() {
+            if (stage < stageThresholds.length && cookies >= stageThresholds[stage]) {
+                stage++;
+                stageElement.innerText = `Stage: ${stage}`;
+                stageElement.classList.remove("hidden");
+                unlockNewUpgrades();
+            }
+        }
+
+        function unlockNewUpgrades() {
+            if (stage === 2) {
+                createUpgrade("Double Click Value", 100, 2, 'click');
+            } else if (stage === 3) {
+                createUpgrade("Advanced Auto-Clicker (2 per second)", 200, 0, 'auto');
+                createUpgrade("Cookie Multiplier", 500, 1, 'click');
+            } else if (stage === 4) {
+                createUpgrade("Mega Auto-Clicker (5 per second)", 1000, 0, 'auto');
+            }
+        }
+
         resetButton.addEventListener("click", () => {
             cookies = 0;
             clickValue = 1;
             autoClickers = 0;
+            stage = 1;
             achievements = {};
             updateScore();
             upgradesElement.innerHTML = "";
             achievementsElement.innerHTML = "";
             achievementsElement.classList.add("hidden");
+            stageElement.classList.add("hidden");
             // Recreate upgrades
             createUpgrade("Upgrade Click Value", 10, 1, 'click');
             createUpgrade("Auto-Clicker (1 per second)", 50, 0, 'auto');
