@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Cookie Clicker with Graphics</title>
+    <title>Ultimate Cookie Clicker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,10 +32,10 @@
             margin: 20px;
             font-weight: bold;
         }
-        #upgrades, #achievements {
+        #upgrades, #achievements, #unlockables {
             margin-top: 20px;
         }
-        .upgrade, .achievement {
+        .upgrade, .achievement, .unlockable {
             margin: 5px;
             padding: 10px 15px;
             font-size: 16px;
@@ -46,7 +46,7 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        .upgrade:hover, .achievement {
+        .upgrade:hover, .achievement, .unlockable {
             background-color: #45a049;
         }
         .hidden {
@@ -56,6 +56,9 @@
             font-size: 20px;
             margin-top: 20px;
             font-weight: bold;
+        }
+        #prestige {
+            margin-top: 20px;
         }
         @keyframes achievement {
             from { opacity: 0; }
@@ -71,27 +74,38 @@
     <div id="score">Cookies: 0</div>
     <div id="upgrades"></div>
     <div id="achievements" class="hidden"></div>
+    <div id="unlockables" class="hidden"></div>
     <div id="stage" class="hidden">Stage: 1</div>
+    <div id="prestige" class="hidden">
+        <button id="prestigeButton">Prestige</button>
+        <div id="prestigeScore">Total Cookies: 0</div>
+    </div>
     <button id="reset">Reset Game</button>
 
     <script>
         let cookies = 0;
         let clickValue = 1;
         let autoClickers = 0;
-        let upgradeCost = 10;
+        let totalCookies = 0;
         let stage = 1;
-        const stageThresholds = [0, 100, 1000, 10000]; // Cookies required for each stage
+        const stageThresholds = [0, 100, 1000, 10000];
         const achievements = {};
+        const unlockables = {};
 
         const cookieElement = document.getElementById("cookie");
         const scoreElement = document.getElementById("score");
         const upgradesElement = document.getElementById("upgrades");
         const achievementsElement = document.getElementById("achievements");
+        const unlockablesElement = document.getElementById("unlockables");
         const stageElement = document.getElementById("stage");
+        const prestigeElement = document.getElementById("prestige");
+        const prestigeButton = document.getElementById("prestigeButton");
+        const prestigeScoreElement = document.getElementById("prestigeScore");
         const resetButton = document.getElementById("reset");
 
         cookieElement.addEventListener("click", () => {
             cookies += clickValue;
+            totalCookies += clickValue;
             updateScore();
             checkAchievements("click");
         });
@@ -121,13 +135,41 @@
         // Create upgrades
         createUpgrade("Upgrade Click Value", 10, 1, 'click');
         createUpgrade("Auto-Clicker (1 per second)", 50, 0, 'auto');
+        createUpgrade("Cookie Multiplier", 100, 1, 'click');
+
+        // Unlockable features
+        function unlockableFeature(name, requirement, effect) {
+            const unlockableButton = document.createElement("button");
+            unlockableButton.classList.add("unlockable");
+            unlockableButton.innerText = `${name} (Unlocks at ${requirement} cookies)`;
+            unlockableButton.disabled = true; // Initially disabled
+            unlockableButton.addEventListener("click", () => {
+                if (effect.type === "addAutoClicker") {
+                    autoClickers += effect.value;
+                } else if (effect.type === "bonusCookies") {
+                    cookies += effect.value;
+                }
+                unlockableButton.innerText = `${name} (Unlocked!)`;
+                unlockableButton.disabled = true; // Disable after unlocking
+                updateScore();
+            });
+            unlockablesElement.appendChild(unlockableButton);
+            unlockables[name] = { button: unlockableButton, requirement: requirement, effect: effect };
+        }
+
+        // Create unlockable features
+        unlockableFeature("Cookie Factory (1 cookie per second)", 500, { type: "addAutoClicker", value: 1 });
+        unlockableFeature("Golden Cookie (x5 cookies)", 1000, { type: "bonusCookies", value: 5 });
+        unlockableFeature("Super Click (10 cookies per click)", 2000, { type: "changeClickValue", value: 10 });
 
         // Auto-clicker functionality
         setInterval(() => {
             if (autoClickers > 0) {
                 cookies += autoClickers;
+                totalCookies += autoClickers;
                 updateScore();
             }
+            checkUnlockables();
         }, 1000);
 
         function updateScore() {
@@ -151,6 +193,10 @@
                 achievements['1000Cookies'] = true;
                 unlockAchievement("1000 Cookies!");
             }
+            if (cookies >= 10000 && !achievements['10000Cookies']) {
+                achievements['10000Cookies'] = true;
+                unlockAchievement("10,000 Cookies!");
+            }
         }
 
         function unlockAchievement(name) {
@@ -167,6 +213,17 @@
                 stageElement.innerText = `Stage: ${stage}`;
                 stageElement.classList.remove("hidden");
                 unlockNewUpgrades();
+                if (stage === 4) {
+                    prestigeElement.classList.remove("hidden");
+                }
+            }
+        }
+
+        function checkUnlockables() {
+            for (const name in unlockables) {
+                if (cookies >= unlockables[name].requirement) {
+                    unlockables[name].button.disabled = false;
+                }
             }
         }
 
@@ -175,26 +232,61 @@
                 createUpgrade("Double Click Value", 100, 2, 'click');
             } else if (stage === 3) {
                 createUpgrade("Advanced Auto-Clicker (2 per second)", 200, 0, 'auto');
-                createUpgrade("Cookie Multiplier", 500, 1, 'click');
             } else if (stage === 4) {
-                createUpgrade("Mega Auto-Clicker (5 per second)", 1000, 0, 'auto');
+                createUpgrade("Mega Auto-Clicker (5 per second)", 500, 0, 'auto');
             }
         }
+
+        prestigeButton.addEventListener("click", () => {
+            cookies = 0;
+            clickValue = 1;
+            autoClickers = 0;
+            stage = 1;
+            Object.keys(achievements).forEach(key => delete achievements[key]);
+            unlockablesElement.innerHTML = "";
+            totalCookies += cookies; // Add current cookies to total
+            prestigeScoreElement.innerText = `Total Cookies: ${totalCookies}`;
+            updateScore();
+            upgradesElement.innerHTML = "";
+            achievementsElement.innerHTML = "";
+            achievementsElement.classList.add("hidden");
+            stageElement.classList.add("hidden");
+            prestigeElement.classList.add("hidden");
+            // Recreate upgrades
+            createUpgrade("Upgrade Click Value", 10, 1, 'click');
+            createUpgrade("Auto-Clicker (1 per second)", 50, 0, 'auto');
+            createUpgrade("Cookie Multiplier", 100, 1, 'click');
+            // Recreate unlockables
+            unlockables = {};
+            unlockableFeature("Cookie Factory (1 cookie per second)", 500, { type: "addAutoClicker", value: 1 });
+            unlockableFeature("Golden Cookie (x5 cookies)", 1000, { type: "bonusCookies", value: 5 });
+            unlockableFeature("Super Click (10 cookies per click)", 2000, { type: "changeClickValue", value: 10 });
+        });
 
         resetButton.addEventListener("click", () => {
             cookies = 0;
             clickValue = 1;
             autoClickers = 0;
             stage = 1;
-            achievements = {};
+            Object.keys(achievements).forEach(key => delete achievements[key]);
+            unlockablesElement.innerHTML = "";
+            totalCookies = 0; // Reset total cookies on game reset
+            prestigeScoreElement.innerText = `Total Cookies: ${totalCookies}`;
             updateScore();
             upgradesElement.innerHTML = "";
             achievementsElement.innerHTML = "";
             achievementsElement.classList.add("hidden");
             stageElement.classList.add("hidden");
+            prestigeElement.classList.add("hidden");
             // Recreate upgrades
             createUpgrade("Upgrade Click Value", 10, 1, 'click');
             createUpgrade("Auto-Clicker (1 per second)", 50, 0, 'auto');
+            createUpgrade("Cookie Multiplier", 100, 1, 'click');
+            // Recreate unlockables
+            unlockables = {};
+            unlockableFeature("Cookie Factory (1 cookie per second)", 500, { type: "addAutoClicker", value: 1 });
+            unlockableFeature("Golden Cookie (x5 cookies)", 1000, { type: "bonusCookies", value: 5 });
+            unlockableFeature("Super Click (10 cookies per click)", 2000, { type: "changeClickValue", value: 10 });
         });
     </script>
 </body>
