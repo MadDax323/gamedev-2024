@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cookie Clicker</title>
+    <title>Advanced Cookie Clicker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,50 +19,126 @@
             margin: 20px;
             cursor: pointer;
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            position: relative;
         }
         #score {
             font-size: 24px;
             margin: 20px;
         }
-        #upgrade {
+        #upgrades, #achievements {
             margin-top: 20px;
+        }
+        .upgrade, .achievement {
+            margin: 5px;
+        }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
     <div id="cookie"></div>
     <div id="score">Cookies: 0</div>
-    <button id="upgrade">Buy Upgrade (Cost: 10 cookies)</button>
+    <div id="upgrades"></div>
+    <div id="achievements" class="hidden"></div>
+    <button id="reset">Reset Game</button>
 
     <script>
         let cookies = 0;
         let clickValue = 1;
+        let autoClickers = 0;
         let upgradeCost = 10;
+        let achievements = {};
 
         const cookieElement = document.getElementById("cookie");
         const scoreElement = document.getElementById("score");
-        const upgradeButton = document.getElementById("upgrade");
+        const upgradesElement = document.getElementById("upgrades");
+        const achievementsElement = document.getElementById("achievements");
+        const resetButton = document.getElementById("reset");
 
         cookieElement.addEventListener("click", () => {
             cookies += clickValue;
             updateScore();
+            checkAchievements("click");
         });
 
-        upgradeButton.addEventListener("click", () => {
-            if (cookies >= upgradeCost) {
-                cookies -= upgradeCost;
-                clickValue++;
-                upgradeCost *= 2; // Increase cost for next upgrade
+        function createUpgrade(name, cost, increment, type) {
+            const upgradeButton = document.createElement("button");
+            upgradeButton.classList.add("upgrade");
+            upgradeButton.innerText = `${name} (Cost: ${cost} cookies)`;
+            upgradeButton.addEventListener("click", () => {
+                if (cookies >= cost) {
+                    cookies -= cost;
+                    if (type === 'click') {
+                        clickValue += increment;
+                    } else if (type === 'auto') {
+                        autoClickers++;
+                    }
+                    updateScore();
+                    upgradeButton.innerText = `${name} (Cost: ${Math.floor(cost * 1.5)} cookies)`;
+                    cost = Math.floor(cost * 1.5); // Increase cost for next upgrade
+                } else {
+                    alert("Not enough cookies!");
+                }
+            });
+            upgradesElement.appendChild(upgradeButton);
+        }
+
+        // Create upgrades
+        createUpgrade("Upgrade Click Value", 10, 1, 'click');
+        createUpgrade("Auto-Clicker (1 per second)", 50, 0, 'auto');
+
+        // Auto-clicker functionality
+        setInterval(() => {
+            if (autoClickers > 0) {
+                cookies += autoClickers;
                 updateScore();
-                upgradeButton.innerText = `Buy Upgrade (Cost: ${upgradeCost} cookies)`;
-            } else {
-                alert("Not enough cookies!");
             }
-        });
+        }, 1000);
 
         function updateScore() {
             scoreElement.innerText = `Cookies: ${cookies}`;
+            checkAchievements("cookies");
         }
+
+        function checkAchievements(type) {
+            if (type === "click") {
+                if (!achievements['firstClick']) {
+                    achievements['firstClick'] = true;
+                    unlockAchievement("First Click!");
+                }
+            }
+            if (cookies >= 100 && !achievements['100Cookies']) {
+                achievements['100Cookies'] = true;
+                unlockAchievement("100 Cookies!");
+            }
+            if (cookies >= 1000 && !achievements['1000Cookies']) {
+                achievements['1000Cookies'] = true;
+                unlockAchievement("1000 Cookies!");
+            }
+        }
+
+        function unlockAchievement(name) {
+            const achievementElement = document.createElement("div");
+            achievementElement.classList.add("achievement");
+            achievementElement.innerText = name;
+            achievementsElement.appendChild(achievementElement);
+            achievementsElement.classList.remove("hidden");
+        }
+
+        resetButton.addEventListener("click", () => {
+            cookies = 0;
+            clickValue = 1;
+            autoClickers = 0;
+            achievements = {};
+            updateScore();
+            upgradesElement.innerHTML = "";
+            achievementsElement.innerHTML = "";
+            achievementsElement.classList.add("hidden");
+            // Recreate upgrades
+            createUpgrade("Upgrade Click Value", 10, 1, 'click');
+            createUpgrade("Auto-Clicker (1 per second)", 50, 0, 'auto');
+        });
     </script>
 </body>
 </html>
