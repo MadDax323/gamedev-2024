@@ -2,45 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Cookie Clicker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background: linear-gradient(to bottom, #f5f5f5, #e0e0e0);
+            background-color: #ffe4c4; /* Light background color */
+            background-image: radial-gradient(circle at 50% 50%, #f5deb3, #ffe4e1);
             margin: 0;
             padding: 20px;
         }
         #cookie {
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle at 50% 50%, #d2691e, #8b4513);
-            border-radius: 50%;
-            display: inline-block;
-            margin: 20px;
+            font-size: 200px; /* Large cookie emoji */
             cursor: pointer;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
-            position: relative;
-            transition: transform 0.2s;
             animation: bounce 1s infinite alternate;
         }
         @keyframes bounce {
             0% { transform: translateY(0); }
             100% { transform: translateY(-10px); }
         }
-        #cookie:hover {
-            transform: scale(1.1);
-        }
         #score {
             font-size: 24px;
             margin: 20px;
             font-weight: bold;
         }
-        #upgrades, #achievements, #unlockables {
+        #upgrades, #achievements, #unlockables, #oneTimeUpgrades {
             margin-top: 20px;
         }
-        .upgrade, .achievement, .unlockable {
+        .upgrade, .achievement, .unlockable, .oneTimeUpgrade {
             margin: 5px;
             padding: 10px 15px;
             font-size: 16px;
@@ -51,7 +41,7 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        .upgrade:hover, .achievement, .unlockable {
+        .upgrade:hover, .achievement, .unlockable, .oneTimeUpgrade:hover {
             background-color: #45a049;
         }
         .hidden {
@@ -75,9 +65,10 @@
     </style>
 </head>
 <body>
-    <div id="cookie"></div>
+    <div id="cookie">🍪</div> <!-- Cookie Emoji -->
     <div id="score">Cookies: 0</div>
     <div id="upgrades"></div>
+    <div id="oneTimeUpgrades"></div>
     <div id="achievements" class="hidden"></div>
     <div id="unlockables" class="hidden"></div>
     <div id="stage" class="hidden">Stage: 1</div>
@@ -103,6 +94,7 @@
         const cookieElement = document.getElementById("cookie");
         const scoreElement = document.getElementById("score");
         const upgradesElement = document.getElementById("upgrades");
+        const oneTimeUpgradesElement = document.getElementById("oneTimeUpgrades");
         const achievementsElement = document.getElementById("achievements");
         const unlockablesElement = document.getElementById("unlockables");
         const stageElement = document.getElementById("stage");
@@ -153,6 +145,50 @@
         createUpgrade("Cookie Plant (5 cookies per second)", 200, 0, 'plant');
         createUpgrade("Cookie Multiplier (x2)", 100, 2, 'multiplier');
 
+        // One-time upgrades
+        function createOneTimeUpgrade(name, cost, effect) {
+            const oneTimeUpgradeButton = document.createElement("button");
+            oneTimeUpgradeButton.classList.add("oneTimeUpgrade");
+            oneTimeUpgradeButton.innerText = `${name} (Cost: ${cost} cookies)`;
+            oneTimeUpgradeButton.addEventListener("click", () => {
+                if (cookies >= cost) {
+                    cookies -= cost;
+                    effect();
+                    oneTimeUpgradeButton.innerText = `${name} (Purchased!)`;
+                    oneTimeUpgradeButton.disabled = true; // Disable after purchase
+                } else {
+                    alert("Not enough cookies!");
+                }
+            });
+            oneTimeUpgradesElement.appendChild(oneTimeUpgradeButton);
+        }
+
+        // Create one-time upgrades
+        createOneTimeUpgrade("Double Your Click Value", 200, () => { clickValue *= 2; });
+        createOneTimeUpgrade("Increase Auto-Clicker Output by 1", 300, () => { autoClickers += 1; });
+        createOneTimeUpgrade("Increase Grandmother Output by 2", 400, () => { grandmothers += 2; });
+        createOneTimeUpgrade("Increase Cookie Plant Output by 5", 500, () => { cookiePlants += 5; });
+        createOneTimeUpgrade("Boost Click Value by 5", 250, () => { clickValue += 5; });
+        createOneTimeUpgrade("Unlock 2 Grandmothers", 600, () => { grandmothers += 2; });
+        createOneTimeUpgrade("Unlock 3 Cookie Plants", 700, () => { cookiePlants += 3; });
+        createOneTimeUpgrade("Double Auto-Clickers Output", 800, () => { autoClickers *= 2; });
+        createOneTimeUpgrade("Increase Cookie Multiplier by 1.5", 900, () => { cookieMultiplier *= 1.5; });
+        createOneTimeUpgrade("Unlock a Cookie Factory (1 cookie/sec)", 1000, () => { autoClickers += 1; });
+        createOneTimeUpgrade("Super Click (25 cookies per click)", 1200, () => { clickValue = 25; });
+        createOneTimeUpgrade("Mega Grandmother (4 cookies/sec)", 1300, () => { grandmothers += 1; clickValue += 2; });
+        createOneTimeUpgrade("Cookie Plant Bonus (add 10)", 1400, () => { cookiePlants += 10; });
+        createOneTimeUpgrade("Automatic Grandma (grandma auto-clicker)", 1500, () => { grandmothers += 1; });
+        createOneTimeUpgrade("Permanent Click Boost (+10)", 1600, () => { clickValue += 10; });
+        createOneTimeUpgrade("Elite Cookie Plant (10 cookies/sec)", 1700, () => { cookiePlants += 1; });
+        createOneTimeUpgrade("Infinite Cookies (costs 2000)", 2000, () => { cookies += 1000; });
+        createOneTimeUpgrade("Mega Boost (x3 Click Value)", 2500, () => { clickValue *= 3; });
+        createOneTimeUpgrade("Cookie Storm (50 cookies)", 3000, () => { cookies += 50; });
+        createOneTimeUpgrade("Super Auto-Clicker", 3500, () => { autoClickers += 5; });
+        createOneTimeUpgrade("Cookie Factory Upgrade (+5 cookies/sec)", 4000, () => { autoClickers += 5; });
+        createOneTimeUpgrade("Grandma's Recipe (boost grandmothers by 3)", 4500, () => { grandmothers += 3; });
+        createOneTimeUpgrade("Plant Mastery (boost cookie plants by 5)", 5000, () => { cookiePlants += 5; });
+        createOneTimeUpgrade("Ultimate Cookie (add 1000 cookies)", 10000, () => { cookies += 1000; });
+
         // Unlockable features
         function unlockableFeature(name, requirement, effect) {
             const unlockableButton = document.createElement("button");
@@ -202,20 +238,20 @@
             if (type === "click") {
                 if (!achievements['firstClick']) {
                     achievements['firstClick'] = true;
-                    unlockAchievement("First Click!");
+                    unlockAchievement("First Click! 🎉");
                 }
             }
             if (cookies >= 100 && !achievements['100Cookies']) {
                 achievements['100Cookies'] = true;
-                unlockAchievement("100 Cookies!");
+                unlockAchievement("100 Cookies! 🍪");
             }
             if (cookies >= 1000 && !achievements['1000Cookies']) {
                 achievements['1000Cookies'] = true;
-                unlockAchievement("1000 Cookies!");
+                unlockAchievement("1000 Cookies! 🍪");
             }
             if (cookies >= 10000 && !achievements['10000Cookies']) {
                 achievements['10000Cookies'] = true;
-                unlockAchievement("10,000 Cookies!");
+                unlockAchievement("10,000 Cookies! 🍪");
             }
         }
 
@@ -271,6 +307,7 @@
             prestigeScoreElement.innerText = `Total Cookies: ${totalCookies}`;
             updateScore();
             upgradesElement.innerHTML = "";
+            oneTimeUpgradesElement.innerHTML = "";
             achievementsElement.innerHTML = "";
             achievementsElement.classList.add("hidden");
             stageElement.classList.add("hidden");
@@ -281,11 +318,32 @@
             createUpgrade("Grandmother (2 cookies per second)", 100, 0, 'grandmother');
             createUpgrade("Cookie Plant (5 cookies per second)", 200, 0, 'plant');
             createUpgrade("Cookie Multiplier (x2)", 100, 2, 'multiplier');
-            // Recreate unlockables
-            unlockables = {};
-            unlockableFeature("Cookie Factory (1 cookie per second)", 500, { type: "addAutoClicker", value: 1 });
-            unlockableFeature("Golden Cookie (x5 cookies)", 1000, { type: "bonusCookies", value: 5 });
-            unlockableFeature("Super Click (10 cookies per click)", 2000, { type: "changeClickValue", value: 10 });
+            // Recreate one-time upgrades
+            oneTimeUpgradesElement.innerHTML = "";
+            createOneTimeUpgrade("Double Your Click Value", 200, () => { clickValue *= 2; });
+            createOneTimeUpgrade("Increase Auto-Clicker Output by 1", 300, () => { autoClickers += 1; });
+            createOneTimeUpgrade("Increase Grandmother Output by 2", 400, () => { grandmothers += 2; });
+            createOneTimeUpgrade("Increase Cookie Plant Output by 5", 500, () => { cookiePlants += 5; });
+            createOneTimeUpgrade("Boost Click Value by 5", 250, () => { clickValue += 5; });
+            createOneTimeUpgrade("Unlock 2 Grandmothers", 600, () => { grandmothers += 2; });
+            createOneTimeUpgrade("Unlock 3 Cookie Plants", 700, () => { cookiePlants += 3; });
+            createOneTimeUpgrade("Double Auto-Clickers Output", 800, () => { autoClickers *= 2; });
+            createOneTimeUpgrade("Increase Cookie Multiplier by 1.5", 900, () => { cookieMultiplier *= 1.5; });
+            createOneTimeUpgrade("Unlock a Cookie Factory (1 cookie/sec)", 1000, () => { autoClickers += 1; });
+            createOneTimeUpgrade("Super Click (25 cookies per click)", 1200, () => { clickValue = 25; });
+            createOneTimeUpgrade("Mega Grandmother (4 cookies/sec)", 1300, () => { grandmothers += 1; clickValue += 2; });
+            createOneTimeUpgrade("Cookie Plant Bonus (add 10)", 1400, () => { cookiePlants += 10; });
+            createOneTimeUpgrade("Automatic Grandma (grandma auto-clicker)", 1500, () => { grandmothers += 1; });
+            createOneTimeUpgrade("Permanent Click Boost (+10)", 1600, () => { clickValue += 10; });
+            createOneTimeUpgrade("Elite Cookie Plant (10 cookies/sec)", 1700, () => { cookiePlants += 1; });
+            createOneTimeUpgrade("Infinite Cookies (costs 2000)", 2000, () => { cookies += 1000; });
+            createOneTimeUpgrade("Mega Boost (x3 Click Value)", 2500, () => { clickValue *= 3; });
+            createOneTimeUpgrade("Cookie Storm (50 cookies)", 3000, () => { cookies += 50; });
+            createOneTimeUpgrade("Super Auto-Clicker", 3500, () => { autoClickers += 5; });
+            createOneTimeUpgrade("Cookie Factory Upgrade (+5 cookies/sec)", 4000, () => { autoClickers += 5; });
+            createOneTimeUpgrade("Grandma's Recipe (boost grandmothers by 3)", 4500, () => { grandmothers += 3; });
+            createOneTimeUpgrade("Plant Mastery (boost cookie plants by 5)", 5000, () => { cookiePlants += 5; });
+            createOneTimeUpgrade("Ultimate Cookie (add 1000 cookies)", 10000, () => { cookies += 1000; });
         });
 
         resetButton.addEventListener("click", () => {
@@ -302,6 +360,7 @@
             prestigeScoreElement.innerText = `Total Cookies: ${totalCookies}`;
             updateScore();
             upgradesElement.innerHTML = "";
+            oneTimeUpgradesElement.innerHTML = "";
             achievementsElement.innerHTML = "";
             achievementsElement.classList.add("hidden");
             stageElement.classList.add("hidden");
@@ -312,11 +371,32 @@
             createUpgrade("Grandmother (2 cookies per second)", 100, 0, 'grandmother');
             createUpgrade("Cookie Plant (5 cookies per second)", 200, 0, 'plant');
             createUpgrade("Cookie Multiplier (x2)", 100, 2, 'multiplier');
-            // Recreate unlockables
-            unlockables = {};
-            unlockableFeature("Cookie Factory (1 cookie per second)", 500, { type: "addAutoClicker", value: 1 });
-            unlockableFeature("Golden Cookie (x5 cookies)", 1000, { type: "bonusCookies", value: 5 });
-            unlockableFeature("Super Click (10 cookies per click)", 2000, { type: "changeClickValue", value: 10 });
+            // Recreate one-time upgrades
+            oneTimeUpgradesElement.innerHTML = "";
+            createOneTimeUpgrade("Double Your Click Value", 200, () => { clickValue *= 2; });
+            createOneTimeUpgrade("Increase Auto-Clicker Output by 1", 300, () => { autoClickers += 1; });
+            createOneTimeUpgrade("Increase Grandmother Output by 2", 400, () => { grandmothers += 2; });
+            createOneTimeUpgrade("Increase Cookie Plant Output by 5", 500, () => { cookiePlants += 5; });
+            createOneTimeUpgrade("Boost Click Value by 5", 250, () => { clickValue += 5; });
+            createOneTimeUpgrade("Unlock 2 Grandmothers", 600, () => { grandmothers += 2; });
+            createOneTimeUpgrade("Unlock 3 Cookie Plants", 700, () => { cookiePlants += 3; });
+            createOneTimeUpgrade("Double Auto-Clickers Output", 800, () => { autoClickers *= 2; });
+            createOneTimeUpgrade("Increase Cookie Multiplier by 1.5", 900, () => { cookieMultiplier *= 1.5; });
+            createOneTimeUpgrade("Unlock a Cookie Factory (1 cookie/sec)", 1000, () => { autoClickers += 1; });
+            createOneTimeUpgrade("Super Click (25 cookies per click)", 1200, () => { clickValue = 25; });
+            createOneTimeUpgrade("Mega Grandmother (4 cookies/sec)", 1300, () => { grandmothers += 1; clickValue += 2; });
+            createOneTimeUpgrade("Cookie Plant Bonus (add 10)", 1400, () => { cookiePlants += 10; });
+            createOneTimeUpgrade("Automatic Grandma (grandma auto-clicker)", 1500, () => { grandmothers += 1; });
+            createOneTimeUpgrade("Permanent Click Boost (+10)", 1600, () => { clickValue += 10; });
+            createOneTimeUpgrade("Elite Cookie Plant (10 cookies/sec)", 1700, () => { cookiePlants += 1; });
+            createOneTimeUpgrade("Infinite Cookies (costs 2000)", 2000, () => { cookies += 1000; });
+            createOneTimeUpgrade("Mega Boost (x3 Click Value)", 2500, () => { clickValue *= 3; });
+            createOneTimeUpgrade("Cookie Storm (50 cookies)", 3000, () => { cookies += 50; });
+            createOneTimeUpgrade("Super Auto-Clicker", 3500, () => { autoClickers += 5; });
+            createOneTimeUpgrade("Cookie Factory Upgrade (+5 cookies/sec)", 4000, () => { autoClickers += 5; });
+            createOneTimeUpgrade("Grandma's Recipe (boost grandmothers by 3)", 4500, () => { grandmothers += 3; });
+            createOneTimeUpgrade("Plant Mastery (boost cookie plants by 5)", 5000, () => { cookiePlants += 5; });
+            createOneTimeUpgrade("Ultimate Cookie (add 1000 cookies)", 10000, () => { cookies += 1000; });
         });
     </script>
 </body>
