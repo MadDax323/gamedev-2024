@@ -3,99 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Inspired Page</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Minecraft-style font -->
+    <title>Cookie Clicker</title>
     <style>
         body {
-            font-family: 'Press Start 2P', cursive; /* Minecraft-like font */
-            margin: 0;
-            padding: 0;
-            background: url('https://www.minecraft.net/en-us/assets/images/background.png') no-repeat center center fixed; /* Minecraft background */
-            background-size: cover;
-            color: #000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            overflow: hidden;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f5f5f5;
         }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px #000;
+        #cookie {
+            width: 200px;
+            height: 200px;
+            background-color: #d2691e;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 20px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
-
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            position: relative;
-            z-index: 1; /* Ensures the container appears above the background */
+        #score {
+            font-size: 24px;
+            margin: 20px;
         }
-
-        .block {
-            width: 100px;
-            height: 100px;
-            position: relative;
-            margin: 5px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            border: 2px solid #000;
-        }
-
-        .grass {
-            background: url('https://www.minecraft.net/en-us/assets/images/grass.png') no-repeat center center / cover;
-            height: 60%;
-            position: absolute;
-            top: 0;
-            width: 100%;
-        }
-
-        .dirt {
-            background: url('https://www.minecraft.net/en-us/assets/images/dirt.png') no-repeat center center / cover;
-            height: 100%;
-            width: 100%;
-            border-radius: 5px;
-        }
-
-        .stone {
-            background: url('https://www.minecraft.net/en-us/assets/images/stone.png') no-repeat center center / cover;
-            height: 100%;
-            width: 100%;
-            border-radius: 5px;
+        #upgrade {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
+    <div id="cookie"></div>
+    <div id="score">Cookies: 0</div>
+    <button id="upgrade">Buy Upgrade (Cost: 10 cookies)</button>
 
-<h1>Minecraft Inspired Page</h1>
-<div class="container">
-    <div class="block">
-        <div class="grass"></div>
-        <div class="dirt"></div>
-    </div>
-    <div class="block">
-        <div class="grass"></div>
-        <div class="dirt"></div>
-    </div>
-    <div class="block">
-        <div class="grass"></div>
-        <div class="dirt"></div>
-    </div>
-    <div class="block">
-        <div class="grass"></div>
-        <div class="dirt"></div>
-    </div>
-    <div class="block">
-        <div class="grass"></div>
-        <div class="dirt"></div>
-    </div>
-    <div class="block">
-        <div class="grass"></div>
-        <div class="stone"></div>
-    </div>
-</div>
+    <script>
+        let cookies = 0;
+        let clickValue = 1;
+        let upgradeCost = 10;
 
+        const cookieElement = document.getElementById("cookie");
+        const scoreElement = document.getElementById("score");
+        const upgradeButton = document.getElementById("upgrade");
+
+        cookieElement.addEventListener("click", () => {
+            cookies += clickValue;
+            updateScore();
+        });
+
+        upgradeButton.addEventListener("click", () => {
+            if (cookies >= upgradeCost) {
+                cookies -= upgradeCost;
+                clickValue++;
+                upgradeCost *= 2; // Increase cost for next upgrade
+                updateScore();
+                upgradeButton.innerText = `Buy Upgrade (Cost: ${upgradeCost} cookies)`;
+            } else {
+                alert("Not enough cookies!");
+            }
+        });
+
+        function updateScore() {
+            scoreElement.innerText = `Cookies: ${cookies}`;
+        }
+    </script>
 </body>
 </html>
