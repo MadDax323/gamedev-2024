@@ -1,1 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loop Animation Website</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(270deg, #4e54c8, #8f94fb);
+            animation: backgroundLoop 10s linear infinite;
+            overflow: hidden;
+        }
 
+        @keyframes backgroundLoop {
+            0% {
+                background: linear-gradient(270deg, #4e54c8, #8f94fb);
+            }
+            50% {
+                background: linear-gradient(270deg, #8f94fb, #4e54c8);
+            }
+            100% {
+                background: linear-gradient(270deg, #4e54c8, #8f94fb);
+            }
+        }
+
+        .ball {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #ff6347; /* Tomato color */
+            position: absolute;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-200px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ball"></div>
+
+    <script>
+        const ball = document.querySelector('.ball');
+
+        // Set initial position of the ball
+        ball.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+
+        // Update position on window resize
+        window.addEventListener('resize', () => {
+            ball.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+        });
+    </script>
+</body>
+</html>
