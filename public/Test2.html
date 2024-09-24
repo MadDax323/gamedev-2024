@@ -12,12 +12,12 @@
             background-image: radial-gradient(circle at 50% 50%, #f5deb3, #ffe4e1);
             margin: 0;
             padding: 20px;
-        }
-        #cookie {
-            font-size: 200px; /* Large cookie emoji */
-            cursor: pointer;
-            animation: bounce 1s infinite alternate;
-        }
+       #cookie {
+    font-size: 200px; /* Large cookie emoji */
+    cursor: pointer;
+    animation: bounce 1s infinite alternate;
+    user-select: none; /* Prevent text selection */
+}
         @keyframes bounce {
             0% { transform: translateY(0); }
             100% { transform: translateY(-10px); }
