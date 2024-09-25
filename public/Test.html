@@ -1,5 +1,3 @@
-html
-Copy code
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,19 +28,11 @@ Copy code
             margin: 20px;
             font-weight: bold;
         }
-        /* Other styles remain unchanged */
-        #submitScoreForm {
+        #upgrades, #achievements, #unlockables, #oneTimeUpgrades {
             margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
-        #submitScoreForm input {
+        .upgrade, .achievement, .unlockable, .oneTimeUpgrade {
             margin: 5px;
-            padding: 10px;
-            font-size: 16px;
-        }
-        #submitScoreButton {
             padding: 10px 15px;
             font-size: 16px;
             border: none;
@@ -52,8 +42,29 @@ Copy code
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        #submitScoreButton:hover {
+        .upgrade:hover, .achievement, .unlockable, .oneTimeUpgrade:hover {
             background-color: #45a049;
+        }
+        .hidden {
+            display: none;
+        }
+        #stage {
+            font-size: 20px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        #prestige {
+            margin-top: 20px;
+        }
+        @keyframes achievement {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .achievement {
+            animation: achievement 0.5s ease-in;
+        }
+        #scoreForm {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -71,10 +82,9 @@ Copy code
     </div>
     <button id="reset">Reset Game</button>
 
-    <form id="submitScoreForm">
-        <input type="text" id="playerName" placeholder="Enter your name" />
-        <input type="text" id="playerScore" placeholder="Enter your score" disabled />
-        <button type="button" id="submitScoreButton">Submit Score</button>
+    <form id="scoreForm">
+        <input type="text" id="playerName" placeholder="Enter your name" required>
+        <button type="submit">Submit Score</button>
     </form>
 
     <script>
@@ -101,15 +111,13 @@ Copy code
         const prestigeButton = document.getElementById("prestigeButton");
         const prestigeScoreElement = document.getElementById("prestigeScore");
         const resetButton = document.getElementById("reset");
-        const playerScoreInput = document.getElementById("playerScore");
-        const submitScoreButton = document.getElementById("submitScoreButton");
+        const scoreForm = document.getElementById("scoreForm");
 
         cookieElement.addEventListener("click", () => {
             cookies += clickValue;
             totalCookies += clickValue;
             updateScore();
             checkAchievements("click");
-            playerScoreInput.value = cookies; // Update the score input
         });
 
         function createUpgrade(name, cost, increment, type) {
@@ -147,7 +155,43 @@ Copy code
         createUpgrade("Cookie Plant (5 cookies per second)", 200, 0, 'plant');
         createUpgrade("Cookie Multiplier (x2)", 100, 2, 'multiplier');
 
-        // One-time upgrades and unlockables remain unchanged...
+        // One-time upgrades
+        function createOneTimeUpgrade(name, cost, effect) {
+            const oneTimeUpgradeButton = document.createElement("button");
+            oneTimeUpgradeButton.classList.add("oneTimeUpgrade");
+            oneTimeUpgradeButton.innerText = `${name} (Cost: ${cost} cookies)`;
+            oneTimeUpgradeButton.addEventListener("click", () => {
+                if (cookies >= cost) {
+                    cookies -= cost;
+                    effect();
+                    oneTimeUpgradeButton.innerText = `${name} (Purchased!)`;
+                    oneTimeUpgradeButton.disabled = true; // Disable after purchase
+                } else {
+                    alert("Not enough cookies!");
+                }
+            });
+            oneTimeUpgradesElement.appendChild(oneTimeUpgradeButton);
+        }
+
+        // Create one-time upgrades
+        createOneTimeUpgrade("Double Your Click Value", 200, () => { clickValue *= 2; });
+        createOneTimeUpgrade("Increase Auto-Clicker Output by 1", 300, () => { autoClickers += 1; });
+        createOneTimeUpgrade("Increase Grandmother Output by 2", 400, () => { grandmothers += 2; });
+        createOneTimeUpgrade("Increase Cookie Plant Output by 5", 500, () => { cookiePlants += 5; });
+        createOneTimeUpgrade("Boost Click Value by 5", 250, () => { clickValue += 5; });
+        createOneTimeUpgrade("Unlock 2 Grandmothers", 600, () => { grandmothers += 2; });
+        createOneTimeUpgrade("Unlock 3 Cookie Plants", 700, () => { cookiePlants += 3; });
+        createOneTimeUpgrade("Double Auto-Clickers Output", 800, () => { autoClickers *= 2; });
+        createOneTimeUpgrade("Increase Cookie Multiplier by 1.5", 900, () => { cookieMultiplier *= 1.5; });
+        createOneTimeUpgrade("Unlock a Cookie Factory (1 cookie/sec)", 1000, () => { autoClickers += 1; });
+        createOneTimeUpgrade("Super Click (25 cookies per click)", 1200, () => { clickValue = 25; });
+        createOneTimeUpgrade("Mega Grandmother (4 cookies/sec)", 1300, () => { grandmothers += 1; clickValue += 2; });
+        createOneTimeUpgrade("Cookie Plant Bonus (add 10)", 1400, () => { cookiePlants += 10; });
+        createOneTimeUpgrade("Automatic Grandma (grandma auto-clicker)", 1500, () => { grandmothers += 1; });
+        createOneTimeUpgrade("Permanent Click Boost (+10)", 1600, () => { clickValue += 10; });
+        createOneTimeUpgrade("Elite Cookie Plant (10 cookies/sec)", 1700, () => { cookiePlants += 1; });
+        createOneTimeUpgrade("Infinite Cookies (costs 2000)", 2000, () => { cookies += 1000; });
+        createOneTimeUpgrade("Mega Boost (x3 Click Value)", 2500, () => { clickValue *= 3; });
 
         // Auto-clicker functionality
         setInterval(() => {
@@ -158,7 +202,6 @@ Copy code
             cookies += (cookiesFromAutoClickers + cookiesFromGrandmothers + cookiesFromPlants);
             totalCookies += (cookiesFromAutoClickers + cookiesFromGrandmothers + cookiesFromPlants);
             updateScore();
-            checkUnlockables();
         }, 1000);
 
         function updateScore() {
@@ -167,21 +210,47 @@ Copy code
             checkStage();
         }
 
-        // Achievement and other functions remain unchanged...
+        function checkAchievements(type) {
+            // Achievement logic would go here
+        }
+
+        function checkStage() {
+            if (cookies >= stageThresholds[stage]) {
+                stage++;
+                stageElement.innerText = `Stage: ${stage}`;
+                stageElement.classList.remove("hidden");
+            }
+        }
 
         prestigeButton.addEventListener("click", () => {
-            // Reset game logic remains unchanged...
+            // Reset game logic here
         });
 
         resetButton.addEventListener("click", () => {
-            // Reset game logic remains unchanged...
+            cookies = 0;
+            totalCookies = 0;
+            clickValue = 1;
+            autoClickers = 0;
+            grandmothers = 0;
+            cookiePlants = 0;
+            cookieMultiplier = 1;
+            stage = 1;
+            scoreElement.innerText = `Cookies: ${cookies}`;
+            stageElement.classList.add("hidden");
+            upgradesElement.innerHTML = "";
+            oneTimeUpgradesElement.innerHTML = "";
+            achievementsElement.innerHTML = "";
+            unlockablesElement.innerHTML = "";
+            resetButton.style.display = "none"; // Hide reset button after reset
         });
 
-        submitScoreButton.addEventListener("click", () => {
+        scoreForm.addEventListener("submit", (event) => {
+            event.preventDefault();
             const playerName = document.getElementById("playerName").value;
-            // Here you could handle the submission logic, e.g., log to console
             console.log(`Player: ${playerName}, Score: ${cookies}`);
             alert("Score submitted (not actually sent).");
+            scoreForm.reset(); // Reset the form fields
         });
     </script>
 </body>
+</html>
