@@ -3,401 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Cookie Clicker</title>
+    <title>Snake Game</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #ffe4c4; /* Light background color */
-            background-image: radial-gradient(circle at 50% 50%, #f5deb3, #ffe4e1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
-            padding: 20px;
-       #cookie {
-    font-size: 200px; /* Large cookie emoji */
-    cursor: pointer;
-    animation: bounce 1s infinite alternate;
-    user-select: none; /* Prevent text selection */
-}
-        @keyframes bounce {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-10px); }
+            background-color: #f0f0f0;
+        }
+        canvas {
+            border: 2px solid #000;
+            background-color: #fff;
         }
         #score {
+            text-align: center;
             font-size: 24px;
-            margin: 20px;
-            font-weight: bold;
-        }
-        #upgrades, #achievements, #unlockables, #oneTimeUpgrades {
             margin-top: 20px;
-        }
-        .upgrade, .achievement, .unlockable, .oneTimeUpgrade {
-            margin: 5px;
-            padding: 10px 15px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .upgrade:hover, .achievement, .unlockable, .oneTimeUpgrade:hover {
-            background-color: #45a049;
-        }
-        .hidden {
-            display: none;
-        }
-        #stage {
-            font-size: 20px;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-        #prestige {
-            margin-top: 20px;
-        }
-        @keyframes achievement {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .achievement {
-            animation: achievement 0.5s ease-in;
         }
     </style>
 </head>
 <body>
-    <div id="cookie">🍪</div> <!-- Cookie Emoji -->
-    <div id="score">Cookies: 0</div>
-    <div id="upgrades"></div>
-    <div id="oneTimeUpgrades"></div>
-    <div id="achievements" class="hidden"></div>
-    <div id="unlockables" class="hidden"></div>
-    <div id="stage" class="hidden">Stage: 1</div>
-    <div id="prestige" class="hidden">
-        <button id="prestigeButton">Prestige</button>
-        <div id="prestigeScore">Total Cookies: 0</div>
+    <div>
+        <canvas id="snakeCanvas" width="400" height="400"></canvas>
+        <div id="score">Score: 0</div>
     </div>
-    <button id="reset">Reset Game</button>
 
     <script>
-        let cookies = 0;
-        let clickValue = 1;
-        let autoClickers = 0;
-        let grandmothers = 0;
-        let cookiePlants = 0;
-        let totalCookies = 0;
-        let cookieMultiplier = 1;
-        let stage = 1;
-        const stageThresholds = [0, 100, 1000, 10000];
-        const achievements = {};
-        const unlockables = {};
+        const canvas = document.getElementById('snakeCanvas');
+        const ctx = canvas.getContext('2d');
 
-        const cookieElement = document.getElementById("cookie");
-        const scoreElement = document.getElementById("score");
-        const upgradesElement = document.getElementById("upgrades");
-        const oneTimeUpgradesElement = document.getElementById("oneTimeUpgrades");
-        const achievementsElement = document.getElementById("achievements");
-        const unlockablesElement = document.getElementById("unlockables");
-        const stageElement = document.getElementById("stage");
-        const prestigeElement = document.getElementById("prestige");
-        const prestigeButton = document.getElementById("prestigeButton");
-        const prestigeScoreElement = document.getElementById("prestigeScore");
-        const resetButton = document.getElementById("reset");
+        const box = 20; // Size of the snake and food
+        let score = 0;
+        let snake = [{ x: 9 * box, y: 9 * box }];
+        let food = {
+            x: Math.floor(Math.random() * 20) * box,
+            y: Math.floor(Math.random() * 20) * box,
+        };
+        let d;
 
-        cookieElement.addEventListener("click", () => {
-            cookies += clickValue;
-            totalCookies += clickValue;
-            updateScore();
-            checkAchievements("click");
-        });
+        document.addEventListener('keydown', direction);
 
-        function createUpgrade(name, cost, increment, type) {
-            const upgradeButton = document.createElement("button");
-            upgradeButton.classList.add("upgrade");
-            upgradeButton.innerText = `${name} (Cost: ${cost} cookies)`;
-            upgradeButton.addEventListener("click", () => {
-                if (cookies >= cost) {
-                    cookies -= cost;
-                    if (type === 'click') {
-                        clickValue += increment;
-                    } else if (type === 'auto') {
-                        autoClickers++;
-                    } else if (type === 'grandmother') {
-                        grandmothers++;
-                    } else if (type === 'plant') {
-                        cookiePlants++;
-                    } else if (type === 'multiplier') {
-                        cookieMultiplier *= increment;
-                    }
-                    updateScore();
-                    upgradeButton.innerText = `${name} (Cost: ${Math.floor(cost * 1.5)} cookies)`;
-                    cost = Math.floor(cost * 1.5);
-                } else {
-                    alert("Not enough cookies!");
-                }
-            });
-            upgradesElement.appendChild(upgradeButton);
+        function direction(event) {
+            if (event.keyCode == 37 && d !== 'RIGHT') {
+                d = 'LEFT';
+            } else if (event.keyCode == 38 && d !== 'DOWN') {
+                d = 'UP';
+            } else if (event.keyCode == 39 && d !== 'LEFT') {
+                d = 'RIGHT';
+            } else if (event.keyCode == 40 && d !== 'UP') {
+                d = 'DOWN';
+            }
         }
 
-        // Create upgrades
-        createUpgrade("Upgrade Click Value", 10, 1, 'click');
-        createUpgrade("Auto-Clicker (1 per second)", 50, 0, 'auto');
-        createUpgrade("Grandmother (2 cookies per second)", 100, 0, 'grandmother');
-        createUpgrade("Cookie Plant (5 cookies per second)", 200, 0, 'plant');
-        createUpgrade("Cookie Multiplier (x2)", 100, 2, 'multiplier');
-
-        // One-time upgrades
-        function createOneTimeUpgrade(name, cost, effect) {
-            const oneTimeUpgradeButton = document.createElement("button");
-            oneTimeUpgradeButton.classList.add("oneTimeUpgrade");
-            oneTimeUpgradeButton.innerText = `${name} (Cost: ${cost} cookies)`;
-            oneTimeUpgradeButton.addEventListener("click", () => {
-                if (cookies >= cost) {
-                    cookies -= cost;
-                    effect();
-                    oneTimeUpgradeButton.innerText = `${name} (Purchased!)`;
-                    oneTimeUpgradeButton.disabled = true; // Disable after purchase
-                } else {
-                    alert("Not enough cookies!");
-                }
-            });
-            oneTimeUpgradesElement.appendChild(oneTimeUpgradeButton);
-        }
-
-        // Create one-time upgrades
-        createOneTimeUpgrade("Double Your Click Value", 200, () => { clickValue *= 2; });
-        createOneTimeUpgrade("Increase Auto-Clicker Output by 1", 300, () => { autoClickers += 1; });
-        createOneTimeUpgrade("Increase Grandmother Output by 2", 400, () => { grandmothers += 2; });
-        createOneTimeUpgrade("Increase Cookie Plant Output by 5", 500, () => { cookiePlants += 5; });
-        createOneTimeUpgrade("Boost Click Value by 5", 250, () => { clickValue += 5; });
-        createOneTimeUpgrade("Unlock 2 Grandmothers", 600, () => { grandmothers += 2; });
-        createOneTimeUpgrade("Unlock 3 Cookie Plants", 700, () => { cookiePlants += 3; });
-        createOneTimeUpgrade("Double Auto-Clickers Output", 800, () => { autoClickers *= 2; });
-        createOneTimeUpgrade("Increase Cookie Multiplier by 1.5", 900, () => { cookieMultiplier *= 1.5; });
-        createOneTimeUpgrade("Unlock a Cookie Factory (1 cookie/sec)", 1000, () => { autoClickers += 1; });
-        createOneTimeUpgrade("Super Click (25 cookies per click)", 1200, () => { clickValue = 25; });
-        createOneTimeUpgrade("Mega Grandmother (4 cookies/sec)", 1300, () => { grandmothers += 1; clickValue += 2; });
-        createOneTimeUpgrade("Cookie Plant Bonus (add 10)", 1400, () => { cookiePlants += 10; });
-        createOneTimeUpgrade("Automatic Grandma (grandma auto-clicker)", 1500, () => { grandmothers += 1; });
-        createOneTimeUpgrade("Permanent Click Boost (+10)", 1600, () => { clickValue += 10; });
-        createOneTimeUpgrade("Elite Cookie Plant (10 cookies/sec)", 1700, () => { cookiePlants += 1; });
-        createOneTimeUpgrade("Infinite Cookies (costs 2000)", 2000, () => { cookies += 1000; });
-        createOneTimeUpgrade("Mega Boost (x3 Click Value)", 2500, () => { clickValue *= 3; });
-        createOneTimeUpgrade("Cookie Storm (50 cookies)", 3000, () => { cookies += 50; });
-        createOneTimeUpgrade("Super Auto-Clicker", 3500, () => { autoClickers += 5; });
-        createOneTimeUpgrade("Cookie Factory Upgrade (+5 cookies/sec)", 4000, () => { autoClickers += 5; });
-        createOneTimeUpgrade("Grandma's Recipe (boost grandmothers by 3)", 4500, () => { grandmothers += 3; });
-        createOneTimeUpgrade("Plant Mastery (boost cookie plants by 5)", 5000, () => { cookiePlants += 5; });
-        createOneTimeUpgrade("Ultimate Cookie (add 1000 cookies)", 10000, () => { cookies += 1000; });
-
-        // Unlockable features
-        function unlockableFeature(name, requirement, effect) {
-            const unlockableButton = document.createElement("button");
-            unlockableButton.classList.add("unlockable");
-            unlockableButton.innerText = `${name} (Unlocks at ${requirement} cookies)`;
-            unlockableButton.disabled = true; // Initially disabled
-            unlockableButton.addEventListener("click", () => {
-                if (effect.type === "addAutoClicker") {
-                    autoClickers += effect.value;
-                } else if (effect.type === "bonusCookies") {
-                    cookies += effect.value;
-                } else if (effect.type === "changeClickValue") {
-                    clickValue = effect.value;
-                }
-                unlockableButton.innerText = `${name} (Unlocked!)`;
-                unlockableButton.disabled = true; // Disable after unlocking
-                updateScore();
-            });
-            unlockablesElement.appendChild(unlockableButton);
-            unlockables[name] = { button: unlockableButton, requirement: requirement, effect: effect };
-        }
-
-        // Create unlockable features
-        unlockableFeature("Cookie Factory (1 cookie per second)", 500, { type: "addAutoClicker", value: 1 });
-        unlockableFeature("Golden Cookie (x5 cookies)", 1000, { type: "bonusCookies", value: 5 });
-        unlockableFeature("Super Click (10 cookies per click)", 2000, { type: "changeClickValue", value: 10 });
-
-        // Auto-clicker functionality
-        setInterval(() => {
-            let cookiesFromAutoClickers = autoClickers * clickValue * cookieMultiplier;
-            let cookiesFromGrandmothers = grandmothers * 2 * cookieMultiplier;
-            let cookiesFromPlants = cookiePlants * 5 * cookieMultiplier;
-
-            cookies += (cookiesFromAutoClickers + cookiesFromGrandmothers + cookiesFromPlants);
-            totalCookies += (cookiesFromAutoClickers + cookiesFromGrandmothers + cookiesFromPlants);
-            updateScore();
-            checkUnlockables();
-        }, 1000);
-
-        function updateScore() {
-            scoreElement.innerText = `Cookies: ${cookies}`;
-            checkAchievements("cookies");
-            checkStage();
-        }
-
-        function checkAchievements(type) {
-            if (type === "click") {
-                if (!achievements['firstClick']) {
-                    achievements['firstClick'] = true;
-                    unlockAchievement("First Click! 🎉");
+        function collision(head, array) {
+            for (let i = 0; i < array.length; i++) {
+                if (head.x === array[i].x && head.y === array[i].y) {
+                    return true;
                 }
             }
-            if (cookies >= 100 && !achievements['100Cookies']) {
-                achievements['100Cookies'] = true;
-                unlockAchievement("100 Cookies! 🍪");
-            }
-            if (cookies >= 1000 && !achievements['1000Cookies']) {
-                achievements['1000Cookies'] = true;
-                unlockAchievement("1000 Cookies! 🍪");
-            }
-            if (cookies >= 10000 && !achievements['10000Cookies']) {
-                achievements['10000Cookies'] = true;
-                unlockAchievement("10,000 Cookies! 🍪");
-            }
+            return false;
         }
 
-        function unlockAchievement(name) {
-            const achievementElement = document.createElement("div");
-            achievementElement.classList.add("achievement");
-            achievementElement.innerText = name;
-            achievementsElement.appendChild(achievementElement);
-            achievementsElement.classList.remove("hidden");
-        }
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        function checkStage() {
-            if (stage < stageThresholds.length && cookies >= stageThresholds[stage]) {
-                stage++;
-                stageElement.innerText = `Stage: ${stage}`;
-                stageElement.classList.remove("hidden");
-                unlockNewUpgrades();
-                if (stage === 4) {
-                    prestigeElement.classList.remove("hidden");
-                }
+            // Draw the snake
+            for (let i = 0; i < snake.length; i++) {
+                ctx.fillStyle = (i === 0) ? 'green' : 'lightgreen';
+                ctx.fillRect(snake[i].x, snake[i].y, box, box);
+                ctx.strokeStyle = 'darkgreen';
+                ctx.strokeRect(snake[i].x, snake[i].y, box, box);
             }
-        }
 
-        function checkUnlockables() {
-            for (const name in unlockables) {
-                if (cookies >= unlockables[name].requirement) {
-                    unlockables[name].button.disabled = false;
-                }
+            // Draw the food
+            ctx.fillStyle = 'red';
+            ctx.fillRect(food.x, food.y, box, box);
+
+            // Old head position
+            let snakeX = snake[0].x;
+            let snakeY = snake[0].y;
+
+            // Move the snake
+            if (d === 'LEFT') snakeX -= box;
+            if (d === 'UP') snakeY -= box;
+            if (d === 'RIGHT') snakeX += box;
+            if (d === 'DOWN') snakeY += box;
+
+            // Check if the snake has eaten the food
+            if (snakeX === food.x && snakeY === food.y) {
+                score++;
+                food = {
+                    x: Math.floor(Math.random() * 20) * box,
+                    y: Math.floor(Math.random() * 20) * box,
+                };
+            } else {
+                // Remove the tail
+                snake.pop();
             }
-        }
 
-        function unlockNewUpgrades() {
-            if (stage === 2) {
-                createUpgrade("Double Click Value", 100, 2, 'click');
-            } else if (stage === 3) {
-                createUpgrade("Advanced Auto-Clicker (2 cookies per second)", 200, 0, 'auto');
-            } else if (stage === 4) {
-                createUpgrade("Mega Auto-Clicker (5 cookies per second)", 500, 0, 'auto');
+            // Add new head
+            const newHead = { x: snakeX, y: snakeY };
+
+            // Game over conditions
+            if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead, snake)) {
+                clearInterval(game);
+                alert("Game Over! Your score: " + score);
+                document.location.reload();
             }
+
+            snake.unshift(newHead);
+            document.getElementById('score').innerText = "Score: " + score;
         }
 
-        prestigeButton.addEventListener("click", () => {
-            cookies = 0;
-            clickValue = 1;
-            autoClickers = 0;
-            grandmothers = 0;
-            cookiePlants = 0;
-            cookieMultiplier = 1;
-            stage = 1;
-            Object.keys(achievements).forEach(key => delete achievements[key]);
-            unlockablesElement.innerHTML = "";
-            totalCookies += cookies; // Add current cookies to total
-            prestigeScoreElement.innerText = `Total Cookies: ${totalCookies}`;
-            updateScore();
-            upgradesElement.innerHTML = "";
-            oneTimeUpgradesElement.innerHTML = "";
-            achievementsElement.innerHTML = "";
-            achievementsElement.classList.add("hidden");
-            stageElement.classList.add("hidden");
-            prestigeElement.classList.add("hidden");
-            // Recreate upgrades
-            createUpgrade("Upgrade Click Value", 10, 1, 'click');
-            createUpgrade("Auto-Clicker (1 per second)", 50, 0, 'auto');
-            createUpgrade("Grandmother (2 cookies per second)", 100, 0, 'grandmother');
-            createUpgrade("Cookie Plant (5 cookies per second)", 200, 0, 'plant');
-            createUpgrade("Cookie Multiplier (x2)", 100, 2, 'multiplier');
-            // Recreate one-time upgrades
-            oneTimeUpgradesElement.innerHTML = "";
-            createOneTimeUpgrade("Double Your Click Value", 200, () => { clickValue *= 2; });
-            createOneTimeUpgrade("Increase Auto-Clicker Output by 1", 300, () => { autoClickers += 1; });
-            createOneTimeUpgrade("Increase Grandmother Output by 2", 400, () => { grandmothers += 2; });
-            createOneTimeUpgrade("Increase Cookie Plant Output by 5", 500, () => { cookiePlants += 5; });
-            createOneTimeUpgrade("Boost Click Value by 5", 250, () => { clickValue += 5; });
-            createOneTimeUpgrade("Unlock 2 Grandmothers", 600, () => { grandmothers += 2; });
-            createOneTimeUpgrade("Unlock 3 Cookie Plants", 700, () => { cookiePlants += 3; });
-            createOneTimeUpgrade("Double Auto-Clickers Output", 800, () => { autoClickers *= 2; });
-            createOneTimeUpgrade("Increase Cookie Multiplier by 1.5", 900, () => { cookieMultiplier *= 1.5; });
-            createOneTimeUpgrade("Unlock a Cookie Factory (1 cookie/sec)", 1000, () => { autoClickers += 1; });
-            createOneTimeUpgrade("Super Click (25 cookies per click)", 1200, () => { clickValue = 25; });
-            createOneTimeUpgrade("Mega Grandmother (4 cookies/sec)", 1300, () => { grandmothers += 1; clickValue += 2; });
-            createOneTimeUpgrade("Cookie Plant Bonus (add 10)", 1400, () => { cookiePlants += 10; });
-            createOneTimeUpgrade("Automatic Grandma (grandma auto-clicker)", 1500, () => { grandmothers += 1; });
-            createOneTimeUpgrade("Permanent Click Boost (+10)", 1600, () => { clickValue += 10; });
-            createOneTimeUpgrade("Elite Cookie Plant (10 cookies/sec)", 1700, () => { cookiePlants += 1; });
-            createOneTimeUpgrade("Infinite Cookies (costs 2000)", 2000, () => { cookies += 1000; });
-            createOneTimeUpgrade("Mega Boost (x3 Click Value)", 2500, () => { clickValue *= 3; });
-            createOneTimeUpgrade("Cookie Storm (50 cookies)", 3000, () => { cookies += 50; });
-            createOneTimeUpgrade("Super Auto-Clicker", 3500, () => { autoClickers += 5; });
-            createOneTimeUpgrade("Cookie Factory Upgrade (+5 cookies/sec)", 4000, () => { autoClickers += 5; });
-            createOneTimeUpgrade("Grandma's Recipe (boost grandmothers by 3)", 4500, () => { grandmothers += 3; });
-            createOneTimeUpgrade("Plant Mastery (boost cookie plants by 5)", 5000, () => { cookiePlants += 5; });
-            createOneTimeUpgrade("Ultimate Cookie (add 1000 cookies)", 10000, () => { cookies += 1000; });
-        });
-
-        resetButton.addEventListener("click", () => {
-            cookies = 0;
-            clickValue = 1;
-            autoClickers = 0;
-            grandmothers = 0;
-            cookiePlants = 0;
-            cookieMultiplier = 1;
-            stage = 1;
-            Object.keys(achievements).forEach(key => delete achievements[key]);
-            unlockablesElement.innerHTML = "";
-            totalCookies = 0; // Reset total cookies on game reset
-            prestigeScoreElement.innerText = `Total Cookies: ${totalCookies}`;
-            updateScore();
-            upgradesElement.innerHTML = "";
-            oneTimeUpgradesElement.innerHTML = "";
-            achievementsElement.innerHTML = "";
-            achievementsElement.classList.add("hidden");
-            stageElement.classList.add("hidden");
-            prestigeElement.classList.add("hidden");
-            // Recreate upgrades
-            createUpgrade("Upgrade Click Value", 10, 1, 'click');
-            createUpgrade("Auto-Clicker (1 per second)", 50, 0, 'auto');
-            createUpgrade("Grandmother (2 cookies per second)", 100, 0, 'grandmother');
-            createUpgrade("Cookie Plant (5 cookies per second)", 200, 0, 'plant');
-            createUpgrade("Cookie Multiplier (x2)", 100, 2, 'multiplier');
-            // Recreate one-time upgrades
-            oneTimeUpgradesElement.innerHTML = "";
-            createOneTimeUpgrade("Double Your Click Value", 200, () => { clickValue *= 2; });
-            createOneTimeUpgrade("Increase Auto-Clicker Output by 1", 300, () => { autoClickers += 1; });
-            createOneTimeUpgrade("Increase Grandmother Output by 2", 400, () => { grandmothers += 2; });
-            createOneTimeUpgrade("Increase Cookie Plant Output by 5", 500, () => { cookiePlants += 5; });
-            createOneTimeUpgrade("Boost Click Value by 5", 250, () => { clickValue += 5; });
-            createOneTimeUpgrade("Unlock 2 Grandmothers", 600, () => { grandmothers += 2; });
-            createOneTimeUpgrade("Unlock 3 Cookie Plants", 700, () => { cookiePlants += 3; });
-            createOneTimeUpgrade("Double Auto-Clickers Output", 800, () => { autoClickers *= 2; });
-            createOneTimeUpgrade("Increase Cookie Multiplier by 1.5", 900, () => { cookieMultiplier *= 1.5; });
-            createOneTimeUpgrade("Unlock a Cookie Factory (1 cookie/sec)", 1000, () => { autoClickers += 1; });
-            createOneTimeUpgrade("Super Click (25 cookies per click)", 1200, () => { clickValue = 25; });
-            createOneTimeUpgrade("Mega Grandmother (4 cookies/sec)", 1300, () => { grandmothers += 1; clickValue += 2; });
-            createOneTimeUpgrade("Cookie Plant Bonus (add 10)", 1400, () => { cookiePlants += 10; });
-            createOneTimeUpgrade("Automatic Grandma (grandma auto-clicker)", 1500, () => { grandmothers += 1; });
-            createOneTimeUpgrade("Permanent Click Boost (+10)", 1600, () => { clickValue += 10; });
-            createOneTimeUpgrade("Elite Cookie Plant (10 cookies/sec)", 1700, () => { cookiePlants += 1; });
-            createOneTimeUpgrade("Infinite Cookies (costs 2000)", 2000, () => { cookies += 1000; });
-            createOneTimeUpgrade("Mega Boost (x3 Click Value)", 2500, () => { clickValue *= 3; });
-            createOneTimeUpgrade("Cookie Storm (50 cookies)", 3000, () => { cookies += 50; });
-            createOneTimeUpgrade("Super Auto-Clicker", 3500, () => { autoClickers += 5; });
-            createOneTimeUpgrade("Cookie Factory Upgrade (+5 cookies/sec)", 4000, () => { autoClickers += 5; });
-            createOneTimeUpgrade("Grandma's Recipe (boost grandmothers by 3)", 4500, () => { grandmothers += 3; });
-            createOneTimeUpgrade("Plant Mastery (boost cookie plants by 5)", 5000, () => { cookiePlants += 5; });
-            createOneTimeUpgrade("Ultimate Cookie (add 1000 cookies)", 10000, () => { cookies += 1000; });
-        });
+        let game = setInterval(draw, 100); // Call the draw function every 100 ms
     </script>
 </body>
 </html>
