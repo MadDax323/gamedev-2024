@@ -3,130 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake Game - Dark Mode</title>
+    <title>Random Graph Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #181818; /* Dark background */
-            color: #ffffff; /* Light text color */
-            font-family: Arial, sans-serif;
-        }
         canvas {
-            border: 2px solid #ffffff; /* White border */
-            background-color: #282828; /* Dark canvas background */
-        }
-        #score {
-            text-align: center;
-            font-size: 24px;
-            margin-top: 20px;
+            max-width: 600px;
+            max-height: 400px;
         }
     </style>
 </head>
 <body>
-    <div>
-        <canvas id="snakeCanvas" width="400" height="400"></canvas>
-        <div id="score">Score: 0</div>
-    </div>
 
-  <script>
-    const canvas = document.getElementById('snakeCanvas');
-    const ctx = canvas.getContext('2d');
+<h1>Random Graph Generator</h1>
+<canvas id="myChart"></canvas>
+<button id="generateButton">Generate Random Graph</button>
 
-    const box = 20; // Size of the snake and food
-    let score = 0;
-    let snake = [{ x: 9 * box, y: 9 * box }];
-    let food = {
-        x: Math.floor(Math.random() * 20) * box,
-        y: Math.floor(Math.random() * 20) * box,
-    };
-    let d;
+<script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+    let chart;
 
-    document.addEventListener('keydown', direction);
+    function generateRandomData() {
+        const labels = Array.from({ length: 10 }, (_, i) => `Label ${i + 1}`);
+        const data = Array.from({ length: 10 }, () => Math.floor(Math.random() * 100));
 
-    function direction(event) {
-        if (event.keyCode == 37 && d !== 'RIGHT') {
-            d = 'LEFT';
-        } else if (event.keyCode == 38 && d !== 'DOWN') {
-            d = 'UP';
-        } else if (event.keyCode == 39 && d !== 'LEFT') {
-            d = 'RIGHT';
-        } else if (event.keyCode == 40 && d !== 'UP') {
-            d = 'DOWN';
-        }
+        return { labels, data };
     }
 
-    function collision(head, array) {
-        for (let i = 0; i < array.length; i++) {
-            if (head.x === array[i].x && head.y === array[i].y) {
-                return true;
+    function renderChart() {
+        const { labels, data } = generateRandomData();
+        
+        if (chart) {
+            chart.destroy();
+        }
+
+        chart = new Chart(ctx, {
+            type: 'bar', // You can change this to 'line', 'pie', etc.
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Random Data',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
             }
-        }
-        return false;
+        });
     }
 
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Draw the snake
-        for (let i = 0; i < snake.length; i++) {
-            ctx.fillStyle = (i === 0) ? '#00FF00' : '#32CD32'; // Snake colors
-            ctx.fillRect(snake[i].x, snake[i].y, box, box);
-            ctx.strokeStyle = '#228B22'; // Dark green stroke
-            ctx.strokeRect(snake[i].x, snake[i].y, box, box);
-        }
-
-        // Draw the food
-        ctx.fillStyle = '#FF4500'; // Bright red food
-        ctx.fillRect(food.x, food.y, box, box);
-
-        // Old head position
-        let snakeX = snake[0].x;
-        let snakeY = snake[0].y;
-
-        // Move the snake
-        if (d === 'LEFT') snakeX -= box;
-        if (d === 'UP') snakeY -= box;
-        if (d === 'RIGHT') snakeX += box;
-        if (d === 'DOWN') snakeY += box;
-
-        // Check if the snake goes out of bounds
-        if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height) {
-            alert("Game Over! Your score: " + score);
-            document.location.reload();
-            return;
-        }
-
-        // Check if the snake has eaten the food
-        if (snakeX === food.x && snakeY === food.y) {
-            score++;
-            food = {
-                x: Math.floor(Math.random() * 20) * box,
-                y: Math.floor(Math.random() * 20) * box,
-            };
-        } else {
-            // Remove the tail
-            snake.pop();
-        }
-
-        // Add new head
-        const newHead = { x: snakeX, y: snakeY };
-
-        // Game over if the snake collides with itself
-        if (collision(newHead, snake)) {
-            alert("Game Over! Your score: " + score);
-            document.location.reload();
-            return;
-        }
-
-        snake.unshift(newHead);
-        document.getElementById('score').innerText = "Score: " + score;
-    }
-
-    let game = setInterval(draw, 100); // Call the draw function every 100 ms
+    document.getElementById('generateButton').addEventListener('click', renderChart);
 </script>
+
 </body>
 </html>
