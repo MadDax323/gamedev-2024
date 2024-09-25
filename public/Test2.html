@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake Game</title>
+    <title>Snake Game - Dark Mode</title>
     <style>
         body {
             display: flex;
@@ -11,11 +11,13 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #181818; /* Dark background */
+            color: #ffffff; /* Light text color */
+            font-family: Arial, sans-serif;
         }
         canvas {
-            border: 2px solid #000;
-            background-color: #fff;
+            border: 2px solid #ffffff; /* White border */
+            background-color: #282828; /* Dark canvas background */
         }
         #score {
             text-align: center;
@@ -71,14 +73,14 @@
 
             // Draw the snake
             for (let i = 0; i < snake.length; i++) {
-                ctx.fillStyle = (i === 0) ? 'green' : 'lightgreen';
+                ctx.fillStyle = (i === 0) ? '#00FF00' : '#32CD32'; // Snake colors
                 ctx.fillRect(snake[i].x, snake[i].y, box, box);
-                ctx.strokeStyle = 'darkgreen';
+                ctx.strokeStyle = '#228B22'; // Dark green stroke
                 ctx.strokeRect(snake[i].x, snake[i].y, box, box);
             }
 
             // Draw the food
-            ctx.fillStyle = 'red';
+            ctx.fillStyle = '#FF4500'; // Bright red food
             ctx.fillRect(food.x, food.y, box, box);
 
             // Old head position
