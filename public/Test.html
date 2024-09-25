@@ -1,49 +1,187 @@
+html
+Copy code
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Change Background Color</title>
+    <title>Ultimate Cookie Clicker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffe4c4; /* Light background color */
+            background-image: radial-gradient(circle at 50% 50%, #f5deb3, #ffe4e1);
+            margin: 0;
+            padding: 20px;
+        }
+        #cookie {
+            font-size: 200px; /* Large cookie emoji */
+            cursor: pointer;
+            animation: bounce 1s infinite alternate;
+            user-select: none; /* Prevent text selection */
+        }
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+        #score {
+            font-size: 24px;
+            margin: 20px;
+            font-weight: bold;
+        }
+        /* Other styles remain unchanged */
+        #submitScoreForm {
+            margin-top: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            transition: background-color 0.5s;
         }
-        button {
-            padding: 10px 20px;
-            margin: 10px;
+        #submitScoreForm input {
+            margin: 5px;
+            padding: 10px;
             font-size: 16px;
         }
-        input[type="color"] {
-            width: 50px;
-            height: 50px;
+        #submitScoreButton {
+            padding: 10px 15px;
+            font-size: 16px;
             border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
             cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #submitScoreButton:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-<img src="https://github.com/user-attachments/assets/450ba56c-caa8-47aa-9911-d9962d99c107">
-    <h1>Change Background Color</h1>
-    <div>
-        <button onclick="setBackgroundColor('red')">Red</button>
-        <button onclick="setBackgroundColor('green')">Green</button>
-        <button onclick="setBackgroundColor('blue')">Blue</button>
-        <button onclick="setBackgroundColor('yellow')">Yellow</button>
-        <input type="color" id="colorPicker" onchange="setBackgroundColor(this.value)">
+    <div id="cookie">🍪</div> <!-- Cookie Emoji -->
+    <div id="score">Cookies: 0</div>
+    <div id="upgrades"></div>
+    <div id="oneTimeUpgrades"></div>
+    <div id="achievements" class="hidden"></div>
+    <div id="unlockables" class="hidden"></div>
+    <div id="stage" class="hidden">Stage: 1</div>
+    <div id="prestige" class="hidden">
+        <button id="prestigeButton">Prestige</button>
+        <div id="prestigeScore">Total Cookies: 0</div>
     </div>
+    <button id="reset">Reset Game</button>
+
+    <form id="submitScoreForm">
+        <input type="text" id="playerName" placeholder="Enter your name" />
+        <input type="text" id="playerScore" placeholder="Enter your score" disabled />
+        <button type="button" id="submitScoreButton">Submit Score</button>
+    </form>
 
     <script>
-        function setBackgroundColor(color) {
-            document.body.style.backgroundColor = color;
-        }
-    </script>
+        let cookies = 0;
+        let clickValue = 1;
+        let autoClickers = 0;
+        let grandmothers = 0;
+        let cookiePlants = 0;
+        let totalCookies = 0;
+        let cookieMultiplier = 1;
+        let stage = 1;
+        const stageThresholds = [0, 100, 1000, 10000];
+        const achievements = {};
+        const unlockables = {};
 
+        const cookieElement = document.getElementById("cookie");
+        const scoreElement = document.getElementById("score");
+        const upgradesElement = document.getElementById("upgrades");
+        const oneTimeUpgradesElement = document.getElementById("oneTimeUpgrades");
+        const achievementsElement = document.getElementById("achievements");
+        const unlockablesElement = document.getElementById("unlockables");
+        const stageElement = document.getElementById("stage");
+        const prestigeElement = document.getElementById("prestige");
+        const prestigeButton = document.getElementById("prestigeButton");
+        const prestigeScoreElement = document.getElementById("prestigeScore");
+        const resetButton = document.getElementById("reset");
+        const playerScoreInput = document.getElementById("playerScore");
+        const submitScoreButton = document.getElementById("submitScoreButton");
+
+        cookieElement.addEventListener("click", () => {
+            cookies += clickValue;
+            totalCookies += clickValue;
+            updateScore();
+            checkAchievements("click");
+            playerScoreInput.value = cookies; // Update the score input
+        });
+
+        function createUpgrade(name, cost, increment, type) {
+            const upgradeButton = document.createElement("button");
+            upgradeButton.classList.add("upgrade");
+            upgradeButton.innerText = `${name} (Cost: ${cost} cookies)`;
+            upgradeButton.addEventListener("click", () => {
+                if (cookies >= cost) {
+                    cookies -= cost;
+                    if (type === 'click') {
+                        clickValue += increment;
+                    } else if (type === 'auto') {
+                        autoClickers++;
+                    } else if (type === 'grandmother') {
+                        grandmothers++;
+                    } else if (type === 'plant') {
+                        cookiePlants++;
+                    } else if (type === 'multiplier') {
+                        cookieMultiplier *= increment;
+                    }
+                    updateScore();
+                    upgradeButton.innerText = `${name} (Cost: ${Math.floor(cost * 1.5)} cookies)`;
+                    cost = Math.floor(cost * 1.5);
+                } else {
+                    alert("Not enough cookies!");
+                }
+            });
+            upgradesElement.appendChild(upgradeButton);
+        }
+
+        // Create upgrades
+        createUpgrade("Upgrade Click Value", 10, 1, 'click');
+        createUpgrade("Auto-Clicker (1 per second)", 50, 0, 'auto');
+        createUpgrade("Grandmother (2 cookies per second)", 100, 0, 'grandmother');
+        createUpgrade("Cookie Plant (5 cookies per second)", 200, 0, 'plant');
+        createUpgrade("Cookie Multiplier (x2)", 100, 2, 'multiplier');
+
+        // One-time upgrades and unlockables remain unchanged...
+
+        // Auto-clicker functionality
+        setInterval(() => {
+            let cookiesFromAutoClickers = autoClickers * clickValue * cookieMultiplier;
+            let cookiesFromGrandmothers = grandmothers * 2 * cookieMultiplier;
+            let cookiesFromPlants = cookiePlants * 5 * cookieMultiplier;
+
+            cookies += (cookiesFromAutoClickers + cookiesFromGrandmothers + cookiesFromPlants);
+            totalCookies += (cookiesFromAutoClickers + cookiesFromGrandmothers + cookiesFromPlants);
+            updateScore();
+            checkUnlockables();
+        }, 1000);
+
+        function updateScore() {
+            scoreElement.innerText = `Cookies: ${cookies}`;
+            checkAchievements("cookies");
+            checkStage();
+        }
+
+        // Achievement and other functions remain unchanged...
+
+        prestigeButton.addEventListener("click", () => {
+            // Reset game logic remains unchanged...
+        });
+
+        resetButton.addEventListener("click", () => {
+            // Reset game logic remains unchanged...
+        });
+
+        submitScoreButton.addEventListener("click", () => {
+            const playerName = document.getElementById("playerName").value;
+            // Here you could handle the submission logic, e.g., log to console
+            console.log(`Player: ${playerName}, Score: ${cookies}`);
+            alert("Score submitted (not actually sent).");
+        });
+    </script>
 </body>
-</html>
