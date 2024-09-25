@@ -29,143 +29,165 @@
 
 <div class="example">
     <h2>1. For Loop</h2>
-    <p>
-        <strong>Code:</strong><br>
-        <script>
-            for (let i = 0; i < 5; i++) {
-                document.write("For Loop Iteration: " + i + "<br>");
-            }
-        </script>
-    </p>
+    <button onclick="forLoopExample()">Run Example</button>
+    <p id="output1"></p>
 </div>
 
 <div class="example">
     <h2>2. While Loop</h2>
-    <p>
-        <strong>Code:</strong><br>
-        <script>
-            let j = 0;
-            while (j < 5) {
-                document.write("While Loop Iteration: " + j + "<br>");
-                j++;
-            }
-        </script>
-    </p>
+    <button onclick="whileLoopExample()">Run Example</button>
+    <p id="output2"></p>
 </div>
 
 <div class="example">
     <h2>3. Do...While Loop</h2>
-    <p>
-        <strong>Code:</strong><br>
-        <script>
-            let k = 0;
-            do {
-                document.write("Do...While Loop Iteration: " + k + "<br>");
-                k++;
-            } while (k < 5);
-        </script>
-    </p>
+    <button onclick="doWhileLoopExample()">Run Example</button>
+    <p id="output3"></p>
 </div>
 
 <div class="example">
     <h2>4. For...of Loop</h2>
-    <p>
-        <strong>Code:</strong><br>
-        <script>
-            const array = ["Apple", "Banana", "Cherry"];
-            for (const fruit of array) {
-                document.write("Fruit: " + fruit + "<br>");
-            }
-        </script>
-    </p>
+    <button onclick="forOfLoopExample()">Run Example</button>
+    <p id="output4"></p>
 </div>
 
 <div class="example">
     <h2>5. For...in Loop</h2>
-    <p>
-        <strong>Code:</strong><br>
-        <script>
-            const obj = { a: 1, b: 2, c: 3 };
-            for (const key in obj) {
-                document.write("Key: " + key + ", Value: " + obj[key] + "<br>");
-            }
-        </script>
-    </p>
+    <button onclick="forInLoopExample()">Run Example</button>
+    <p id="output5"></p>
 </div>
 
 <div class="example">
     <h2>6. Nested For Loop</h2>
-    <p>
-        <strong>Code:</strong><br>
-        <script>
-            for (let i = 1; i <= 3; i++) {
-                for (let j = 1; j <= 2; j++) {
-                    document.write("Outer Loop: " + i + ", Inner Loop: " + j + "<br>");
-                }
-            }
-        </script>
-    </p>
+    <button onclick="nestedForLoopExample()">Run Example</button>
+    <p id="output6"></p>
 </div>
 
 <div class="example">
     <h2>7. Breaking a For Loop</h2>
-    <p>
-        <strong>Code:</strong><br>
-        <script>
-            for (let i = 0; i < 10; i++) {
-                if (i === 5) {
-                    break; // Exit the loop when i is 5
-                }
-                document.write("Breaking For Loop Iteration: " + i + "<br>");
-            }
-        </script>
-    </p>
+    <button onclick="breakForLoopExample()">Run Example</button>
+    <p id="output7"></p>
 </div>
 
 <div class="example">
     <h2>8. Continuing a For Loop</h2>
-    <p>
-        <strong>Code:</strong><br>
-        <script>
-            for (let i = 0; i < 10; i++) {
-                if (i % 2 === 0) {
-                    continue; // Skip even numbers
-                }
-                document.write("Continue For Loop Iteration: " + i + "<br>");
-            }
-        </script>
-    </p>
+    <button onclick="continueForLoopExample()">Run Example</button>
+    <p id="output8"></p>
 </div>
 
 <div class="example">
     <h2>9. Infinite While Loop (with break)</h2>
-    <p>
-        <strong>Code:</strong><br>
-        <script>
-            let count = 0;
-            while (true) {
-                if (count >= 3) break; // Exit the infinite loop after 3 iterations
-                document.write("Infinite While Loop Count: " + count + "<br>");
-                count++;
-            }
-        </script>
-    </p>
+    <button onclick="infiniteWhileLoopExample()">Run Example</button>
+    <p id="output9"></p>
 </div>
 
 <div class="example">
     <h2>10. Using Loops with Functions</h2>
-    <p>
-        <strong>Code:</strong><br>
-        <script>
-            function loopExample() {
-                for (let i = 0; i < 3; i++) {
-                    document.write("Function Loop Iteration: " + i + "<br>");
-                }
-            }
-            loopExample();
-        </script>
-    </p>
+    <button onclick="functionLoopExample()">Run Example</button>
+    <p id="output10"></p>
 </div>
+
+<script>
+    function forLoopExample() {
+        let output = "";
+        for (let i = 0; i < 5; i++) {
+            output += "For Loop Iteration: " + i + "<br>";
+        }
+        document.getElementById('output1').innerHTML = output;
+    }
+
+    function whileLoopExample() {
+        let output = "";
+        let j = 0;
+        while (j < 5) {
+            output += "While Loop Iteration: " + j + "<br>";
+            j++;
+        }
+        document.getElementById('output2').innerHTML = output;
+    }
+
+    function doWhileLoopExample() {
+        let output = "";
+        let k = 0;
+        do {
+            output += "Do...While Loop Iteration: " + k + "<br>";
+            k++;
+        } while (k < 5);
+        document.getElementById('output3').innerHTML = output;
+    }
+
+    function forOfLoopExample() {
+        let output = "";
+        const array = ["Apple", "Banana", "Cherry"];
+        for (const fruit of array) {
+            output += "Fruit: " + fruit + "<br>";
+        }
+        document.getElementById('output4').innerHTML = output;
+    }
+
+    function forInLoopExample() {
+        let output = "";
+        const obj = { a: 1, b: 2, c: 3 };
+        for (const key in obj) {
+            output += "Key: " + key + ", Value: " + obj[key] + "<br>";
+        }
+        document.getElementById('output5').innerHTML = output;
+    }
+
+    function nestedForLoopExample() {
+        let output = "";
+        for (let i = 1; i <= 3; i++) {
+            for (let j = 1; j <= 2; j++) {
+                output += "Outer Loop: " + i + ", Inner Loop: " + j + "<br>";
+            }
+        }
+        document.getElementById('output6').innerHTML = output;
+    }
+
+    function breakForLoopExample() {
+        let output = "";
+        for (let i = 0; i < 10; i++) {
+            if (i === 5) {
+                break; // Exit the loop when i is 5
+            }
+            output += "Breaking For Loop Iteration: " + i + "<br>";
+        }
+        document.getElementById('output7').innerHTML = output;
+    }
+
+    function continueForLoopExample() {
+        let output = "";
+        for (let i = 0; i < 10; i++) {
+            if (i % 2 === 0) {
+                continue; // Skip even numbers
+            }
+            output += "Continue For Loop Iteration: " + i + "<br>";
+        }
+        document.getElementById('output8').innerHTML = output;
+    }
+
+    function infiniteWhileLoopExample() {
+        let output = "";
+        let count = 0;
+        while (true) {
+            if (count >= 3) break; // Exit the infinite loop after 3 iterations
+            output += "Infinite While Loop Count: " + count + "<br>";
+            count++;
+        }
+        document.getElementById('output9').innerHTML = output;
+    }
+
+    function functionLoopExample() {
+        let output = "";
+        function loopExample() {
+            for (let i = 0; i < 3; i++) {
+                output += "Function Loop Iteration: " + i + "<br>";
+            }
+        }
+        loopExample();
+        document.getElementById('output10').innerHTML = output;
+    }
+</script>
 
 </body>
 </html>
