@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do List</title>
-   <style>
+    <style>
         body { 
             font-family: Arial, sans-serif; 
             background-color: #f4f4f4; 
@@ -73,7 +73,7 @@
     </style>
 </head>
 <body>
-  <div class="container">
+    <div class="container">
         <h1>My To-Do List</h1>
         <div class="instructions">
             <strong>How to Use the Marking Off and Editing Features:</strong><br>
@@ -89,11 +89,14 @@
             <button onclick="markAllComplete()">Mark All Complete</button>
             <button onclick="clearAllTasks()">Clear All Tasks</button>
             <button onclick="filterCompleted()">Show Completed Tasks</button>
+            <button onclick="showAllTasks()">Show All Tasks</button>
         </div>
         <ul id="taskList"></ul>
     </div>
+
     <script>
         const tasks = [];
+        let showingCompleted = false;
 
         function addTask() {
             const taskInput = document.getElementById('taskInput');
@@ -106,12 +109,12 @@
             }
         }
 
-        function renderTasks(showCompleted = true) {
+        function renderTasks() {
             const taskList = document.getElementById('taskList');
             taskList.innerHTML = '';
 
             tasks.forEach((task, index) => {
-                if (!task.completed || showCompleted) {
+                if (!task.completed || showingCompleted) {
                     const li = document.createElement('li');
                     li.textContent = task.text;
                     li.className = task.completed ? 'completed' : '';
@@ -166,7 +169,13 @@
         }
 
         function filterCompleted() {
-            renderTasks(true); // Only show completed tasks
+            showingCompleted = true;
+            renderTasks();
+        }
+
+        function showAllTasks() {
+            showingCompleted = false;
+            renderTasks();
         }
     </script>
 </body>
