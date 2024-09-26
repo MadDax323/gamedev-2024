@@ -16,6 +16,9 @@
     <input type="text" id="taskInput" placeholder="Add a new task" />
     <button onclick="addTask()">Add Task</button>
     <button onclick="toggleCompletedTasks()">Toggle Completed Tasks</button>
+    <button onclick="markAllComplete()">Mark All Complete</button>
+    <button onclick="clearAllTasks()">Clear All Tasks</button>
+    <button onclick="filterCompleted()">Show Completed Tasks</button>
     <ul id="taskList"></ul>
 
     <script>
@@ -76,6 +79,23 @@
                 alert('No completed tasks to remove.');
             }
             renderTasks();
+        }
+
+        function markAllComplete() {
+            tasks.forEach(task => task.completed = true);
+            renderTasks();
+        }
+
+        function clearAllTasks() {
+            const confirmClear = confirm('Are you sure you want to clear all tasks?');
+            if (confirmClear) {
+                tasks.length = 0; // Clear the array
+                renderTasks();
+            }
+        }
+
+        function filterCompleted() {
+            renderTasks(true); // Only show completed tasks
         }
     </script>
 </body>
