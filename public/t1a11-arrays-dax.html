@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
+    <title>To-Do List with Groups</title>
     <style>
         body { 
             font-family: Arial, sans-serif; 
@@ -23,7 +23,7 @@
             border-radius: 8px; 
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
         }
-        input[type="text"] { 
+        input[type="text"], select { 
             width: calc(100% - 22px); 
             padding: 10px; 
             border: 1px solid #ddd; 
@@ -53,7 +53,6 @@
             border: 1px solid #ddd; 
             border-radius: 4px; 
             margin-bottom: 10px; 
-            background: #f9f9f9; 
             transition: background 0.3s; 
         }
         li:hover { 
@@ -76,13 +75,19 @@
     <div class="container">
         <h1>My To-Do List</h1>
         <div class="instructions">
-            <strong>How to Use the Marking Off and Editing Features:</strong><br>
-            <strong>Adding Tasks:</strong> Start by entering a task in the input field at the top of the page. Click the "Add Task" button to add it.<br>
-            <strong>Marking a Task as Complete:</strong> Click on the task to toggle its completion status. It will show a strikethrough when completed.<br>
-            <strong>Unmarking a Task:</strong> Click on a completed task again to mark it as incomplete.<br>
-            <strong>Editing Tasks:</strong> Double-click on the task text to edit it. A prompt will allow you to change the task text.<br>
+            <strong>How to Use the Grouping and Color Features:</strong><br>
+            <strong>Adding Tasks:</strong> Enter a task and select a group color from the dropdown. Click "Add Task" to add it.<br>
+            <strong>Marking a Task as Complete:</strong> Click on the task to toggle its completion status.<br>
+            <strong>Editing Tasks:</strong> Double-click on the task text to edit it.<br>
         </div>
         <input type="text" id="taskInput" placeholder="Add a new task" />
+        <select id="groupColor">
+            <option value="">Select Group Color</option>
+            <option value="lightblue">Light Blue</option>
+            <option value="lightgreen">Light Green</option>
+            <option value="lightcoral">Light Coral</option>
+            <option value="lightyellow">Light Yellow</option>
+        </select>
         <div>
             <button onclick="addTask()">Add Task</button>
             <button onclick="toggleCompletedTasks()">Toggle Completed Tasks</button>
@@ -100,12 +105,14 @@
 
         function addTask() {
             const taskInput = document.getElementById('taskInput');
+            const groupColor = document.getElementById('groupColor').value;
             const taskValue = taskInput.value;
 
             if (taskValue) {
-                tasks.push({ text: taskValue, completed: false });
+                tasks.push({ text: taskValue, completed: false, color: groupColor });
                 renderTasks();
                 taskInput.value = '';
+                document.getElementById('groupColor').value = ''; // Reset color selection
             }
         }
 
@@ -113,16 +120,34 @@
             const taskList = document.getElementById('taskList');
             taskList.innerHTML = '';
 
-            tasks.forEach((task, index) => {
-                if (!task.completed || showingCompleted) {
-                    const li = document.createElement('li');
-                    li.textContent = task.text;
-                    li.className = task.completed ? 'completed' : '';
-                    li.onclick = () => toggleTask(index);
-                    li.ondblclick = () => editTask(index);
-                    taskList.appendChild(li);
+            // Group tasks by color
+            const groupedTasks = tasks.reduce((acc, task) => {
+                if (!acc[task.color]) {
+                    acc[task.color] = [];
                 }
-            });
+                acc[task.color].push(task);
+                return acc;
+            }, {});
+
+            // Render each group
+            for (const [color, group] of Object.entries(groupedTasks)) {
+                const groupHeader = document.createElement('h3');
+                groupHeader.style.color = color; // Set color for the group
+                groupHeader.textContent = color.charAt(0).toUpperCase() + color.slice(1) + ' Group';
+                taskList.appendChild(groupHeader);
+
+                group.forEach((task, index) => {
+                    if (!task.completed || showingCompleted) {
+                        const li = document.createElement('li');
+                        li.textContent = task.text;
+                        li.className = task.completed ? 'completed' : '';
+                        li.onclick = () => toggleTask(tasks.indexOf(task));
+                        li.ondblclick = () => editTask(tasks.indexOf(task));
+                        li.style.backgroundColor = task.color; // Set background color for task
+                        taskList.appendChild(li);
+                    }
+                });
+            }
         }
 
         function toggleTask(index) {
