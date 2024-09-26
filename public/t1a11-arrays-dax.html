@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do List with Groups</title>
     <style>
+        /* Styles remain unchanged */
         body { 
             font-family: Arial, sans-serif; 
             background-color: #f4f4f4; 
@@ -79,7 +80,9 @@
             <strong>Adding Tasks:</strong> Enter a task and select a group color from the dropdown. Click "Add Task" to add it.<br>
             <strong>Marking a Task as Complete:</strong> Click on the task to toggle its completion status.<br>
             <strong>Editing Tasks:</strong> Double-click on the task text to edit it.<br>
+            <strong>Group Name:</strong> Enter a name for your group before adding tasks.
         </div>
+        <input type="text" id="groupInput" placeholder="Enter group name" />
         <input type="text" id="taskInput" placeholder="Add a new task" />
         <select id="groupColor">
             <option value="">Select Group Color</option>
@@ -105,14 +108,18 @@
 
         function addTask() {
             const taskInput = document.getElementById('taskInput');
+            const groupInput = document.getElementById('groupInput').value;
             const groupColor = document.getElementById('groupColor').value;
             const taskValue = taskInput.value;
 
-            if (taskValue) {
-                tasks.push({ text: taskValue, completed: false, color: groupColor });
+            if (taskValue && groupInput) {
+                tasks.push({ text: taskValue, completed: false, color: groupColor, group: groupInput });
                 renderTasks();
                 taskInput.value = '';
                 document.getElementById('groupColor').value = ''; // Reset color selection
+                document.getElementById('groupInput').value = ''; // Reset group input
+            } else {
+                alert('Please enter both a task and a group name.');
             }
         }
 
@@ -120,20 +127,19 @@
             const taskList = document.getElementById('taskList');
             taskList.innerHTML = '';
 
-            // Group tasks by color
+            // Group tasks by group name
             const groupedTasks = tasks.reduce((acc, task) => {
-                if (!acc[task.color]) {
-                    acc[task.color] = [];
+                if (!acc[task.group]) {
+                    acc[task.group] = [];
                 }
-                acc[task.color].push(task);
+                acc[task.group].push(task);
                 return acc;
             }, {});
 
             // Render each group
-            for (const [color, group] of Object.entries(groupedTasks)) {
+            for (const [groupName, group] of Object.entries(groupedTasks)) {
                 const groupHeader = document.createElement('h3');
-                groupHeader.style.color = color; // Set color for the group
-                groupHeader.textContent = color.charAt(0).toUpperCase() + color.slice(1) + ' Group';
+                groupHeader.textContent = groupName.charAt(0).toUpperCase() + groupName.slice(1) + ' Group';
                 taskList.appendChild(groupHeader);
 
                 group.forEach((task, index) => {
