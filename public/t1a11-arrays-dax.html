@@ -73,7 +73,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+  <div class="container">
         <h1>My To-Do List</h1>
         <div class="instructions">
             <strong>How to Use the Marking Off and Editing Features:</strong><br>
@@ -82,14 +82,16 @@
             <strong>Unmarking a Task:</strong> Click on a completed task again to mark it as incomplete.<br>
             <strong>Editing Tasks:</strong> Double-click on the task text to edit it. A prompt will allow you to change the task text.<br>
         </div>
-    <input type="text" id="taskInput" placeholder="Add a new task" />
-    <button onclick="addTask()">Add Task</button>
-    <button onclick="toggleCompletedTasks()">Toggle Completed Tasks</button>
-    <button onclick="markAllComplete()">Mark All Complete</button>
-    <button onclick="clearAllTasks()">Clear All Tasks</button>
-    <button onclick="filterCompleted()">Show Completed Tasks</button>
-    <ul id="taskList"></ul>
-  </div>
+        <input type="text" id="taskInput" placeholder="Add a new task" />
+        <div>
+            <button onclick="addTask()">Add Task</button>
+            <button onclick="toggleCompletedTasks()">Toggle Completed Tasks</button>
+            <button onclick="markAllComplete()">Mark All Complete</button>
+            <button onclick="clearAllTasks()">Clear All Tasks</button>
+            <button onclick="filterCompleted()">Show Completed Tasks</button>
+        </div>
+        <ul id="taskList"></ul>
+    </div>
     <script>
         const tasks = [];
 
