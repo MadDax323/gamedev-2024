@@ -4,41 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do List</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        ul { list-style-type: none; padding: 0; }
-        li { margin: 5px 0; cursor: pointer; }
-        .completed { text-decoration: line-through; color: gray; }
+   <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #f4f4f4; 
+            margin: 0; 
+            padding: 20px; 
+        }
+        h1 { 
+            text-align: center; 
+            color: #333; 
+        }
+        .container {
+            max-width: 600px; 
+            margin: auto; 
+            background: #fff; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+        }
+        input[type="text"] { 
+            width: calc(100% - 22px); 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+            margin-bottom: 10px; 
+        }
+        button { 
+            background: #5cb85c; 
+            color: white; 
+            border: none; 
+            padding: 10px 15px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            margin-right: 5px; 
+            transition: background 0.3s; 
+        }
+        button:hover { 
+            background: #4cae4c; 
+        }
+        ul { 
+            list-style-type: none; 
+            padding: 0; 
+            margin: 20px 0; 
+        }
+        li { 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+            margin-bottom: 10px; 
+            background: #f9f9f9; 
+            transition: background 0.3s; 
+        }
+        li:hover { 
+            background: #f1f1f1; 
+        }
+        .completed { 
+            text-decoration: line-through; 
+            color: gray; 
+        }
+        .instructions {
+            background: #eef; 
+            padding: 10px; 
+            border-radius: 4px; 
+            margin-bottom: 20px; 
+            font-size: 14px; 
+        }
     </style>
 </head>
 <body>
-    <h1>My To-Do List</h1>
-    <br>
-    <p>How to Use the Marking Off and Editing Features
-Marking Off Tasks
-Adding Tasks:
-
-Start by entering a task in the input field at the top of the page. Once you’ve typed your task, click the "Add Task" button. Your task will appear in the list below.
-Marking a Task as Complete:
-
-To mark a task as complete, simply click on the task in the list. This action toggles the completed status of the task.
-When a task is marked as complete, it will be displayed with a strikethrough, indicating that it is finished.
-Unmarking a Task:
-
-If you click on a completed task again, it will be marked as incomplete, and the strikethrough will be removed. This allows you to easily manage your tasks.
-Editing Tasks
-Double-Click to Edit:
-
-To edit a task, double-click on the task text in the list. A prompt will appear, showing the current text of the task.
-Changing the Task Text:
-
-In the prompt, you can modify the text of the task. Once you’re finished editing, press OK to save the changes.
-If you decide not to change anything, you can simply press Cancel in the prompt. The task will remain unchanged.
-Updating the Task List:
-
-After editing a task, the updated task will be displayed in the list. You can continue to mark it as complete or edit it further if needed.
-    </p>
-    <br>
+    <div class="container">
+        <h1>My To-Do List</h1>
+        <div class="instructions">
+            <strong>How to Use the Marking Off and Editing Features:</strong><br>
+            <strong>Adding Tasks:</strong> Start by entering a task in the input field at the top of the page. Click the "Add Task" button to add it.<br>
+            <strong>Marking a Task as Complete:</strong> Click on the task to toggle its completion status. It will show a strikethrough when completed.<br>
+            <strong>Unmarking a Task:</strong> Click on a completed task again to mark it as incomplete.<br>
+            <strong>Editing Tasks:</strong> Double-click on the task text to edit it. A prompt will allow you to change the task text.<br>
+        </div>
     <input type="text" id="taskInput" placeholder="Add a new task" />
     <button onclick="addTask()">Add Task</button>
     <button onclick="toggleCompletedTasks()">Toggle Completed Tasks</button>
@@ -46,7 +89,7 @@ After editing a task, the updated task will be displayed in the list. You can co
     <button onclick="clearAllTasks()">Clear All Tasks</button>
     <button onclick="filterCompleted()">Show Completed Tasks</button>
     <ul id="taskList"></ul>
-
+  </div>
     <script>
         const tasks = [];
 
