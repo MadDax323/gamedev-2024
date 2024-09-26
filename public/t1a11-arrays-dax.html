@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
+    <title>Enhanced To-Do List</title>
     <style>
         body { font-family: Arial, sans-serif; }
         ul { list-style-type: none; padding: 0; }
-        li { margin: 5px 0; }
+        li { margin: 5px 0; cursor: pointer; }
+        .completed { text-decoration: line-through; color: gray; }
     </style>
 </head>
 <body>
-    <h1>My To-Do List</h1>
+    <h1>My Enhanced To-Do List</h1>
     <input type="text" id="taskInput" placeholder="Add a new task" />
     <button onclick="addTask()">Add Task</button>
+    <button onclick="toggleCompletedTasks()">Toggle Completed Tasks</button>
     <ul id="taskList"></ul>
 
     <script>
@@ -24,27 +26,56 @@
             const taskValue = taskInput.value;
 
             if (taskValue) {
-                tasks.push(taskValue); // Add the new task to the array
-                renderTasks(); // Update the displayed task list
-                taskInput.value = ''; // Clear the input field
+                tasks.push({ text: taskValue, completed: false });
+                renderTasks();
+                taskInput.value = '';
             }
         }
 
-        function renderTasks() {
+        function renderTasks(showCompleted = true) {
             const taskList = document.getElementById('taskList');
-            taskList.innerHTML = ''; // Clear the current list
+            taskList.innerHTML = '';
 
             tasks.forEach((task, index) => {
-                const li = document.createElement('li');
-                li.textContent = task;
-                li.onclick = () => removeTask(index); // Add click event to remove the task
-                taskList.appendChild(li);
+                if (!task.completed || showCompleted) {
+                    const li = document.createElement('li');
+                    li.textContent = task.text;
+                    li.className = task.completed ? 'completed' : '';
+                    li.onclick = () => toggleTask(index);
+                    li.ondblclick = () => editTask(index);
+                    taskList.appendChild(li);
+                }
             });
         }
 
-        function removeTask(index) {
-            tasks.splice(index, 1); // Remove the task from the array
-            renderTasks(); // Update the displayed task list
+        function toggleTask(index) {
+            tasks[index].completed = !tasks[index].completed;
+            renderTasks();
+        }
+
+        function editTask(index) {
+            const newTaskText = prompt('Edit your task:', tasks[index].text);
+            if (newTaskText !== null) {
+                tasks[index].text = newTaskText;
+                renderTasks();
+            }
+        }
+
+        function toggleCompletedTasks() {
+            const completedTasks = tasks.filter(task => task.completed);
+            if (completedTasks.length > 0) {
+                const removeCompleted = confirm('Do you want to remove all completed tasks?');
+                if (removeCompleted) {
+                    for (let i = tasks.length - 1; i >= 0; i--) {
+                        if (tasks[i].completed) {
+                            tasks.splice(i, 1);
+                        }
+                    }
+                }
+            } else {
+                alert('No completed tasks to remove.');
+            }
+            renderTasks();
         }
     </script>
 </body>
