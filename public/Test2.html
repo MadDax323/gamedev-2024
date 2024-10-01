@@ -3,63 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Graph Generator</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Books Collection</title>
     <style>
-        canvas {
-            max-width: 600px;
-            max-height: 400px;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .book {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .title {
+            font-size: 1.5em;
+            color: #333;
+        }
+        .author {
+            color: #555;
         }
     </style>
 </head>
 <body>
 
-<h1>Random Graph Generator</h1>
-<canvas id="myChart"></canvas>
-<button id="generateButton">Generate Random Graph</button>
+<h1>My Book Collection</h1>
+<div id="book-list"></div>
 
 <script>
-    const ctx = document.getElementById('myChart').getContext('2d');
-    let chart;
-
-    function generateRandomData() {
-        const labels = Array.from({ length: 10 }, (_, i) => `Label ${i + 1}`);
-        const data = Array.from({ length: 10 }, () => Math.floor(Math.random() * 100));
-
-        return { labels, data };
-    }
-
-    function renderChart() {
-        const { labels, data } = generateRandomData();
-        
-        if (chart) {
-            chart.destroy();
+    // Create an array of book objects
+    const books = [
+        {
+            title: "To Kill a Mockingbird",
+            author: "Harper Lee",
+            year: 1960
+        },
+        {
+            title: "1984",
+            author: "George Orwell",
+            year: 1949
+        },
+        {
+            title: "The Great Gatsby",
+            author: "F. Scott Fitzgerald",
+            year: 1925
+        },
+        {
+            title: "Moby Dick",
+            author: "Herman Melville",
+            year: 1851
         }
+    ];
 
-        chart = new Chart(ctx, {
-            type: 'bar', // You can change this to 'line', 'pie', etc.
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Random Data',
-                    data: data,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
+    // Function to display books
+    function displayBooks() {
+        const bookList = document.getElementById("book-list");
+        books.forEach(book => {
+            const bookDiv = document.createElement("div");
+            bookDiv.classList.add("book");
+            bookDiv.innerHTML = `
+                <div class="title">${book.title}</div>
+                <div class="author">by ${book.author} (${book.year})</div>
+            `;
+            bookList.appendChild(bookDiv);
         });
     }
 
-    document.getElementById('generateButton').addEventListener('click', renderChart);
+    // Call the function to display the books
+    displayBooks();
 </script>
 
 </body>
