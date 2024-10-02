@@ -3,54 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Objects</title>
+    <title>Interactive HTML Showcase</title>
     <style>
         canvas {
             border: 1px solid #000;
-            cursor: crosshair;
+        }
+        .editable {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
         }
     </style>
 </head>
 <body>
 
-<h1>Draw Something!</h1>
-<canvas id="drawingCanvas" width="800" height="600"></canvas>
+<h1>Interactive HTML Showcase</h1>
 
+
+<!-- SVG Graphics -->
+<h2>SVG Graphics</h2>
+<svg width="200" height="200" style="border: 1px solid black;">
+    <circle cx="100" cy="100" r="80" fill="lightblue" />
+    <text x="100" y="100" font-size="20" text-anchor="middle" fill="black">SVG!</text>
+</svg>
+
+<!-- Image Map -->
+<h2>Image Map</h2>
+<img src="https://github.com/user-attachments/assets/739b9abb-2d37-4e1c-a1c7-d2ad0f14d056" usemap="#image-map" alt="Sample Map" style="max-width: 100%;">
+<map name="image-map">
+    <area shape="rect" coords="34,44,270,350" href="link1.html" alt="Link 1">
+    <area shape="circle" coords="337,300,44" href="link2.html" alt="Link 2">
+</map>
+
+<!-- Progress Element -->
+<h2>Progress Bar</h2>
+<progress value="70" max="100"></progress>
+
+<!-- Details and Summary -->
+<h2>More Info</h2>
+<details>
+    <summary>Click to expand</summary>
+    <p>This is additional information that can be toggled.</p>
+</details>
+
+<!-- Dialog Element -->
+<h2>Dialog Example</h2>
+<dialog id="myDialog">
+    <p>This is a dialog!</p>
+    <button id="closeBtn">Close</button>
+</dialog>
+<button id="openBtn">Open Dialog</button>
 <script>
-    const canvas = document.getElementById('drawingCanvas');
-    const ctx = canvas.getContext('2d');
-    
-    let isDrawing = false;
-
-    // Start drawing
-    canvas.addEventListener('mousedown', (e) => {
-        isDrawing = true;
-        ctx.moveTo(e.offsetX, e.offsetY);
-    });
-
-    // Draw on the canvas
-    canvas.addEventListener('mousemove', (e) => {
-        if (isDrawing) {
-            ctx.lineTo(e.offsetX, e.offsetY);
-            ctx.stroke();
-        }
-    });
-
-    // Stop drawing
-    canvas.addEventListener('mouseup', () => {
-        isDrawing = false;
-        ctx.beginPath();
-    });
-
-    // Clear the canvas
-    canvas.addEventListener('dblclick', () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    });
-
-    // Set line properties
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = '#000';
+    const dialog = document.getElementById('myDialog');
+    document.getElementById('openBtn').onclick = () => dialog.showModal();
+    document.getElementById('closeBtn').onclick = () => dialog.close();
 </script>
 
+<!-- IFrame -->
+<h2>Embedded Page</h2>
+<iframe src="https://example.com" width="600" height="400"></iframe>
+
+<!-- Canvas Animation -->
+<h2>Canvas Animation</h2>
+<canvas id="bounceCanvas" width="400" height="400" style="border:1px solid #000;"></canvas>
+<script>
+    const canvas = document.getElementById('bounceCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let x = 20;
+    let y = 20;
+    let dx = 2;
+    let dy = 2;
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.arc(x, y, 10, 0, Math.PI * 2);
+        ctx.fillStyle = 'blue';
+        ctx.fill();
+        ctx.closePath();
+
+        if (x + dx > canvas.width || x + dx < 0) {
+            dx = -dx;
+        }
+        if (y + dy > canvas.height || y + dy < 0) {
+            dy = -dy;
+        }
+
+        x += dx;
+        y += dy;
+    }
+
+    setInterval(draw, 10);
+</script>
+
+<!-- Content Editable -->
+<h2>Editable Text</h2>
+<div class="editable" contenteditable="true">
+    You can edit this text!
+</div>
+
+</body>
+</html>
 </body>
 </html>
