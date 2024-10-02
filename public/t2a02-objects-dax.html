@@ -1,1 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Drawing App</title>
+    <style>
+        canvas {
+            border: 1px solid #000;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
 
+<h1>Draw Something!</h1>
+<canvas id="drawingCanvas" width="800" height="600"></canvas>
+
+<script>
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    let isDrawing = false;
+
+    // Start drawing
+    canvas.addEventListener('mousedown', (e) => {
+        isDrawing = true;
+        ctx.moveTo(e.offsetX, e.offsetY);
+    });
+
+    // Draw on the canvas
+    canvas.addEventListener('mousemove', (e) => {
+        if (isDrawing) {
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+        }
+    });
+
+    // Stop drawing
+    canvas.addEventListener('mouseup', () => {
+        isDrawing = false;
+        ctx.beginPath();
+    });
+
+    // Clear the canvas
+    canvas.addEventListener('dblclick', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+
+    // Set line properties
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = '#000';
+</script>
+
+</body>
+</html>
