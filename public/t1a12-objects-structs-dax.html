@@ -8,6 +8,11 @@
         h2 {
             text-align: center;
         }
+        pre {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -35,6 +40,42 @@ let myPerson = {
 
 <div id="myDiv01">...</div>
 
+<h4>More Examples of JavaScript Objects:</h4>
+
+<h5>1. Nested Objects:</h5>
+<pre>
+let myCar = {
+    brand: "Ford",
+    model: "Mustang",
+    year: 2021,
+    features: {
+        color: "red",
+        engine: "V8",
+        seats: 4
+    }
+};
+</pre>
+
+<h5>2. Array of Objects:</h5>
+<pre>
+let people = [
+    { firstname: "Alice", lastname: "Smith", age: 30 },
+    { firstname: "Bob", lastname: "Johnson", age: 25 },
+    { firstname: "Charlie", lastname: "Brown", age: 35 }
+];
+</pre>
+
+<h5>3. Object with Methods:</h5>
+<pre>
+let myDog = {
+    name: "Rex",
+    breed: "Golden Retriever",
+    bark: function() {
+        return "Woof!";
+    }
+};
+</pre>
+
 <script>
     function showPerson() {
         let myPerson = {
@@ -55,6 +96,42 @@ let myPerson = {
         displayDiv.innerHTML += 'Last Name: ' + myPerson.lastname + '<br>';
         displayDiv.innerHTML += 'Age: ' + myPerson.age + '<br>';
         displayDiv.innerHTML += 'Eye Color: ' + myPerson.eyecolor + '<br>';
+    }
+
+    // Example usage of nested objects and methods
+    function showCar() {
+        let myCar = {
+            brand: "Ford",
+            model: "Mustang",
+            year: 2021,
+            features: {
+                color: "red",
+                engine: "V8",
+                seats: 4
+            }
+        };
+        console.log("Car:", myCar);
+    }
+
+    function showPeople() {
+        let people = [
+            { firstname: "Alice", lastname: "Smith", age: 30 },
+            { firstname: "Bob", lastname: "Johnson", age: 25 },
+            { firstname: "Charlie", lastname: "Brown", age: 35 }
+        ];
+        console.log("People:", people);
+    }
+
+    function showDog() {
+        let myDog = {
+            name: "Rex",
+            breed: "Golden Retriever",
+            bark: function() {
+                return "Woof!";
+            }
+        };
+        console.log("Dog:", myDog);
+        console.log(myDog.bark());
     }
 </script>
 
