@@ -3,99 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive HTML Showcase</title>
+    <title>JavaScript Objects Example</title>
     <style>
-        canvas {
-            border: 1px solid #000;
-        }
-        .editable {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px 0;
+        h2 {
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-<h1>Interactive HTML Showcase</h1>
+<h2>JavaScript Objects Example</h2>
 
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects">Good reference to JavaScript objects</a><br>
 
-<!-- SVG Graphics -->
-<h2>SVG Graphics</h2>
-<svg width="200" height="200" style="border: 1px solid black;">
-    <circle cx="100" cy="100" r="80" fill="lightblue" />
-    <text x="100" y="100" font-size="20" text-anchor="middle" fill="black">SVG!</text>
-</svg>
+<p>Objects are stored named variables.</p>
 
-<!-- Progress Element -->
-<h2>Progress Bar</h2>
-<progress value="70" max="100"></progress>
+<h4>Example Objects Code:</h4>
+<pre>
+let myPerson = {
+    "firstname": "john",
+    "lastname": "doe",
+    "age": 50,
+    "eyecolor": "blue"
+};
+</pre>
 
-<!-- Details and Summary -->
-<h2>More Info</h2>
-<details>
-    <summary>Click to expand</summary>
-    <p>This is additional information that can be toggled.</p>
-</details>
+<h4>Example Working Objects Code:</h4>
+<p>Nothing: <input type="text" id="myText01" value="Useless at the moment"></p>
 
-<!-- Dialog Element -->
-<h2>Dialog Example</h2>
-<dialog id="myDialog">
-    <p>This is a dialog!</p>
-    <button id="closeBtn">Close</button>
-</dialog>
-<button id="openBtn">Open Dialog</button>
+<input type="button" value="Example Object Set and Show" onclick="showPerson()">
+
+<div id="myDiv01">...</div>
+
 <script>
-    const dialog = document.getElementById('myDialog');
-    document.getElementById('openBtn').onclick = () => dialog.showModal();
-    document.getElementById('closeBtn').onclick = () => dialog.close();
-</script>
+    function showPerson() {
+        let myPerson = {
+            "firstname": "john",
+            "lastname": "doe",
+            "age": 50,
+            "eyecolor": "blue"
+        };
 
-<!-- IFrame -->
-<h2>Embedded Page</h2>
-<iframe src="https://example.com" width="600" height="400"></iframe>
+        // Display the person's info in the input field
+        document.getElementById("myText01").value = 
+            `${myPerson.firstname} ${myPerson.lastname}, Age: ${myPerson.age}, Eye Color: ${myPerson.eyecolor}`;
 
-<!-- Canvas Animation -->
-<h2>Canvas Animation</h2>
-<canvas id="bounceCanvas" width="400" height="400" style="border:1px solid #000;"></canvas>
-<script>
-    const canvas = document.getElementById('bounceCanvas');
-    const ctx = canvas.getContext('2d');
-
-    let x = 20;
-    let y = 20;
-    let dx = 2;
-    let dy = 2;
-
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.beginPath();
-        ctx.arc(x, y, 10, 0, Math.PI * 2);
-        ctx.fillStyle = 'blue';
-        ctx.fill();
-        ctx.closePath();
-
-        if (x + dx > canvas.width || x + dx < 0) {
-            dx = -dx;
-        }
-        if (y + dy > canvas.height || y + dy < 0) {
-            dy = -dy;
-        }
-
-        x += dx;
-        y += dy;
+        // Show properties in the div
+        let displayDiv = document.getElementById('myDiv01');
+        displayDiv.innerHTML = '<b>myPerson Object has properties:</b><br>';
+        displayDiv.innerHTML += 'First Name: ' + myPerson.firstname + '<br>';
+        displayDiv.innerHTML += 'Last Name: ' + myPerson.lastname + '<br>';
+        displayDiv.innerHTML += 'Age: ' + myPerson.age + '<br>';
+        displayDiv.innerHTML += 'Eye Color: ' + myPerson.eyecolor + '<br>';
     }
-
-    setInterval(draw, 10);
 </script>
 
-<!-- Content Editable -->
-<h2>Editable Text</h2>
-<div class="editable" contenteditable="true">
-    You can edit this text!
-</div>
-
-</body>
-</html>
 </body>
 </html>
