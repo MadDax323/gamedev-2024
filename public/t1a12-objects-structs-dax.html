@@ -13,6 +13,12 @@
             padding: 10px;
             border-radius: 5px;
         }
+        .example {
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -21,119 +27,103 @@
 
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects">Good reference to JavaScript objects</a><br>
 
-<p>Objects are stored named variables.</p>
+<div class="example">
+    <h4>Person Object:</h4>
+    <input type="text" id="personFirstName" placeholder="First Name">
+    <input type="text" id="personLastName" placeholder="Last Name">
+    <input type="number" id="personAge" placeholder="Age">
+    <input type="color" id="personEyeColor" value="#0000ff">
+    <input type="button" value="Show Person" onclick="showPerson()">
+    <div id="personOutput">...</div>
+</div>
 
-<h4>Example Objects Code:</h4>
-<pre>
-let myPerson = {
-    "firstname": "john",
-    "lastname": "doe",
-    "age": 50,
-    "eyecolor": "blue"
-};
-</pre>
+<div class="example">
+    <h4>Car Object:</h4>
+    <input type="text" id="carBrand" placeholder="Brand">
+    <input type="text" id="carModel" placeholder="Model">
+    <input type="number" id="carYear" placeholder="Year">
+    <input type="text" id="carColor" placeholder="Color">
+    <input type="number" id="carSeats" placeholder="Seats">
+    <input type="button" value="Show Car" onclick="showCar()">
+    <div id="carOutput">...</div>
+</div>
 
-<h4>Example Working Objects Code:</h4>
-<p>Nothing: <input type="text" id="myText01" value="Useless at the moment"></p>
+<div class="example">
+    <h4>Dog Object:</h4>
+    <input type="text" id="dogName" placeholder="Dog Name">
+    <input type="text" id="dogBreed" placeholder="Dog Breed">
+    <input type="button" value="Show Dog" onclick="showDog()">
+    <div id="dogOutput">...</div>
+</div>
 
-<input type="button" value="Example Object Set and Show" onclick="showPerson()">
-
-<div id="myDiv01">...</div>
-
-<h4>More Examples of JavaScript Objects:</h4>
-
-<h5>1. Nested Objects:</h5>
-<pre>
-let myCar = {
-    brand: "Ford",
-    model: "Mustang",
-    year: 2021,
-    features: {
-        color: "red",
-        engine: "V8",
-        seats: 4
-    }
-};
-</pre>
-
-<h5>2. Array of Objects:</h5>
-<pre>
-let people = [
-    { firstname: "Alice", lastname: "Smith", age: 30 },
-    { firstname: "Bob", lastname: "Johnson", age: 25 },
-    { firstname: "Charlie", lastname: "Brown", age: 35 }
-];
-</pre>
-
-<h5>3. Object with Methods:</h5>
-<pre>
-let myDog = {
-    name: "Rex",
-    breed: "Golden Retriever",
-    bark: function() {
-        return "Woof!";
-    }
-};
-</pre>
+<h4>Array of People:</h4>
+<input type="button" value="Show All People" onclick="showPeople()">
+<div id="peopleOutput">...</div>
 
 <script>
     function showPerson() {
-        let myPerson = {
-            "firstname": "john",
-            "lastname": "doe",
-            "age": 50,
-            "eyecolor": "blue"
-        };
+        const firstname = document.getElementById("personFirstName").value;
+        const lastname = document.getElementById("personLastName").value;
+        const age = document.getElementById("personAge").value;
+        const eyecolor = document.getElementById("personEyeColor").value;
 
-        // Display the person's info in the input field
-        document.getElementById("myText01").value = 
-            `${myPerson.firstname} ${myPerson.lastname}, Age: ${myPerson.age}, Eye Color: ${myPerson.eyecolor}`;
+        const myPerson = { firstname, lastname, age, eyecolor };
 
         // Show properties in the div
-        let displayDiv = document.getElementById('myDiv01');
-        displayDiv.innerHTML = '<b>myPerson Object has properties:</b><br>';
-        displayDiv.innerHTML += 'First Name: ' + myPerson.firstname + '<br>';
-        displayDiv.innerHTML += 'Last Name: ' + myPerson.lastname + '<br>';
-        displayDiv.innerHTML += 'Age: ' + myPerson.age + '<br>';
-        displayDiv.innerHTML += 'Eye Color: ' + myPerson.eyecolor + '<br>';
+        let output = document.getElementById('personOutput');
+        output.innerHTML = `<b>Person Object:</b><br>
+            First Name: ${myPerson.firstname}<br>
+            Last Name: ${myPerson.lastname}<br>
+            Age: ${myPerson.age}<br>
+            Eye Color: <span style="color:${myPerson.eyecolor}">${myPerson.eyecolor}</span>`;
     }
 
-    // Example usage of nested objects and methods
     function showCar() {
-        let myCar = {
-            brand: "Ford",
-            model: "Mustang",
-            year: 2021,
-            features: {
-                color: "red",
-                engine: "V8",
-                seats: 4
-            }
-        };
-        console.log("Car:", myCar);
+        const brand = document.getElementById("carBrand").value;
+        const model = document.getElementById("carModel").value;
+        const year = document.getElementById("carYear").value;
+        const color = document.getElementById("carColor").value;
+        const seats = document.getElementById("carSeats").value;
+
+        const myCar = { brand, model, year, features: { color, seats } };
+
+        let output = document.getElementById('carOutput');
+        output.innerHTML = `<b>Car Object:</b><br>
+            Brand: ${myCar.brand}<br>
+            Model: ${myCar.model}<br>
+            Year: ${myCar.year}<br>
+            Color: <span style="color:${myCar.features.color}">${myCar.features.color}</span><br>
+            Seats: ${myCar.features.seats}`;
+    }
+
+    function showDog() {
+        const name = document.getElementById("dogName").value;
+        const breed = document.getElementById("dogBreed").value;
+
+        const myDog = { name, breed, bark: function() { return "Woof!"; } };
+
+        let output = document.getElementById('dogOutput');
+        output.innerHTML = `<b>Dog Object:</b><br>
+            Name: ${myDog.name}<br>
+            Breed: ${myDog.breed}<br>
+            Bark: ${myDog.bark()}`;
     }
 
     function showPeople() {
-        let people = [
+        const people = [
             { firstname: "Alice", lastname: "Smith", age: 30 },
             { firstname: "Bob", lastname: "Johnson", age: 25 },
             { firstname: "Charlie", lastname: "Brown", age: 35 }
         ];
-        console.log("People:", people);
-    }
 
-    function showDog() {
-        let myDog = {
-            name: "Rex",
-            breed: "Golden Retriever",
-            bark: function() {
-                return "Woof!";
-            }
-        };
-        console.log("Dog:", myDog);
-        console.log(myDog.bark());
+        let output = document.getElementById('peopleOutput');
+        output.innerHTML = "<b>Array of People:</b><br>";
+        people.forEach(person => {
+            output.innerHTML += `First Name: ${person.firstname}, Last Name: ${person.lastname}, Age: ${person.age}<br>`;
+        });
     }
 </script>
 
 </body>
+</html>
 </html>
