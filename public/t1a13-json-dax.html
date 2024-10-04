@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -141,10 +140,10 @@
             loadingIndicator.style.display = 'block';
             catImage.style.display = 'none'; // Hide the cat image
 
-            fetch('https://aws.random.cat/meow')
+            fetch('https://api.thecatapi.com/v1/images/search?limit=1')
                 .then(response => response.json())
                 .then(data => {
-                    catImage.src = data.file; // Set the cat image source
+                    catImage.src = data[0].url; // Set the cat image source
                     catImage.style.display = 'block'; // Show the cat image
                     loadingIndicator.style.display = 'none'; // Hide loading indicator
                 })
