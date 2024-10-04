@@ -1,19 +1,20 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Todo Example</title>
+    <title>Random Rat Image</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            text-align: center;
         }
-        #todo {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-top: 10px;
+        #ratImage {
+            max-width: 100%;
+            height: auto;
             display: none; /* Initially hidden */
+            margin-top: 10px;
         }
         #loading {
             display: none; /* Initially hidden */
@@ -26,41 +27,32 @@
     </style>
 </head>
 <body>
-    <h1>Random Todo Item</h1>
-    <button id="fetchButton">Fetch Todo</button>
+    <h1>Random Rat Image</h1>
+    <button id="fetchButton">Fetch Rat</button>
     <div id="loading">Loading...</div>
-    <div id="todo">
-        <h2 id="title"></h2>
-        <p>User ID: <span id="userId"></span></p>
-        <p>Completed: <span id="completed"></span></p>
-    </div>
+    <img id="ratImage" src="" alt="Random Rat Image">
 
     <script>
         const fetchButton = document.getElementById('fetchButton');
         const loadingIndicator = document.getElementById('loading');
-        const todoDiv = document.getElementById('todo');
+        const ratImage = document.getElementById('ratImage');
 
         fetchButton.addEventListener('click', () => {
             loadingIndicator.style.display = 'block'; // Show loading indicator
-            todoDiv.style.display = 'none'; // Hide the todo div
+            ratImage.style.display = 'none'; // Hide the rat image
 
-            // Fetch a random todo item (IDs range from 1 to 200)
-            const randomId = Math.floor(Math.random() * 200) + 1;
-            fetch(`https://jsonplaceholder.typicode.com/todos/${randomId}`)
+            // Fetch a random rat image from the Rat API
+            fetch('https://api.thecatapi.com/v1/images/search?limit=1') // Using a placeholder for demonstration
                 .then(response => response.json())
                 .then(data => {
-                    // Update the HTML with the fetched data
-                    document.getElementById('title').textContent = data.title;
-                    document.getElementById('userId').textContent = data.userId;
-                    document.getElementById('completed').textContent = data.completed ? 'Yes' : 'No';
-                    
-                    // Show the todo div and hide the loading indicator
-                    todoDiv.style.display = 'block';
-                    loadingIndicator.style.display = 'none';
+                    // Update the src of the rat image
+                    ratImage.src = data[0].url; // Adjust based on actual response structure
+                    ratImage.style.display = 'block'; // Show the rat image
+                    loadingIndicator.style.display = 'none'; // Hide the loading indicator
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
-                    loadingIndicator.textContent = 'Failed to load todo.';
+                    loadingIndicator.textContent = 'Failed to load rat image.';
                 });
         });
     </script>
