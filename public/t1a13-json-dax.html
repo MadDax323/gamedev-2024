@@ -7,28 +7,51 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #333;
             text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        button {
+            padding: 12px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
         }
         .output {
             margin-top: 20px;
-            padding: 10px;
+            padding: 15px;
             border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             display: none; /* Initially hidden */
         }
         #loading {
             display: none; /* Initially hidden */
-        }
-        button {
-            padding: 10px;
-            margin-top: 10px;
-            cursor: pointer;
+            font-weight: bold;
+            color: #e67e22;
         }
         #catImage {
-            max-width: 100%;
+            max-width: 90%;
             height: auto;
             display: none; /* Initially hidden */
-            margin-top: 10px;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
