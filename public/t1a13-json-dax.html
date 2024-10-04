@@ -1,20 +1,20 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Cat Image</title>
+    <title>Random Advice, Trivia, Yoda Translation & Cat Pictures</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
             text-align: center;
         }
-        #ratImage {
-            max-width: 100%;
-            height: auto;
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
             display: none; /* Initially hidden */
-            margin-top: 10px;
         }
         #loading {
             display: none; /* Initially hidden */
@@ -24,37 +24,112 @@
             margin-top: 10px;
             cursor: pointer;
         }
+        #catImage {
+            max-width: 100%;
+            height: auto;
+            display: none; /* Initially hidden */
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>Random Cat Image</h1>
-    <button id="fetchButton">Fetch Cat</button>
+    <h1>Random Advice, Trivia, Yoda Translation & Cat Pictures</h1>
+
+    <button id="adviceButton">Get Advice</button>
+    <button id="triviaButton">Get Trivia</button>
+    <button id="yodaButton">Translate to Yoda</button>
+    <button id="catButton">Get Cat Picture</button>
+
     <div id="loading">Loading...</div>
-    <img id="ratImage" src="" alt="Random Rat Image">
+
+    <div id="adviceOutput" class="output"></div>
+    <div id="triviaOutput" class="output"></div>
+    <div id="yodaOutput" class="output"></div>
+    <img id="catImage" src="" alt="Random Cat" />
 
     <script>
-        const fetchButton = document.getElementById('fetchButton');
         const loadingIndicator = document.getElementById('loading');
-        const ratImage = document.getElementById('ratImage');
+        const adviceOutput = document.getElementById('adviceOutput');
+        const triviaOutput = document.getElementById('triviaOutput');
+        const yodaOutput = document.getElementById('yodaOutput');
+        const catImage = document.getElementById('catImage');
 
-        fetchButton.addEventListener('click', () => {
-            loadingIndicator.style.display = 'block'; // Show loading indicator
-            ratImage.style.display = 'none'; // Hide the rat image
+        document.getElementById('adviceButton').addEventListener('click', () => {
+            loadingIndicator.style.display = 'block';
+            adviceOutput.style.display = 'none';
 
-            // Fetch a random rat image from the Rat API
-            fetch('https://api.thecatapi.com/v1/images/search?limit=1') // Using a placeholder for demonstration
+            fetch('https://api.adviceslip.com/advice')
                 .then(response => response.json())
                 .then(data => {
-                    // Update the src of the rat image
-                    ratImage.src = data[0].url; // Adjust based on actual response structure
-                    ratImage.style.display = 'block'; // Show the rat image
-                    loadingIndicator.style.display = 'none'; // Hide the loading indicator
+                    adviceOutput.textContent = `"${data.slip.advice}"`;
+                    adviceOutput.style.display = 'block';
+                    loadingIndicator.style.display = 'none';
                 })
                 .catch(error => {
-                    console.error('Error fetching data:', error);
+                    console.error('Error fetching advice:', error);
+                    adviceOutput.textContent = 'Failed to load advice.';
+                    adviceOutput.style.display = 'block';
+                    loadingIndicator.style.display = 'none';
+                });
+        });
+
+        document.getElementById('triviaButton').addEventListener('click', () => {
+            loadingIndicator.style.display = 'block';
+            triviaOutput.style.display = 'none';
+
+            fetch('https://opentdb.com/api.php?amount=1')
+                .then(response => response.json())
+                .then(data => {
+                    const question = data.results[0].question;
+                    const correctAnswer = data.results[0].correct_answer;
+                    triviaOutput.innerHTML = `Question: ${question}<br>Answer: ${correctAnswer}`;
+                    triviaOutput.style.display = 'block';
+                    loadingIndicator.style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error fetching trivia:', error);
+                    triviaOutput.textContent = 'Failed to load trivia.';
+                    triviaOutput.style.display = 'block';
+                    loadingIndicator.style.display = 'none';
+                });
+        });
+
+        document.getElementById('yodaButton').addEventListener('click', () => {
+            loadingIndicator.style.display = 'block';
+            yodaOutput.style.display = 'none';
+
+            const textToTranslate = "Hello world"; // Change this text as needed
+            fetch(`https://api.funtranslations.com/translate/yoda.json?text=${encodeURIComponent(textToTranslate)}`)
+                .then(response => response.json())
+                .then(data => {
+                    yodaOutput.textContent = data.contents.translated;
+                    yodaOutput.style.display = 'block';
+                    loadingIndicator.style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error fetching Yoda translation:', error);
+                    yodaOutput.textContent = 'Failed to translate to Yoda.';
+                    yodaOutput.style.display = 'block';
+                    loadingIndicator.style.display = 'none';
+                });
+        });
+
+        document.getElementById('catButton').addEventListener('click', () => {
+            loadingIndicator.style.display = 'block';
+            catImage.style.display = 'none'; // Hide the cat image
+
+            fetch('https://aws.random.cat/meow')
+                .then(response => response.json())
+                .then(data => {
+                    catImage.src = data.file; // Set the cat image source
+                    catImage.style.display = 'block'; // Show the cat image
+                    loadingIndicator.style.display = 'none'; // Hide loading indicator
+                })
+                .catch(error => {
+                    console.error('Error fetching cat image:', error);
                     loadingIndicator.textContent = 'Failed to load cat image.';
+                    loadingIndicator.style.display = 'none';
                 });
         });
     </script>
 </body>
-</html>
