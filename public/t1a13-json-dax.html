@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -52,6 +53,15 @@
             border-radius: 5px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+        #yodaInput {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 400px;
+        }
     </style>
 </head>
 <body>
@@ -59,6 +69,7 @@
 
     <button id="adviceButton">Get Advice</button>
     <button id="triviaButton">Get Trivia</button>
+    <input id="yodaInput" type="text" placeholder="Enter text to translate to Yoda" />
     <button id="yodaButton">Translate to Yoda</button>
     <button id="catButton">Get Cat Picture</button>
 
@@ -75,6 +86,7 @@
         const triviaOutput = document.getElementById('triviaOutput');
         const yodaOutput = document.getElementById('yodaOutput');
         const catImage = document.getElementById('catImage');
+        const yodaInput = document.getElementById('yodaInput');
 
         document.getElementById('adviceButton').addEventListener('click', () => {
             loadingIndicator.style.display = 'block';
@@ -117,10 +129,16 @@
         });
 
         document.getElementById('yodaButton').addEventListener('click', () => {
+            const textToTranslate = yodaInput.value.trim();
+            if (textToTranslate === "") {
+                yodaOutput.textContent = "Please enter text to translate.";
+                yodaOutput.style.display = 'block';
+                return;
+            }
+
             loadingIndicator.style.display = 'block';
             yodaOutput.style.display = 'none';
 
-            const textToTranslate = "Hello world"; // Change this text as needed
             fetch(`https://api.funtranslations.com/translate/yoda.json?text=${encodeURIComponent(textToTranslate)}`)
                 .then(response => response.json())
                 .then(data => {
