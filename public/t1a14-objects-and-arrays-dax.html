@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Number Guessing Game</title>
+    <title>Guess the Item Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,9 +19,19 @@
 </head>
 <body>
 
-<h1>Number Guessing Game</h1>
-<p>Guess a number between <span id="min-number"></span> and <span id="max-number"></span>:</p>
-<input type="number" id="guess" min="1" max="10">
+<h1>Guess the Item Game</h1>
+
+<h2>Select a Category:</h2>
+<select id="category-select">
+    <option value="numbers">Numbers</option>
+    <option value="fruits">Fruits</option>
+    <option value="animals">Animals</option>
+    <option value="colors">Colors</option>
+    <option value="countries">Countries</option>
+</select>
+
+<p>Guess an item from the selected category:</p>
+<input type="text" id="guess" placeholder="Enter your guess here">
 <button id="submit">Submit Guess</button>
 
 <h2>Your Guesses:</h2>
@@ -31,18 +41,58 @@
 <ul id="correct-numbers"></ul>
 
 <script>
-    // Named variables
-    const minNumber = 1;
-    const maxNumber = 10;
-    const correctAnswers = [3, 5, 7]; // Array of correct answers
+    // Object containing categories with their corresponding correct answers
+    const categories = {
+        numbers: {
+            correctAnswers: [3, 5, 7],
+            min: 1,
+            max: 10
+        },
+        fruits: {
+            correctAnswers: ["apple", "banana", "cherry"],
+            min: null,
+            max: null
+        },
+        animals: {
+            correctAnswers: ["cat", "dog", "elephant"],
+            min: null,
+            max: null
+        },
+        colors: {
+            correctAnswers: ["red", "blue", "green", "yellow"],
+            min: null,
+            max: null
+        },
+        countries: {
+            correctAnswers: ["usa", "canada", "mexico", "france"],
+            min: null,
+            max: null
+        }
+    };
 
-    // Display min and max numbers
-    document.getElementById('min-number').textContent = minNumber;
-    document.getElementById('max-number').textContent = maxNumber;
+    // Set default category
+    let currentCategory = 'numbers';
+
+    // Update input placeholder based on initial category
+    updatePlaceholder();
+
+    // Event listener for category selection
+    document.getElementById('category-select').addEventListener('change', (event) => {
+        currentCategory = event.target.value;
+        updatePlaceholder();
+    });
+
+    function updatePlaceholder() {
+        const category = categories[currentCategory];
+        const placeholder = currentCategory === 'numbers' ? 
+            `Enter a number between ${category.min} and ${category.max}` : 
+            `Enter a ${currentCategory.slice(0, -1)}`; // Remove "s" for singular
+        document.getElementById('guess').placeholder = placeholder;
+    }
 
     // Event listener for the button
     document.getElementById('submit').addEventListener('click', () => {
-        const guess = Number(document.getElementById('guess').value);
+        const guess = document.getElementById('guess').value.trim().toLowerCase();
         const guessList = document.getElementById('guess-list');
 
         // Add the guess to the list
@@ -50,8 +100,10 @@
         listItem.textContent = `You guessed: ${guess}`;
         guessList.appendChild(listItem);
 
+        const category = categories[currentCategory];
+
         // Check if the guess is correct
-        if (correctAnswers.includes(guess)) {
+        if (category.correctAnswers.includes(guess) || (currentCategory === 'numbers' && category.correctAnswers.includes(Number(guess)))) {
             const correctListItem = document.createElement('li');
             correctListItem.textContent = `Correct guess: ${guess}`;
             correctListItem.className = 'correct'; // Add class for correct guesses
