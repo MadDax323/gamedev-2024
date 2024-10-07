@@ -9,8 +9,11 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
-        .result {
-            margin-top: 10px;
+        .correct {
+            color: green;
+        }
+        .wrong {
+            color: red;
         }
     </style>
 </head>
@@ -24,7 +27,7 @@
 <h2>Your Guesses:</h2>
 <ul id="guess-list"></ul>
 
-<h2>Correct Numbers:</h2>
+<h2>Feedback:</h2>
 <ul id="correct-numbers"></ul>
 
 <script>
@@ -51,10 +54,12 @@
         if (correctAnswers.includes(guess)) {
             const correctListItem = document.createElement('li');
             correctListItem.textContent = `Correct guess: ${guess}`;
+            correctListItem.className = 'correct'; // Add class for correct guesses
             document.getElementById('correct-numbers').appendChild(correctListItem);
         } else {
             const wrongListItem = document.createElement('li');
             wrongListItem.textContent = `Wrong guess: ${guess}`;
+            wrongListItem.className = 'wrong'; // Add class for wrong guesses
             document.getElementById('correct-numbers').appendChild(wrongListItem);
         }
 
