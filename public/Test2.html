@@ -3,74 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Books Collection</title>
+    <title>Mouse Move Example</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .book {
-            border: 1px solid #ccc;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-        }
-        .title {
-            font-size: 1.5em;
-            color: #333;
-        }
-        .author {
-            color: #555;
+        #myDiv01 {
+            width: 200px;
+            height: 100px;
+            border: 1px solid #000;
+            margin: 20px 0;
         }
     </style>
 </head>
-<body>
+<body onmousemove="showMousePosition(event)">
 
-<h1>My Book Collection</h1>
-<div id="book-list"></div>
+    <h1>Mouse Move Example</h1>
+    <div id="myDiv01">Move your mouse over here!</div>
 
-<script>
-    // Create an array of book objects
-    const books = [
-        {
-            title: "To Kill a Mockingbird",
-            author: "Harper Lee",
-            year: 1960
-        },
-        {
-            title: "1984",
-            author: "George Orwell",
-            year: 1949
-        },
-        {
-            title: "The Great Gatsby",
-            author: "F. Scott Fitzgerald",
-            year: 1925
-        },
-        {
-            title: "Moby Dick",
-            author: "Herman Melville",
-            year: 1851
+    <script>
+        function showMousePosition(event) {
+            document.getElementById('myDiv01').innerHTML = `x: ${event.clientX}, y: ${event.clientY}`;
         }
-    ];
-
-    // Function to display books
-    function displayBooks() {
-        const bookList = document.getElementById("book-list");
-        books.forEach(book => {
-            const bookDiv = document.createElement("div");
-            bookDiv.classList.add("book");
-            bookDiv.innerHTML = `
-                <div class="title">${book.title}</div>
-                <div class="author">by ${book.author} (${book.year})</div>
-            `;
-            bookList.appendChild(bookDiv);
-        });
-    }
-
-    // Call the function to display the books
-    displayBooks();
-</script>
-
+    </script>
 </body>
 </html>
