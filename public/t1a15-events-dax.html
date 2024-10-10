@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Handlers Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        #output {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .hover-box {
+            width: 200px;
+            height: 100px;
+            background-color: lightblue;
+            text-align: center;
+            line-height: 100px;
+            transition: background-color 0.3s;
+        }
+        .hover-box:hover {
+            background-color: lightgreen;
+        }
+    </style>
+</head>
+<body onload="showMessage()">
+
+    <h1>Event Handlers Example</h1>
+    
+    <div class="hover-box" onclick="showMessage('You clicked the box!')" onmouseover="changeColor('Hovering!')" onmouseout="resetColor()">Hover over me!</div>
+
+    <input type="text" id="textInput" onfocus="focusInput()" onchange="inputChanged()" placeholder="Click here and type something...">
+    
+    <select id="selectBox" onchange="optionChanged()">
+        <option value="">Select an option</option>
+        <option value="1">Option 1</option>
+        <option value="2">Option 2</option>
+        <option value="3">Option 3</option>
+    </select>
+
+    <textarea id="textArea" onselect="textSelected()" rows="4" placeholder="Select some text here..."></textarea>
+    
+    <div id="output"></div>
+
+    <script>
+        function showMessage(message = "Page Loaded!") {
+            document.getElementById('output').innerText += message + "\n";
+        }
+
+        function focusInput() {
+            showMessage("Input field is focused.");
+        }
+
+        function inputChanged() {
+            showMessage("Input field value changed to: " + document.getElementById('textInput').value);
+        }
+
+        function optionChanged() {
+            showMessage("Selected option changed to: " + document.getElementById('selectBox').value);
+        }
+
+        function textSelected() {
+            showMessage("Text selected in textarea.");
+        }
+
+        function changeColor(message) {
+            showMessage(message);
+        }
+
+        function resetColor() {
+            showMessage("Mouse left the box.");
+        }
+    </script>
+</body>
+</html>
