@@ -13,6 +13,7 @@
             margin-top: 20px;
             border: 1px solid #ccc;
             padding: 10px;
+            white-space: pre-wrap; /* Maintain whitespaces and line breaks */
         }
         .hover-box {
             width: 200px;
@@ -31,10 +32,19 @@
 
     <h1>Event Handlers Example</h1>
     
-    <div class="hover-box" onclick="showMessage('You clicked the box!')" onmouseover="changeColor('Hovering!')" onmouseout="resetColor()">Hover over me!</div>
+    <div class="hover-box" 
+         onclick="showMessage('You clicked the box!')" 
+         onmouseover="changeColor('Hovering!')" 
+         onmouseout="resetColor()">Hover over me!</div>
 
-    <input type="text" id="textInput" onfocus="focusInput()" onchange="inputChanged()" placeholder="Click here and type something...">
-    
+    <input type="text" id="textInput" 
+           onfocus="focusInput()" 
+           onchange="inputChanged()" 
+           onkeypress="keyPressHandler(event)" 
+           onkeydown="keyDownHandler(event)"
+           onkeyup="keyUpHandler(event)"
+           placeholder="Click here and type something...">
+
     <select id="selectBox" onchange="optionChanged()">
         <option value="">Select an option</option>
         <option value="1">Option 1</option>
@@ -42,7 +52,11 @@
         <option value="3">Option 3</option>
     </select>
 
-    <textarea id="textArea" onselect="textSelected()" rows="4" placeholder="Select some text here..."></textarea>
+    <textarea id="textArea" 
+              onselect="textSelected()" 
+              onwheel="wheelHandler()" 
+              rows="4" 
+              placeholder="Select some text here..."></textarea>
     
     <div id="output"></div>
 
@@ -74,6 +88,28 @@
         function resetColor() {
             showMessage("Mouse left the box.");
         }
+
+        function keyPressHandler(event) {
+            showMessage("Key pressed: " + event.key);
+        }
+
+        function keyDownHandler(event) {
+            showMessage("Key down: " + event.key);
+        }
+
+        function keyUpHandler(event) {
+            showMessage("Key released: " + event.key);
+        }
+
+        function wheelHandler() {
+            showMessage("Mouse wheel scrolled.");
+        }
+
+        // Prevent default context menu and show message instead
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+            showMessage("Right-click context menu triggered.");
+        });
     </script>
 </body>
 </html>
