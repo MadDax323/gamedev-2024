@@ -3,23 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Interactive Cube Array Visualization</title>
+    <title>Advanced 3D Interactive Cube Array Visualization</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
             text-align: center;
             user-select: none; /* Disable text selection */
+            background-color: #f0f0f0;
         }
         button {
-            margin: 10px 0;
-            padding: 10px;
+            margin: 10px 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
         .cube-container {
-            width: 600px;
-            height: 600px;
+            width: 90vw;
+            height: 90vh;
+            max-width: 600px;
+            max-height: 600px;
             perspective: 1000px; /* Perspective for 3D effect */
             margin: 20px auto;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
         }
         .scene {
             width: 100%;
@@ -32,24 +49,25 @@
             position: absolute;
             width: 50px; /* Size of individual cubes */
             height: 50px;
-            background: rgba(0, 128, 255, 0.7);
-            border: 2px solid #333;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 14px;
             color: #fff;
             font-weight: bold;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s;
         }
     </style>
 </head>
 <body>
 
-<h1>3D Interactive Cube Array Visualization</h1>
+<h1>Advanced 3D Cube Array Visualization</h1>
 
 <button id="manualBtn">Show Manual 3D Array</button>
 <button id="automaticBtn">Show Automatic 3D Array</button>
+<button id="dynamicBtn">Create Dynamic Array</button>
 <button id="visualizeBtn">Visualize Array</button>
 
 <div id="visualization" class="cube-container"></div>
@@ -71,8 +89,7 @@
             [[13, 14, 15], [16, 17, 18]]
         ];
         currentArray = manualArray;
-        document.getElementById("visualization").innerHTML = ''; // Clear previous visualization
-        document.getElementById("output").textContent = "Manual 3D Array:\n" + JSON.stringify(manualArray, null, 2);
+        updateOutput(manualArray);
     };
 
     document.getElementById("automaticBtn").onclick = function() {
@@ -83,8 +100,24 @@
             )
         );
         currentArray = automaticArray;
-        document.getElementById("visualization").innerHTML = ''; // Clear previous visualization
-        document.getElementById("output").textContent = "Automatic 3D Array:\n" + JSON.stringify(automaticArray, null, 2);
+        updateOutput(automaticArray);
+    };
+
+    document.getElementById("dynamicBtn").onclick = function() {
+        // Create a dynamic 3D array based on user input
+        const depth = prompt("Enter depth (number of layers):", "3");
+        const height = prompt("Enter height (number of rows):", "2");
+        const width = prompt("Enter width (number of columns):", "3");
+
+        if (depth && height && width) {
+            const dynamicArray = Array.from({ length: depth }, (_, x) =>
+                Array.from({ length: height }, (_, y) =>
+                    Array.from({ length: width }, (_, z) => `${Math.floor(Math.random() * 100)}`) // Random numbers
+                )
+            );
+            currentArray = dynamicArray;
+            updateOutput(dynamicArray);
+        }
     };
 
     document.getElementById("visualizeBtn").onclick = function() {
@@ -110,6 +143,7 @@
                 for (let z = 0; z < width; z++) {
                     const cube = document.createElement('div');
                     cube.className = 'cube';
+                    cube.style.backgroundColor = getColor(currentArray[x][y][z]);
                     cube.style.transform = `translate3D(${(x * 60) - (depth * 30)}px, ${(-y * 60) + (height * 30)}px, ${(-z * 60) + (width * 30)}px)`;
                     cube.textContent = currentArray[x][y][z];
                     scene.appendChild(cube);
@@ -153,6 +187,21 @@
         // Add event listeners to the scene for mouse controls
         scene.addEventListener('mousedown', onMouseDown);
     };
+
+    function updateOutput(array) {
+        const outputDiv = document.getElementById("output");
+        outputDiv.textContent = "Current 3D Array:\n" + JSON.stringify(array, null, 2);
+        document.getElementById("visualization").innerHTML = ''; // Clear previous visualization
+    }
+
+    function getColor(value) {
+        // Generate a color based on the value (for example, using a simple hash)
+        const num = parseInt(value);
+        const r = (num * 50) % 255;
+        const g = (num * 30) % 255;
+        const b = (num * 20) % 255;
+        return `rgb(${r}, ${g}, ${b})`;
+    }
 </script>
 
 </body>
