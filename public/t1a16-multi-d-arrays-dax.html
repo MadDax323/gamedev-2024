@@ -3,55 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Array Cube Visualization</title>
+    <title>Advanced 3D Array Visualization</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
         button { margin: 10px 0; padding: 10px; }
         pre { background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc; margin: 10px auto; width: 90%; }
         .cube-container {
-            width: 200px;
-            height: 200px;
-            perspective: 1000px;
-            margin: 20px auto;
-        }
-        .cube {
             width: 100%;
             height: 100%;
+            perspective: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .scene {
+            width: 400px;
+            height: 400px;
             position: relative;
             transform-style: preserve-3d;
-            animation: spin 10s infinite linear; /* Remove this for no spinning */
+            transition: transform 1s;
         }
-        .face {
+        .block {
             position: absolute;
-            width: 200px;
-            height: 200px;
+            width: 40px;
+            height: 40px;
             background: rgba(255, 255, 255, 0.9);
             border: 1px solid #ccc;
             box-sizing: border-box;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 16px;
+            font-size: 12px;
             color: #333;
             font-weight: bold;
-        }
-        .front  { transform: translateZ(100px); }
-        .back   { transform: rotateY(180deg) translateZ(100px); }
-        .right  { transform: rotateY(90deg) translateZ(100px); }
-        .left   { transform: rotateY(-90deg) translateZ(100px); }
-        .top    { transform: rotateX(90deg) translateZ(100px); }
-        .bottom { transform: rotateX(-90deg) translateZ(100px); }
-        @keyframes spin {
-            from { transform: rotateY(0); }
-            to { transform: rotateY(360deg); }
         }
     </style>
 </head>
 <body>
 
-<h1>3D Array Cube Visualization</h1>
+<h1>Advanced 3D Array Visualization</h1>
 
-<button id="manualBtn">Show Manual Multi-Dimensional Array</button>
+<button id="manualBtn">Show Manual 3D Array</button>
 <button id="automaticBtn">Show Automatic 3D Array</button>
 <button id="visualizeBtn">Visualize Array</button>
 
@@ -93,36 +85,33 @@
             return;
         }
 
-        // Create the cube
-        const cube = document.createElement('div');
-        cube.className = 'cube';
+        // Create the scene
+        const scene = document.createElement('div');
+        scene.className = 'scene';
 
-        // Assign faces
-        const faces = [ 'front', 'right', 'back', 'left', 'top', 'bottom' ];
-        faces.forEach((face, index) => {
-            const faceDiv = document.createElement('div');
-            faceDiv.className = 'face ' + face;
+        const depth = currentArray.length;
+        const rows = currentArray[0].length;
+        const cols = currentArray[0][0].length;
 
-            let content = '';
-            if (face === 'front') {
-                content = currentArray[0].map(row => JSON.stringify(row)).join('\n');
-            } else if (face === 'back') {
-                content = currentArray[currentArray.length - 1].map(row => JSON.stringify(row)).join('\n');
-            } else if (face === 'right') {
-                content = currentArray.map(layer => JSON.stringify(layer[1])).join('\n');
-            } else if (face === 'left') {
-                content = currentArray.map(layer => JSON.stringify(layer[0])).join('\n');
-            } else if (face === 'top') {
-                content = currentArray[0].map(row => JSON.stringify(row)).join('\n');
-            } else if (face === 'bottom') {
-                content = currentArray[currentArray.length - 1].map(row => JSON.stringify(row)).join('\n');
+        // Size of each block
+        const blockSize = 40;
+
+        // Create blocks based on the current array
+        for (let x = 0; x < depth; x++) {
+            for (let y = 0; y < rows; y++) {
+                for (let z = 0; z < cols; z++) {
+                    const block = document.createElement('div');
+                    block.className = 'block';
+                    block.textContent = currentArray[x][y][z];
+
+                    // Positioning each block in 3D space
+                    block.style.transform = `translate3d(${z * blockSize}px, ${y * blockSize}px, ${-x * blockSize}px)`;
+                    scene.appendChild(block);
+                }
             }
+        }
 
-            faceDiv.textContent = content;
-            cube.appendChild(faceDiv);
-        });
-
-        visualizationDiv.appendChild(cube);
+        visualizationDiv.appendChild(scene);
     };
 </script>
 
