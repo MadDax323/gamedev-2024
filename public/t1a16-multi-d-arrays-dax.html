@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Cube Array Visualization</title>
+    <title>3D Interactive Cube Array Visualization</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
         button { margin: 10px 0; padding: 10px; }
@@ -40,7 +40,7 @@
 </head>
 <body>
 
-<h1>3D Cube Array Visualization</h1>
+<h1>3D Interactive Cube Array Visualization</h1>
 
 <button id="manualBtn">Show Manual 3D Array</button>
 <button id="automaticBtn">Show Automatic 3D Array</button>
@@ -51,6 +51,11 @@
 
 <script>
     let currentArray = null; // To store the currently selected array
+    let isMouseDown = false;
+    let lastMouseX = 0;
+    let lastMouseY = 0;
+    let rotationX = 20; // Initial rotation X
+    let rotationY = -30; // Initial rotation Y
 
     document.getElementById("manualBtn").onclick = function() {
         // Manually set a multi-dimensional array
@@ -111,6 +116,40 @@
         }
 
         visualizationDiv.appendChild(scene);
+
+        // Add mouse events for interaction
+        const onMouseMove = (event) => {
+            if (!isMouseDown) return;
+            const deltaX = event.clientX - lastMouseX;
+            const deltaY = event.clientY - lastMouseY;
+
+            // Update rotation
+            rotationY += deltaX * 0.5;
+            rotationX -= deltaY * 0.5;
+
+            // Apply rotation to the scene
+            scene.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+
+            lastMouseX = event.clientX;
+            lastMouseY = event.clientY;
+        };
+
+        const onMouseDown = (event) => {
+            isMouseDown = true;
+            lastMouseX = event.clientX;
+            lastMouseY = event.clientY;
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        };
+
+        const onMouseUp = () => {
+            isMouseDown = false;
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        };
+
+        // Add event listeners to the scene for mouse controls
+        scene.addEventListener('mousedown', onMouseDown);
     };
 </script>
 
