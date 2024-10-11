@@ -69,6 +69,7 @@
 <button id="automaticBtn">Show Automatic 3D Array</button>
 <button id="dynamicBtn">Create Dynamic Array</button>
 <button id="visualizeBtn">Visualize Array</button>
+<button id="resetBtn">Reset View</button>
 
 <div id="visualization" class="cube-container"></div>
 <pre id="output"></pre>  <!-- Output formatted array for user reference -->
@@ -80,6 +81,7 @@
     let lastMouseY = 0;
     let rotationX = 20; // Initial rotation X
     let rotationY = -30; // Initial rotation Y
+    let rotationSpeed = 0.5; // Initial rotation speed
 
     document.getElementById("manualBtn").onclick = function() {
         // Manually set a multi-dimensional array
@@ -144,7 +146,8 @@
                     const cube = document.createElement('div');
                     cube.className = 'cube';
                     cube.style.backgroundColor = getColor(currentArray[x][y][z]);
-                    cube.style.transform = `translate3D(${(x * 60) - (depth * 30)}px, ${(-y * 60) + (height * 30)}px, ${(-z * 60) + (width * 30)}px)`;
+                    // Center the positioning of the cubes
+                    cube.style.transform = `translate3D(${(x - (depth - 1) / 2) * 60}px, ${((height - 1) / 2 - y) * 60}px, ${((width - 1) / 2 - z) * 60}px)`;
                     cube.textContent = currentArray[x][y][z];
                     scene.appendChild(cube);
                 }
@@ -159,9 +162,9 @@
             const deltaX = event.clientX - lastMouseX;
             const deltaY = event.clientY - lastMouseY;
 
-            // Update rotation angles
-            rotationY += deltaX * 0.5;
-            rotationX -= deltaY * 0.5;
+            // Update rotation angles with rotation speed
+            rotationY += deltaX * rotationSpeed;
+            rotationX -= deltaY * rotationSpeed;
 
             // Apply rotation to the scene
             scene.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
@@ -186,6 +189,13 @@
 
         // Add event listeners to the scene for mouse controls
         scene.addEventListener('mousedown', onMouseDown);
+    };
+
+    document.getElementById("resetBtn").onclick = function() {
+        // Reset the view
+        rotationX = 20;
+        rotationY = -30;
+        document.querySelector('.scene').style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
     };
 
     function updateOutput(array) {
