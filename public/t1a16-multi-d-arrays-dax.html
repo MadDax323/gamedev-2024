@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Dimensional Arrays</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        button { margin: 10px 0; padding: 10px; }
+        pre { background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+
+<h1>Multi-Dimensional Arrays Example</h1>
+
+<button id="manualBtn">Show Manual Multi-Dimensional Array</button>
+<button id="automaticBtn">Show Automatic 3D Array</button>
+
+<pre id="output"></pre>
+
+<script>
+    document.getElementById("manualBtn").onclick = function() {
+        // Manually set multi-dimensional array
+        const manualArray = [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+        ];
+
+        // Display the manually set array
+        document.getElementById("output").textContent = "Manual Multi-Dimensional Array:\n" + JSON.stringify(manualArray, null, 2);
+    };
+
+    document.getElementById("automaticBtn").onclick = function() {
+        // Automatically set a 3D array
+        const rows = 2;
+        const cols = 3;
+        const depth = 4;
+        const automaticArray = Array.from({ length: rows }, () =>
+            Array.from({ length: cols }, () =>
+                Array.from({ length: depth }, (_, z) => z + 1)
+            )
+        );
+
+        // Display the automatically set array
+        document.getElementById("output").textContent = "Automatic 3D Array:\n" + JSON.stringify(automaticArray, null, 2);
+    };
+</script>
+
+</body>
+</html>
