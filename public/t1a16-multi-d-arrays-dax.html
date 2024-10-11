@@ -16,38 +16,32 @@
             padding: 10px;
         }
         .cube-container {
-            width: 300px;
-            height: 300px;
+            width: 600px;
+            height: 600px;
             perspective: 1000px; /* Perspective for 3D effect */
             margin: 20px auto;
         }
-        .cube {
+        .scene {
             width: 100%;
             height: 100%;
             position: relative;
             transform-style: preserve-3d; /* Allow 3D transformations */
             transition: transform 0.5s; /* Smooth transition for rotation */
         }
-        .face {
+        .cube {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 50px; /* Size of individual cubes */
+            height: 50px;
             background: rgba(0, 128, 255, 0.7);
             border: 2px solid #333;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            font-size: 14px;
             color: #fff;
             font-weight: bold;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
         }
-        .face1 { transform: rotateY(0deg) translateZ(150px); }
-        .face2 { transform: rotateY(90deg) translateZ(150px); }
-        .face3 { transform: rotateY(180deg) translateZ(150px); }
-        .face4 { transform: rotateY(-90deg) translateZ(150px); }
-        .face5 { transform: rotateX(90deg) translateZ(150px); }
-        .face6 { transform: rotateX(-90deg) translateZ(150px); }
     </style>
 </head>
 <body>
@@ -56,7 +50,7 @@
 
 <button id="manualBtn">Show Manual 3D Array</button>
 <button id="automaticBtn">Show Automatic 3D Array</button>
-<button id="visualizeBtn">Visualize Cube</button>
+<button id="visualizeBtn">Visualize Array</button>
 
 <div id="visualization" class="cube-container"></div>
 <pre id="output"></pre>  <!-- Output formatted array for user reference -->
@@ -102,24 +96,28 @@
         const visualizationDiv = document.getElementById("visualization");
         visualizationDiv.innerHTML = ''; // Clear previous visualization
 
-        // Create the cube
-        const cube = document.createElement('div');
-        cube.className = 'cube';
+        // Create the scene
+        const scene = document.createElement('div');
+        scene.className = 'scene';
 
-        // Create cube faces based on the current array
-        const faces = currentArray.flat().flat(); // Flatten array to get individual values
+        const depth = currentArray.length;
+        const height = currentArray[0].length;
+        const width = currentArray[0][0].length;
 
-        // Ensure we only create up to 6 faces
-        for (let i = 0; i < 6; i++) {
-            const face = document.createElement('div');
-            face.className = 'face';
-
-            // Set the text for the face based on the array or a placeholder
-            face.textContent = faces[i] !== undefined ? faces[i] : `Face ${i + 1}`;
-            cube.appendChild(face);
+        // Create cubelets based on the current array
+        for (let x = 0; x < depth; x++) {
+            for (let y = 0; y < height; y++) {
+                for (let z = 0; z < width; z++) {
+                    const cube = document.createElement('div');
+                    cube.className = 'cube';
+                    cube.style.transform = `translate3D(${(x * 60) - (depth * 30)}px, ${(-y * 60) + (height * 30)}px, ${(-z * 60) + (width * 30)}px)`;
+                    cube.textContent = currentArray[x][y][z];
+                    scene.appendChild(cube);
+                }
+            }
         }
 
-        visualizationDiv.appendChild(cube);
+        visualizationDiv.appendChild(scene);
 
         // Add mouse events for interaction
         const onMouseMove = (event) => {
@@ -131,8 +129,8 @@
             rotationY += deltaX * 0.5;
             rotationX -= deltaY * 0.5;
 
-            // Apply rotation to the cube
-            cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+            // Apply rotation to the scene
+            scene.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
 
             lastMouseX = event.clientX;
             lastMouseY = event.clientY;
@@ -152,8 +150,8 @@
             document.removeEventListener('mouseup', onMouseUp);
         };
 
-        // Add event listeners to the cube for mouse controls
-        cube.addEventListener('mousedown', onMouseDown);
+        // Add event listeners to the scene for mouse controls
+        scene.addEventListener('mousedown', onMouseDown);
     };
 </script>
 
