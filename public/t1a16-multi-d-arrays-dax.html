@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Dimensional Arrays</title>
+    <title>Multi-Dimensional Array Visualization</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         button { margin: 10px 0; padding: 10px; }
         pre { background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc; }
+        .array-container { margin-top: 20px; }
+        .array { display: inline-block; margin-right: 20px; border: 1px solid #ccc; padding: 10px; }
+        .dimension { margin: 5px 0; }
     </style>
 </head>
 <body>
@@ -16,10 +19,14 @@
 
 <button id="manualBtn">Show Manual Multi-Dimensional Array</button>
 <button id="automaticBtn">Show Automatic 3D Array</button>
+<button id="visualizeBtn">Visualize Array</button>
 
 <pre id="output"></pre>
+<div id="visualization" class="array-container"></div>
 
 <script>
+    let currentArray = null; // To hold the currently selected array type
+
     document.getElementById("manualBtn").onclick = function() {
         // Manually set multi-dimensional array
         const manualArray = [
@@ -27,6 +34,9 @@
             [4, 5, 6],
             [7, 8, 9]
         ];
+
+        // Store the array for visualization
+        currentArray = manualArray;
 
         // Display the manually set array
         document.getElementById("output").textContent = "Manual Multi-Dimensional Array:\n" + JSON.stringify(manualArray, null, 2);
@@ -43,8 +53,45 @@
             )
         );
 
+        // Store the array for visualization
+        currentArray = automaticArray;
+
         // Display the automatically set array
         document.getElementById("output").textContent = "Automatic 3D Array:\n" + JSON.stringify(automaticArray, null, 2);
+    };
+
+    document.getElementById("visualizeBtn").onclick = function() {
+        // Clear previous visualization
+        const visualizationDiv = document.getElementById("visualization");
+        visualizationDiv.innerHTML = '';
+
+        if (!currentArray) {
+            visualizationDiv.textContent = "Please select an array to visualize.";
+            return;
+        }
+
+        // Visualize the array
+        if (Array.isArray(currentArray)) {
+            const visualizeArray = (arr, level = 0) => {
+                const container = document.createElement('div');
+                container.className = 'array';
+                arr.forEach(subArray => {
+                    const dimensionDiv = document.createElement('div');
+                    dimensionDiv.className = 'dimension';
+
+                    if (Array.isArray(subArray)) {
+                        dimensionDiv.appendChild(visualizeArray(subArray, level + 1));
+                    } else {
+                        dimensionDiv.textContent = `${subArray}`;
+                    }
+
+                    container.appendChild(dimensionDiv);
+                });
+                return container;
+            };
+
+            visualizationDiv.appendChild(visualizeArray(currentArray));
+        }
     };
 </script>
 
