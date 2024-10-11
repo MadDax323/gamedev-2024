@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced 3D Interactive Cube Array Visualization</title>
+    <title>3D Interactive Cube Array Visualization</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -44,6 +44,7 @@
             position: relative;
             transform-style: preserve-3d; /* Allow 3D transformations */
             transition: transform 0.5s; /* Smooth transition for rotation */
+            transform-origin: center; /* Set the rotation origin to the center */
         }
         .cube {
             position: absolute;
@@ -63,7 +64,7 @@
 </head>
 <body>
 
-<h1>Advanced 3D Cube Array Visualization</h1>
+<h1>3D Interactive Cube Array Visualization</h1>
 
 <button id="manualBtn">Show Manual 3D Array</button>
 <button id="automaticBtn">Show Automatic 3D Array</button>
@@ -84,7 +85,6 @@
     let rotationSpeed = 0.5; // Initial rotation speed
 
     document.getElementById("manualBtn").onclick = function() {
-        // Manually set a multi-dimensional array
         const manualArray = [
             [[1, 2, 3], [4, 5, 6]],
             [[7, 8, 9], [10, 11, 12]],
@@ -95,7 +95,6 @@
     };
 
     document.getElementById("automaticBtn").onclick = function() {
-        // Automatically set a 3D array
         const automaticArray = Array.from({ length: 3 }, (_, x) =>
             Array.from({ length: 2 }, (_, y) =>
                 Array.from({ length: 3 }, (_, z) => `${x},${y},${z}`)
@@ -106,7 +105,6 @@
     };
 
     document.getElementById("dynamicBtn").onclick = function() {
-        // Create a dynamic 3D array based on user input
         const depth = prompt("Enter depth (number of layers):", "3");
         const height = prompt("Enter height (number of rows):", "2");
         const width = prompt("Enter width (number of columns):", "3");
@@ -114,7 +112,7 @@
         if (depth && height && width) {
             const dynamicArray = Array.from({ length: depth }, (_, x) =>
                 Array.from({ length: height }, (_, y) =>
-                    Array.from({ length: width }, (_, z) => `${Math.floor(Math.random() * 100)}`) // Random numbers
+                    Array.from({ length: width }, (_, z) => `${Math.floor(Math.random() * 100)}`)
                 )
             );
             currentArray = dynamicArray;
@@ -131,7 +129,6 @@
         const visualizationDiv = document.getElementById("visualization");
         visualizationDiv.innerHTML = ''; // Clear previous visualization
 
-        // Create the scene
         const scene = document.createElement('div');
         scene.className = 'scene';
 
@@ -156,7 +153,6 @@
 
         visualizationDiv.appendChild(scene);
 
-        // Add mouse events for interaction
         const onMouseMove = (event) => {
             if (!isMouseDown) return;
             const deltaX = event.clientX - lastMouseX;
@@ -187,12 +183,10 @@
             document.removeEventListener('mouseup', onMouseUp);
         };
 
-        // Add event listeners to the scene for mouse controls
         scene.addEventListener('mousedown', onMouseDown);
     };
 
     document.getElementById("resetBtn").onclick = function() {
-        // Reset the view
         rotationX = 20;
         rotationY = -30;
         document.querySelector('.scene').style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
@@ -205,7 +199,6 @@
     }
 
     function getColor(value) {
-        // Generate a color based on the value (for example, using a simple hash)
         const num = parseInt(value);
         const r = (num * 50) % 255;
         const g = (num * 30) % 255;
