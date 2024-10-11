@@ -3,10 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Interactive Cube Visualization</title>
+    <title>3D Interactive Cube Array Visualization</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
-        button { margin: 10px 0; padding: 10px; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+            user-select: none; /* Disable text selection */
+        }
+        button {
+            margin: 10px 0;
+            padding: 10px;
+        }
         .cube-container {
             width: 300px;
             height: 300px;
@@ -44,20 +52,52 @@
 </head>
 <body>
 
-<h1>3D Interactive Cube Visualization</h1>
+<h1>3D Interactive Cube Array Visualization</h1>
 
-<button id="visualizeBtn">Show Cube</button>
+<button id="manualBtn">Show Manual 3D Array</button>
+<button id="automaticBtn">Show Automatic 3D Array</button>
+<button id="visualizeBtn">Visualize Cube</button>
 
 <div id="visualization" class="cube-container"></div>
 
 <script>
+    let currentArray = null; // Store the currently selected array
     let isMouseDown = false;
     let lastMouseX = 0;
     let lastMouseY = 0;
     let rotationX = 20; // Initial rotation X
     let rotationY = -30; // Initial rotation Y
 
+    document.getElementById("manualBtn").onclick = function() {
+        // Manually set a multi-dimensional array
+        const manualArray = [
+            [[1, 2, 3], [4, 5, 6]],
+            [[7, 8, 9], [10, 11, 12]],
+            [[13, 14, 15], [16, 17, 18]]
+        ];
+        currentArray = manualArray;
+        document.getElementById("visualization").innerHTML = ''; // Clear previous visualization
+        document.getElementById("output").textContent = "Manual 3D Array:\n" + JSON.stringify(manualArray, null, 2);
+    };
+
+    document.getElementById("automaticBtn").onclick = function() {
+        // Automatically set a 3D array
+        const automaticArray = Array.from({ length: 3 }, (_, x) =>
+            Array.from({ length: 2 }, (_, y) =>
+                Array.from({ length: 3 }, (_, z) => `${x},${y},${z}`)
+            )
+        );
+        currentArray = automaticArray;
+        document.getElementById("visualization").innerHTML = ''; // Clear previous visualization
+        document.getElementById("output").textContent = "Automatic 3D Array:\n" + JSON.stringify(automaticArray, null, 2);
+    };
+
     document.getElementById("visualizeBtn").onclick = function() {
+        if (!currentArray) {
+            alert("Please select an array to visualize first!");
+            return;
+        }
+
         const visualizationDiv = document.getElementById("visualization");
         visualizationDiv.innerHTML = ''; // Clear previous visualization
 
@@ -65,11 +105,16 @@
         const cube = document.createElement('div');
         cube.className = 'cube';
 
-        // Create cube faces
-        for (let i = 1; i <= 6; i++) {
+        // Create cube faces based on the current array
+        const faces = currentArray.flat(); // Flatten array if necessary
+
+        // Ensure we only create up to 6 faces
+        for (let i = 0; i < 6; i++) {
             const face = document.createElement('div');
-            face.className = `face face${i}`;
-            face.textContent = `Face ${i}`;
+            face.className = 'face';
+
+            // Set the text for the face based on the array or a placeholder
+            face.textContent = faces[i] ? faces[i] : `Face ${i + 1}`;
             cube.appendChild(face);
         }
 
@@ -110,6 +155,8 @@
         cube.addEventListener('mousedown', onMouseDown);
     };
 </script>
+
+<pre id="output"></pre>  <!-- Output formatted array for user reference -->
 
 </body>
 </html>
