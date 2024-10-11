@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Array Cube Visualization</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
+        body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
         button { margin: 10px 0; padding: 10px; }
-        pre { background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc; }
+        pre { background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc; margin: 10px auto; width: 90%; }
         .cube-container {
             width: 200px;
             height: 200px;
-            perspective: 600px;
+            perspective: 1000px;
             margin: 20px auto;
         }
         .cube {
@@ -19,19 +19,21 @@
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            transform: rotateX(0) rotateY(0);
-            animation: spin 20s infinite linear;
+            animation: spin 10s infinite linear; /* Remove this for no spinning */
         }
         .face {
             position: absolute;
             width: 200px;
             height: 200px;
-            background-color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.9);
             border: 1px solid #ccc;
-            line-height: 200px;
-            font-size: 24px;
-            text-align: center;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
             color: #333;
+            font-weight: bold;
         }
         .front  { transform: translateZ(100px); }
         .back   { transform: rotateY(180deg) translateZ(100px); }
@@ -60,35 +62,24 @@
     let currentArray = null; // To hold the currently selected array
 
     document.getElementById("manualBtn").onclick = function() {
-        // Manually set multi-dimensional array
+        // Manually set a multi-dimensional array
         const manualArray = [
-            [[1, 2], [3, 4]],
-            [[5, 6], [7, 8]],
-            [[9, 10], [11, 12]]
+            [[1, 2, 3], [4, 5, 6]],
+            [[7, 8, 9], [10, 11, 12]],
+            [[13, 14, 15], [16, 17, 18]]
         ];
-
-        // Store the array for visualization
         currentArray = manualArray;
-
-        // Display the manually set array
         document.getElementById("output").textContent = "Manual 3D Array:\n" + JSON.stringify(manualArray, null, 2);
     };
 
     document.getElementById("automaticBtn").onclick = function() {
         // Automatically set a 3D array
-        const rows = 2;
-        const cols = 2;
-        const depth = 2;
-        const automaticArray = Array.from({ length: rows }, (_, x) =>
-            Array.from({ length: cols }, (_, y) =>
-                Array.from({ length: depth }, (_, z) => `${x},${y},${z}`)
+        const automaticArray = Array.from({ length: 3 }, (_, x) =>
+            Array.from({ length: 2 }, (_, y) =>
+                Array.from({ length: 3 }, (_, z) => `${x},${y},${z}`)
             )
         );
-
-        // Store the array for visualization
         currentArray = automaticArray;
-
-        // Display the automatically set array
         document.getElementById("output").textContent = "Automatic 3D Array:\n" + JSON.stringify(automaticArray, null, 2);
     };
 
@@ -102,27 +93,33 @@
             return;
         }
 
-        // Visualize the current 3D array in a cube format
+        // Create the cube
         const cube = document.createElement('div');
         cube.className = 'cube';
 
-        currentArray.forEach((layer, x) => {
-            layer.forEach((row, y) => {
-                const face = document.createElement('div');
-                face.className = 'face';
-                face.textContent = `Layer ${x} Row ${y}: ${JSON.stringify(row)}`;
-                if (x === 0 && y === 0) {
-                    face.className += ' front';
-                } else if (x === 0 && y === 1) {
-                    face.className += ' right';
-                } else if (x === 1 && y === 0) {
-                    face.className += ' back';
-                } else if (x === 1 && y === 1) {
-                    face.className += ' left';
-                }
-                
-                cube.appendChild(face);
-            });
+        // Assign faces
+        const faces = [ 'front', 'right', 'back', 'left', 'top', 'bottom' ];
+        faces.forEach((face, index) => {
+            const faceDiv = document.createElement('div');
+            faceDiv.className = 'face ' + face;
+
+            let content = '';
+            if (face === 'front') {
+                content = currentArray[0].map(row => JSON.stringify(row)).join('\n');
+            } else if (face === 'back') {
+                content = currentArray[currentArray.length - 1].map(row => JSON.stringify(row)).join('\n');
+            } else if (face === 'right') {
+                content = currentArray.map(layer => JSON.stringify(layer[1])).join('\n');
+            } else if (face === 'left') {
+                content = currentArray.map(layer => JSON.stringify(layer[0])).join('\n');
+            } else if (face === 'top') {
+                content = currentArray[0].map(row => JSON.stringify(row)).join('\n');
+            } else if (face === 'bottom') {
+                content = currentArray[currentArray.length - 1].map(row => JSON.stringify(row)).join('\n');
+            }
+
+            faceDiv.textContent = content;
+            cube.appendChild(faceDiv);
         });
 
         visualizationDiv.appendChild(cube);
