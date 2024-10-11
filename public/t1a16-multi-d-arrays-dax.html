@@ -59,6 +59,7 @@
 <button id="visualizeBtn">Visualize Cube</button>
 
 <div id="visualization" class="cube-container"></div>
+<pre id="output"></pre>  <!-- Output formatted array for user reference -->
 
 <script>
     let currentArray = null; // Store the currently selected array
@@ -106,7 +107,7 @@
         cube.className = 'cube';
 
         // Create cube faces based on the current array
-        const faces = currentArray.flat(); // Flatten array if necessary
+        const faces = currentArray.flat().flat(); // Flatten array to get individual values
 
         // Ensure we only create up to 6 faces
         for (let i = 0; i < 6; i++) {
@@ -114,7 +115,7 @@
             face.className = 'face';
 
             // Set the text for the face based on the array or a placeholder
-            face.textContent = faces[i] ? faces[i] : `Face ${i + 1}`;
+            face.textContent = faces[i] !== undefined ? faces[i] : `Face ${i + 1}`;
             cube.appendChild(face);
         }
 
@@ -155,8 +156,6 @@
         cube.addEventListener('mousedown', onMouseDown);
     };
 </script>
-
-<pre id="output"></pre>  <!-- Output formatted array for user reference -->
 
 </body>
 </html>
