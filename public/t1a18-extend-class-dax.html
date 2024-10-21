@@ -1,123 +1,115 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extended Classes Example</title>
-    <style>
-        /* Base Button Class */
-        .button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 5px;
-        }
+  <title>Extending Classes in JavaScript</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
 
-        /* Extended Classes */
-        .primary {
-            background-color: blue;
-            color: white;
-        }
+    section {
+      margin-bottom: 20px;
+    }
 
-        .secondary {
-            background-color: gray;
-            color: white;
-        }
+    button {
+      background-color: #4CAF50;
+      color: #ffffff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-        .danger {
-            background-color: red;
-            color: white;
-        }
+    button:hover {
+      background-color: #3e8e41;
+    }
 
-        .success {
-            background-color: green;
-            color: white;
-        }
-
-        /* Utility Classes */
-        .large {
-            font-size: 20px;
-        }
-
-        .small {
-            font-size: 12px;
-        }
-
-        /* Javascript Class Styles */
-        .alert {
-            padding: 15px;
-            color: white;
-            margin-top: 10px;
-        }
-    </style>
+    #output-1, #output-2 {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>Extending Classes in JavaScript</h1>
+  </header>
+  <main>
+    <section id="example-1">
+      <h2>Example 1: Animal and Dog Classes</h2>
+      <p>Click the button to create a new Dog object and call its methods:</p>
+      <button id="create-dog-btn">Create Dog</button>
+      <div id="output-1"></div>
+    </section>
+    <section id="example-2">
+      <h2>Example 2: Vehicle and Car Classes</h2>
+      <p>Click the button to create a new Car object and call its methods:</p>
+      <button id="create-car-btn">Create Car</button>
+      <div id="output-2"></div>
+    </section>
+  </main>
 
-<h1>Extended Classes in CSS and JavaScript</h1>
+  <script>
+    // Example 1: Animal and Dog Classes
+    class Animal {
+      constructor(name) {
+        this.name = name;
+      }
 
-<!-- CSS Extended Class Examples -->
-<h2>CSS Extended Classes</h2>
-<button class="button primary">Primary Button</button>
-<button class="button secondary">Secondary Button</button>
-<button class="button danger">Danger Button</button>
-<button class="button success large">Success Large Button</button>
-<button class="button success small">Success Small Button</button>
-
-<!-- JavaScript Class Inheritance Examples -->
-<h2>JavaScript Class Inheritance</h2>
-<div id="alerts"></div>
-<button id="addInfoAlert">Add Info Alert</button>
-<button id="addWarningAlert">Add Warning Alert</button>
-
-<script>
-    // Base Class
-    class Alert {
-        constructor(message) {
-            this.message = message;
-        }
-
-        show() {
-            return `<div class="alert">${this.message}</div>`;
-        }
+      sound() {
+        console.log("The animal makes a sound.");
+      }
     }
 
-    // Extended Classes
-    class InfoAlert extends Alert {
-        constructor(message) {
-            super(message);
-        }
+    class Dog extends Animal {
+      constructor(name, breed) {
+        super(name);
+        this.breed = breed;
+      }
 
-        show() {
-            return `<div class="alert" style="background-color: lightblue;">${this.message}</div>`;
-        }
+      sound() {
+        console.log("The dog barks.");
+      }
     }
 
-    class WarningAlert extends Alert {
-        constructor(message) {
-            super(message);
-        }
-
-        show() {
-            return `<div class="alert" style="background-color: gold;">${this.message}</div>`;
-        }
-    }
-
-    // Displaying Alerts
-    const alertsContainer = document.getElementById("alerts");
-
-    document.getElementById("addInfoAlert").addEventListener("click", function() {
-        const infoAlert = new InfoAlert("This is an info alert.");
-        alertsContainer.innerHTML += infoAlert.show();
+    document.getElementById("create-dog-btn").addEventListener("click", () => {
+      const myDog = new Dog("Fido", "Golden Retriever");
+      document.getElementById("output-1").innerHTML = `My dog's name is ${myDog.name} and it's a ${myDog.breed}.`;
+      myDog.sound();
     });
 
-    document.getElementById("addWarningAlert").addEventListener("click", function() {
-        const warningAlert = new WarningAlert("This is a warning alert.");
-        alertsContainer.innerHTML += warningAlert.show();
+    // Example 2: Vehicle and Car Classes
+    class Vehicle {
+      constructor(make, model) {
+        this.make = make;
+        this.model = model;
+      }
+
+      honk() {
+        console.log("The vehicle honks.");
+      }
+    }
+
+    class Car extends Vehicle {
+      constructor(make, model, year) {
+        super(make, model);
+        this.year = year;
+      }
+
+      honk() {
+        console.log("The car beeps.");
+      }
+    }
+
+    document.getElementById("create-car-btn").addEventListener("click", () => {
+      const myCar = new Car("Toyota", "Corolla", 2015);
+      document.getElementById("output-2").innerHTML = `My car is a ${myCar.year} ${myCar.make} ${myCar.model}.`;
+      myCar.honk();
     });
-
-</script>
-
+  </script>
 </body>
 </html>
+
