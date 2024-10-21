@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extended Classes Example</title>
+    <style>
+        /* Base Button Class */
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+
+        /* Extended Classes */
+        .primary {
+            background-color: blue;
+            color: white;
+        }
+
+        .secondary {
+            background-color: gray;
+            color: white;
+        }
+
+        .danger {
+            background-color: red;
+            color: white;
+        }
+
+        .success {
+            background-color: green;
+            color: white;
+        }
+
+        /* Utility Classes */
+        .large {
+            font-size: 20px;
+        }
+
+        .small {
+            font-size: 12px;
+        }
+
+        /* Javascript Class Styles */
+        .alert {
+            padding: 15px;
+            background-color: orange;
+            color: white;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Extended Classes in CSS and JavaScript</h1>
+
+<!-- CSS Extended Class Examples -->
+<h2>CSS Extended Classes</h2>
+<button class="button primary">Primary Button</button>
+<button class="button secondary">Secondary Button</button>
+<button class="button danger">Danger Button</button>
+<button class="button success large">Success Large Button</button>
+<button class="button success small">Success Small Button</button>
+
+<!-- JavaScript Class Inheritance Examples -->
+<h2>JavaScript Class Inheritance</h2>
+<div id="alerts"></div>
+<script>
+    // Base Class
+    class Alert {
+        constructor(message) {
+            this.message = message;
+        }
+
+        show() {
+            return `<div class="alert">${this.message}</div>`;
+        }
+    }
+
+    // Extended Classes
+    class InfoAlert extends Alert {
+        constructor(message) {
+            super(message);
+        }
+
+        show() {
+            return `<div class="alert" style="background-color: lightblue;">${this.message}</div>`;
+        }
+    }
+
+    class WarningAlert extends Alert {
+        constructor(message) {
+            super(message);
+        }
+
+        show() {
+            return `<div class="alert" style="background-color: gold;">${this.message}</div>`;
+        }
+    }
+
+    // Displaying Alerts
+    const alerts = [
+        new Alert("This is a basic alert."),
+        new InfoAlert("This is an info alert."),
+        new WarningAlert("This is a warning alert.")
+    ];
+
+    const alertsContainer = document.getElementById("alerts");
+    alerts.forEach(alert => {
+        alertsContainer.innerHTML += alert.show();
+    });
+</script>
+
+</body>
+</html>
