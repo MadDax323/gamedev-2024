@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Move the Cube</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden; /* Prevent scrollbars */
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .cube {
+            width: 100px;
+            height: 100px;
+            background-color: #3498db; /* Blue color */
+            position: absolute;
+            cursor: grab; /* Cursor style when hovering */
+        }
+
+        .cube:active {
+            cursor: grabbing; /* Cursor style while dragging */
+        }
+    </style>
+</head>
+<body>
+
+<div class="cube" id="cube"></div>
+
+<script>
+    const cube = document.getElementById('cube');
+
+    let offsetX, offsetY;
+    let isDragging = false;
+
+    cube.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        offsetX = e.clientX - cube.getBoundingClientRect().left;
+        offsetY = e.clientY - cube.getBoundingClientRect().top;
+        cube.style.cursor = 'grabbing'; // Change cursor to grabbing
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+        cube.style.cursor = 'grab'; // Revert cursor back
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            cube.style.left = `${e.clientX - offsetX}px`;
+            cube.style.top = `${e.clientY - offsetY}px`;
+        }
+    });
+</script>
+
+</body>
+</html>
