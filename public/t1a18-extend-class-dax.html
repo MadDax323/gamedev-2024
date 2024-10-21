@@ -25,7 +25,7 @@
       background-color: #3e8e41;
     }
 
-    #output-1, #output-2, #output-3, #output-4 {
+    #output-1, #output-2, #output-3, #output-4, #output-5, #output-6, #output-7, #output-8 {
       margin-top: 10px;
       padding: 10px;
       border: 1px solid #ccc;
@@ -62,6 +62,30 @@
       <button id="create-employee-btn">Create Employee</button>
       <div id="output-4"></div>
     </section>
+    <section id="example-5">
+      <h2>Example 5: Food and Pizza Classes</h2>
+      <p>Click the button to create a new Pizza object and call its methods:</p>
+      <button id="create-pizza-btn">Create Pizza</button>
+      <div id="output-5"></div>
+    </section>
+    <section id="example-6">
+      <h2>Example 6: Computer and Laptop Classes</h2>
+      <p>Click the button to create a new Laptop object and call its methods:</p>
+      <button id="create-laptop-btn">Create Laptop</button>
+      <div id="output-6"></div>
+    </section>
+    <section id="example-7">
+      <h2>Example 7: Building and House Classes</h2>
+      <p>Click the button to create a new House object and call its methods:</p>
+      <button id="create-house-btn">Create House</button>
+      <div id="output-7"></div>
+    </section>
+    <section id="example-8">
+      <h2>Example 8: Sport and Football Classes</h2>
+      <p>Click the button to create a new Football object and call its methods:</p>
+      <button id="create-football-btn">Create Football</button>
+      <div id="output-8"></div>
+    </section>
   </main>
 
   <script>
@@ -91,7 +115,7 @@
       const myDog = new Dog("Fido", "Golden Retriever");
       document.getElementById("output-1").innerHTML = `My dog's name is ${myDog.name} and it's a ${myDog.breed}.`;
       myDog.sound();
-    });
+   });
 
     // Example 2: Vehicle and Car Classes
     class Vehicle {
@@ -179,6 +203,119 @@
       document.getElementById("output-4").innerHTML = `My employee's name is ${myEmployee.name}, they are ${myEmployee.age} years old, and they earn a salary of ${myEmployee.salary}.`;
       myEmployee.greet();
     });
+
+    // Example 5: Food and Pizza Classes
+    class Food {
+      constructor(name) {
+        this.name = name;
+      }
+
+      eat() {
+        console.log("I'm eating some food.");
+      }
+    }
+
+    class Pizza extends Food {
+      constructor(name, toppings) {
+        super(name);
+        this.toppings = toppings;
+      }
+
+      eat() {
+        console.log(`I'm eating a ${this.name} pizza with ${this.toppings} toppings.`);
+      }
+    }
+
+    document.getElementById("create-pizza-btn").addEventListener("click", () => {
+      const myPizza = new Pizza("pepperoni", ["pepperoni", "mushrooms", "onions"]);
+      document.getElementById("output-5").innerHTML = `My pizza is a ${myPizza.name} pizza with ${myPizza.toppings} toppings.`;
+      myPizza.eat();
+    });
+
+    // Example 6: Computer and Laptop Classes
+    class Computer {
+      constructor(brand) {
+        this.brand = brand;
+      }
+
+      turnOn() {
+        console.log("The computer is turning on.");
+      }
+    }
+
+    class Laptop extends Computer {
+      constructor(brand, model) {
+        super(brand);
+        this.model = model;
+      }
+
+      turnOn() {
+        console.log(`The ${this.model} laptop by ${this.brand} is turning on.`);
+      }
+    }
+
+    document.getElementById("create-laptop-btn").addEventListener("click", () => {
+      const myLaptop = new Laptop("Apple", "MacBook Air");
+      document.getElementById("output-6").innerHTML = `My laptop is a ${myLaptop.model} by ${myLaptop.brand}.`;
+      myLaptop.turnOn();
+    });
+
+    // Example 7: Building and House Classes
+    class Building {
+      constructor(address) {
+        this.address = address;
+      }
+
+      enter() {
+        console.log("I'm entering the building.");
+      }
+    }
+
+    class House extends Building {
+      constructor(address, bedrooms) {
+        super(address);
+        this.bedrooms = bedrooms;
+      }
+
+      enter() {
+        console.log(`I'm entering the house at ${this.address} with ${this.bedrooms} bedrooms.`);
+      }
+    }
+
+    document.getElementById("create-house-btn").addEventListener("click", () => {
+      const myHouse = new House("123 Main St", 3);
+      document.getElementById("output-7").innerHTML = `My house is at ${myHouse.address} with ${myHouse.bedrooms} bedrooms.`;
+      myHouse.enter();
+    });
+
+    // Example 8: Sport and Football Classes
+    class Sport {
+      constructor(name) {
+        this.name = name;
+      }
+
+      play() {
+        console.log("I'm playing a sport.");
+      }
+    }
+
+    class Football extends Sport {
+      constructor(name, team) {
+        super(name);
+        this.team = team;
+      }
+
+      play() {
+        console.log(`I'm playing ${this.name} for the ${this.team} team.`);
+      }
+    }
+
+    document.getElementById("create-football-btn").addEventListener("click", () => {
+      const myFootball = new Football("football", "New England Patriots");
+      document.getElementById("output-8").innerHTML = `My sport is ${myFootball.name} and I'm playing for the ${myFootball.team} team.`;
+      myFootball.play();
+    });
   </script>
 </body>
 </html>
+
