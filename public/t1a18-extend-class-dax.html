@@ -48,7 +48,6 @@
         /* Javascript Class Styles */
         .alert {
             padding: 15px;
-            background-color: orange;
             color: white;
             margin-top: 10px;
         }
@@ -69,6 +68,9 @@
 <!-- JavaScript Class Inheritance Examples -->
 <h2>JavaScript Class Inheritance</h2>
 <div id="alerts"></div>
+<button id="addInfoAlert">Add Info Alert</button>
+<button id="addWarningAlert">Add Warning Alert</button>
+
 <script>
     // Base Class
     class Alert {
@@ -103,16 +105,18 @@
     }
 
     // Displaying Alerts
-    const alerts = [
-        new Alert("This is a basic alert."),
-        new InfoAlert("This is an info alert."),
-        new WarningAlert("This is a warning alert.")
-    ];
-
     const alertsContainer = document.getElementById("alerts");
-    alerts.forEach(alert => {
-        alertsContainer.innerHTML += alert.show();
+
+    document.getElementById("addInfoAlert").addEventListener("click", function() {
+        const infoAlert = new InfoAlert("This is an info alert.");
+        alertsContainer.innerHTML += infoAlert.show();
     });
+
+    document.getElementById("addWarningAlert").addEventListener("click", function() {
+        const warningAlert = new WarningAlert("This is a warning alert.");
+        alertsContainer.innerHTML += warningAlert.show();
+    });
+
 </script>
 
 </body>
