@@ -25,7 +25,7 @@
       background-color: #3e8e41;
     }
 
-    #output-1, #output-2 {
+    #output-1, #output-2, #output-3, #output-4 {
       margin-top: 10px;
       padding: 10px;
       border: 1px solid #ccc;
@@ -49,6 +49,18 @@
       <p>Click the button to create a new Car object and call its methods:</p>
       <button id="create-car-btn">Create Car</button>
       <div id="output-2"></div>
+    </section>
+    <section id="example-3">
+      <h2>Example 3: Shape and Circle Classes</h2>
+      <p>Click the button to create a new Circle object and call its methods:</p>
+      <button id="create-circle-btn">Create Circle</button>
+      <div id="output-3"></div>
+    </section>
+    <section id="example-4">
+      <h2>Example 4: Person and Employee Classes</h2>
+      <p>Click the button to create a new Employee object and call its methods:</p>
+      <button id="create-employee-btn">Create Employee</button>
+      <div id="output-4"></div>
     </section>
   </main>
 
@@ -109,7 +121,64 @@
       document.getElementById("output-2").innerHTML = `My car is a ${myCar.year} ${myCar.make} ${myCar.model}.`;
       myCar.honk();
     });
+
+    // Example 3: Shape and Circle Classes
+    class Shape {
+      constructor(color) {
+        this.color = color;
+      }
+
+      area() {
+        console.log("The shape has an area.");
+      }
+    }
+
+    class Circle extends Shape {
+      constructor(color, radius) {
+        super(color);
+        this.radius = radius;
+      }
+
+      area() {
+        const area = Math.PI * this.radius * this.radius;
+        console.log(`The circle has an area of ${area}.`);
+      }
+    }
+
+    document.getElementById("create-circle-btn").addEventListener("click", () => {
+      const myCircle = new Circle("red", 5);
+      document.getElementById("output-3").innerHTML = `My circle is ${myCircle.color} and has a radius of ${myCircle.radius}.`;
+      myCircle.area();
+    });
+
+    // Example 4: Person and Employee Classes
+    class Person {
+      constructor(name, age) {
+        this.name = name;
+        this.age = age;
+      }
+
+      greet() {
+        console.log(`Hello, my name is ${this.name} and I am ${this.age} years old.`);
+      }
+    }
+
+    class Employee extends Person {
+      constructor(name, age, salary) {
+        super(name, age);
+        this.salary = salary;
+      }
+
+      greet() {
+        console.log(`Hello, my name is ${this.name} and I am ${this.age} years old. I earn a salary of ${this.salary}.`);
+      }
+    }
+
+    document.getElementById("create-employee-btn").addEventListener("click", () => {
+      const myEmployee = new Employee("John Doe", 30, 50000);
+      document.getElementById("output-4").innerHTML = `My employee's name is ${myEmployee.name}, they are ${myEmployee.age} years old, and they earn a salary of ${myEmployee.salary}.`;
+      myEmployee.greet();
+    });
   </script>
 </body>
 </html>
-
