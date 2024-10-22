@@ -12,6 +12,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column; /* Stack buttons vertically */
             height: 100vh;
         }
 
@@ -26,36 +27,57 @@
         .cube:active {
             cursor: grabbing; /* Cursor style while dragging */
         }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap; /* Allow buttons to wrap */
+            justify-content: center;
+            margin-top: 20px; /* Space between cube and buttons */
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
 <div class="cube" id="cube"></div>
 
+<div class="button-container">
+    <button id="up">Up</button>
+    <button id="down">Down</button>
+    <button id="left">Left</button>
+    <button id="right">Right</button>
+    <button id="up-left">Up-Left</button>
+    <button id="down-right">Down-Right</button>
+    <button id="up-right">Up-Right</button> <!-- New button -->
+    <button id="down-left">Down-Left</button> <!-- New button -->
+</div>
+
 <script>
     const cube = document.getElementById('cube');
+    const step = 10; // Number of pixels to move the cube
 
-    let offsetX, offsetY;
-    let isDragging = false;
+    // Function to move the cube
+    function moveCube(x, y) {
+        const rect = cube.getBoundingClientRect();
+        cube.style.left = `${rect.left + x}px`;
+        cube.style.top = `${rect.top + y}px`;
+    }
 
-    cube.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        offsetX = e.clientX - cube.getBoundingClientRect().left;
-        offsetY = e.clientY - cube.getBoundingClientRect().top;
-        cube.style.cursor = 'grabbing'; // Change cursor to grabbing
-    });
-
-    document.addEventListener('mouseup', () => {
-        isDragging = false;
-        cube.style.cursor = 'grab'; // Revert cursor back
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if (isDragging) {
-            cube.style.left = `${e.clientX - offsetX}px`;
-            cube.style.top = `${e.clientY - offsetY}px`;
-        }
-    });
+    // Event listeners for buttons
+    document.getElementById('up').addEventListener('click', () => moveCube(0, -step));
+    document.getElementById('down').addEventListener('click', () => moveCube(0, step));
+    document.getElementById('left').addEventListener('click', () => moveCube(-step, 0));
+    document.getElementById('right').addEventListener('click', () => moveCube(step, 0));
+    document.getElementById('up-left').addEventListener('click', () => moveCube(-step, -step));
+    document.getElementById('down-right').addEventListener('click', () => moveCube(step, step));
+    document.getElementById('up-right').addEventListener('click', () => moveCube(step, -step)); // New event listener
+    document.getElementById('down-left').addEventListener('click', () => moveCube(-step, step)); // New event listener
 </script>
 
 </body>
