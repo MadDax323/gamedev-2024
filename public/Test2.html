@@ -3,25 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mouse Move Example</title>
+    <title>OpenAI API Example</title>
     <style>
-        #myDiv01 {
-            width: 200px;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
             height: 100px;
-            border: 1px solid #000;
-            margin: 20px 0;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        #response {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
         }
     </style>
 </head>
-<body onmousemove="showMousePosition(event)">
+<body>
 
-    <h1>Mouse Move Example</h1>
-    <div id="myDiv01">Move your mouse over here!</div>
+<h1>DeepAI Limerick Generator</h1>
+<p>Enter a prompt to generate a limerick about the wonders of GPU computing:</p>
 
-    <script>
-        function showMousePosition(event) {
-            document.getElementById('myDiv01').innerHTML = `x: ${event.clientX}, y: ${event.clientY}`;
+<textarea id="inputPrompt"></textarea>
+<button id="generateButton">Generate Limerick</button>
+
+<div id="response"></div>
+
+<script>
+    const apiKey = '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'; // Replace with your actual API key
+    const baseURL = 'https://integrate.api.nvidia.com/v1/chat/completions';
+
+    document.getElementById('generateButton').addEventListener('click', async () => {
+        const prompt = document.getElementById('inputPrompt').value;
+
+        const requestData = {
+            model: "meta/llama3-70b-instruct",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.5,
+            top_p: 1,
+            max_tokens: 1024,
+            stream: false, // Set to true for streaming, but it requires additional handling
+        };
+
+        try {
+            const response = await fetch(baseURL, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const output = data.choices[0].message.content;
+            document.getElementById('response').innerText = output;
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('response').innerText = 'Error fetching response from OpenAI.';
         }
-    </script>
+    });
+</script>
+
 </body>
 </html>
