@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenAI API Example</title>
+    <title>OpenAI API Generic Prompt</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -28,11 +28,11 @@
 </head>
 <body>
 
-<h1>DeepAI Limerick Generator</h1>
-<p>Enter a prompt to generate a limerick about the wonders of GPU computing:</p>
+<h1>DeepAI API Prompt Generator</h1>
+<p>Enter a prompt to generate a response:</p>
 
-<textarea id="inputPrompt"></textarea>
-<button id="generateButton">Generate Limerick</button>
+<textarea id="inputPrompt" placeholder="Type your prompt here..."></textarea>
+<button id="generateButton">Generate Response</button>
 
 <div id="response"></div>
 
@@ -43,13 +43,18 @@
     document.getElementById('generateButton').addEventListener('click', async () => {
         const prompt = document.getElementById('inputPrompt').value;
 
+        if (!prompt) {
+            document.getElementById('response').innerText = 'Please enter a prompt.';
+            return;
+        }
+
         const requestData = {
             model: "meta/llama3-70b-instruct",
             messages: [{ role: "user", content: prompt }],
             temperature: 0.5,
             top_p: 1,
             max_tokens: 1024,
-            stream: false, // Set to true for streaming, but it requires additional handling
+            stream: false,
         };
 
         try {
