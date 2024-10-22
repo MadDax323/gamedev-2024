@@ -54,13 +54,15 @@
     <button id="right">Right</button>
     <button id="up-left">Up-Left</button>
     <button id="down-right">Down-Right</button>
-    <button id="up-right">Up-Right</button> <!-- New button -->
-    <button id="down-left">Down-Left</button> <!-- New button -->
+    <button id="up-right">Up-Right</button>
+    <button id="down-left">Down-Left</button>
 </div>
 
 <script>
     const cube = document.getElementById('cube');
     const step = 10; // Number of pixels to move the cube
+    let offsetX, offsetY;
+    let isDragging = false;
 
     // Function to move the cube
     function moveCube(x, y) {
@@ -69,6 +71,27 @@
         cube.style.top = `${rect.top + y}px`;
     }
 
+    // Mouse down event for dragging
+    cube.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        offsetX = e.clientX - cube.getBoundingClientRect().left;
+        offsetY = e.clientY - cube.getBoundingClientRect().top;
+        cube.style.cursor = 'grabbing'; // Change cursor to grabbing
+    });
+
+    // Mouse up event to stop dragging
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+        cube.style.cursor = 'grab'; // Revert cursor back
+    });
+
+    // Mouse move event for dragging
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            moveCube(e.clientX - offsetX - cube.getBoundingClientRect().left, e.clientY - offsetY - cube.getBoundingClientRect().top);
+        }
+    });
+
     // Event listeners for buttons
     document.getElementById('up').addEventListener('click', () => moveCube(0, -step));
     document.getElementById('down').addEventListener('click', () => moveCube(0, step));
@@ -76,8 +99,8 @@
     document.getElementById('right').addEventListener('click', () => moveCube(step, 0));
     document.getElementById('up-left').addEventListener('click', () => moveCube(-step, -step));
     document.getElementById('down-right').addEventListener('click', () => moveCube(step, step));
-    document.getElementById('up-right').addEventListener('click', () => moveCube(step, -step)); // New event listener
-    document.getElementById('down-left').addEventListener('click', () => moveCube(-step, step)); // New event listener
+    document.getElementById('up-right').addEventListener('click', () => moveCube(step, -step));
+    document.getElementById('down-left').addEventListener('click', () => moveCube(-step, step));
 </script>
 
 </body>
