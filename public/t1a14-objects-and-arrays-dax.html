@@ -178,6 +178,7 @@
             const guess = document.getElementById(inputId).value.trim().toLowerCase();
             const guessList = document.getElementById(guessListId);
             const feedbackList = document.getElementById(feedbackListId);
+
             const listItem = document.createElement('li');
             listItem.textContent = `You guessed: ${guess}`;
             guessList.appendChild(listItem);
