@@ -41,7 +41,7 @@
 <h2>Feedback:</h2>
 <ul id="correct-numbers"></ul>
 
-<!-- New Examples Section -->
+<!-- New Categories Section -->
 <h1>New Categories to Guess</h1>
 
 <!-- New Category 1: Fashion Brands -->
@@ -122,69 +122,54 @@
         }
     };
 
-    // New categories for the second set of examples
+    // New categories
     const newCategories = {
         fashion: {
-            correctAnswers: ["gucci", "prada", "chanel", "versace"],
+            correctAnswers: ["gucci", "prada", "chanel", "versace"]
         },
         authors: {
-            correctAnswers: ["shakespeare", "hemingway", "twain", "orwell"],
+            correctAnswers: ["shakespeare", "hemingway", "twain", "orwell"]
         },
         cuisines: {
-            correctAnswers: ["italian", "chinese", "mexican", "indian"],
+            correctAnswers: ["italian", "chinese", "mexican", "indian"]
         },
         historicalEvents: {
-            correctAnswers: ["moon landing", "world war ii", "industrial revolution", "french revolution"],
+            correctAnswers: ["moon landing", "world war ii", "industrial revolution", "french revolution"]
         },
         spaceMissions: {
-            correctAnswers: ["apollo 11", "voyager 1", "hubble", "curiosity rover"],
+            correctAnswers: ["apollo 11", "voyager 1", "hubble", "curiosity rover"]
         },
         artMovements: {
-            correctAnswers: ["impressionism", "cubism", "surrealism", "baroque"],
+            correctAnswers: ["impressionism", "cubism", "surrealism", "baroque"]
         }
     };
 
     // Original game functionality
-    let currentCategory = 'numbers';
-    updatePlaceholder();
-
-    document.getElementById('category-select').addEventListener('change', (event) => {
-        currentCategory = event.target.value;
-        updatePlaceholder();
-    });
-
-    function updatePlaceholder() {
-        const category = categories[currentCategory];
-        const placeholder = currentCategory === 'numbers' ? 
-            `Enter a number between ${category.min} and ${category.max}` : 
-            `Enter a ${currentCategory.slice(0, -1)}`; // Remove "s" for singular
-        document.getElementById('guess').placeholder = placeholder;
-    }
-
     document.getElementById('submit').addEventListener('click', () => {
         const guess = document.getElementById('guess').value.trim().toLowerCase();
+        const categoryKey = document.getElementById('category-select').value;
+        const category = categories[categoryKey];
+
         const guessList = document.getElementById('guess-list');
+        const feedbackList = document.getElementById('correct-numbers');
 
         const listItem = document.createElement('li');
         listItem.textContent = `You guessed: ${guess}`;
         guessList.appendChild(listItem);
 
-        const category = categories[currentCategory];
-        const correctList = document.getElementById('correct-numbers');
-        
         if (category.correctAnswers.includes(guess) || (category.min <= guess && guess <= category.max)) {
             const feedbackListItem = document.createElement('li');
             feedbackListItem.textContent = `"${guess}" is a correct guess!`;
             feedbackListItem.classList.add('correct');
-            correctList.appendChild(feedbackListItem);
+            feedbackList.appendChild(feedbackListItem);
         } else {
             const feedbackListItem = document.createElement('li');
             feedbackListItem.textContent = `"${guess}" is not correct.`;
             feedbackListItem.classList.add('wrong');
-            correctList.appendChild(feedbackListItem);
+            feedbackList.appendChild(feedbackListItem);
         }
 
-        document.getElementById('guess').value = ''; // Resetting input
+        document.getElementById('guess').value = ''; // Clear input
     });
 
     // New categories functionality
@@ -193,7 +178,6 @@
             const guess = document.getElementById(inputId).value.trim().toLowerCase();
             const guessList = document.getElementById(guessListId);
             const feedbackList = document.getElementById(feedbackListId);
-
             const listItem = document.createElement('li');
             listItem.textContent = `You guessed: ${guess}`;
             guessList.appendChild(listItem);
@@ -210,7 +194,7 @@
                 feedbackList.appendChild(feedbackListItem);
             }
 
-            document.getElementById(inputId).value = ''; // Resetting input
+            document.getElementById(inputId).value = ''; // Clear input
         });
     }
 
