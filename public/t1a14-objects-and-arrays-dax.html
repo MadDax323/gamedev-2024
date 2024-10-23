@@ -183,17 +183,15 @@
             listItem.textContent = `You guessed: ${guess}`;
             guessList.appendChild(listItem);
 
+            const feedbackListItem = document.createElement('li');
             if (newCategories[categoryKey].correctAnswers.includes(guess)) {
-                const feedbackListItem = document.createElement('li');
                 feedbackListItem.textContent = `"${guess}" is a correct guess!`;
                 feedbackListItem.classList.add('correct');
-                feedbackList.appendChild(feedbackListItem);
             } else {
-                const feedbackListItem = document.createElement('li');
                 feedbackListItem.textContent = `"${guess}" is not correct.`;
                 feedbackListItem.classList.add('wrong');
-                feedbackList.appendChild(feedbackListItem);
             }
+            feedbackList.appendChild(feedbackListItem);
 
             document.getElementById(inputId).value = ''; // Clear input
         });
