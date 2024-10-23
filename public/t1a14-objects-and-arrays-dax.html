@@ -44,7 +44,7 @@
 <!-- New Categories Section -->
 <h1>New Categories to Guess</h1>
 
-<!-- New Category 1: Fashion Brands -->
+<!-- Fashion Brands -->
 <h2>Fashion Brands</h2>
 <p>Guess a popular fashion brand:</p>
 <input type="text" id="fashion-guess" placeholder="Enter a fashion brand">
@@ -52,7 +52,7 @@
 <ul id="fashion-guess-list"></ul>
 <ul id="fashion-feedback-list"></ul>
 
-<!-- New Category 2: Famous Authors -->
+<!-- Famous Authors -->
 <h2>Famous Authors</h2>
 <p>Guess a famous author:</p>
 <input type="text" id="author-guess" placeholder="Enter an author">
@@ -60,7 +60,7 @@
 <ul id="author-guess-list"></ul>
 <ul id="author-feedback-list"></ul>
 
-<!-- New Category 3: World Cuisines -->
+<!-- World Cuisines -->
 <h2>World Cuisines</h2>
 <p>Guess a type of world cuisine:</p>
 <input type="text" id="cuisine-guess" placeholder="Enter a cuisine">
@@ -68,7 +68,7 @@
 <ul id="cuisine-guess-list"></ul>
 <ul id="cuisine-feedback-list"></ul>
 
-<!-- New Category 4: Historical Events -->
+<!-- Historical Events -->
 <h2>Historical Events</h2>
 <p>Guess a historical event:</p>
 <input type="text" id="event-guess" placeholder="Enter a historical event">
@@ -76,7 +76,7 @@
 <ul id="event-guess-list"></ul>
 <ul id="event-feedback-list"></ul>
 
-<!-- New Category 5: Space Missions -->
+<!-- Space Missions -->
 <h2>Space Missions</h2>
 <p>Guess a famous space mission:</p>
 <input type="text" id="mission-guess" placeholder="Enter a space mission">
@@ -84,7 +84,7 @@
 <ul id="mission-guess-list"></ul>
 <ul id="mission-feedback-list"></ul>
 
-<!-- New Category 6: Art Movements -->
+<!-- Art Movements -->
 <h2>Art Movements</h2>
 <p>Guess an art movement:</p>
 <input type="text" id="art-guess" placeholder="Enter an art movement">
@@ -185,7 +185,7 @@
 
             const feedbackListItem = document.createElement('li');
             if (newCategories[categoryKey].correctAnswers.includes(guess)) {
-                feedbackListItem.textContent = `"${guess}" is a correct guess!`;
+                feedbackListItem.textContent = `"${guess}" is a correct guess! The correct answer is "${guess}"!`;
                 feedbackListItem.classList.add('correct');
             } else {
                 feedbackListItem.textContent = `"${guess}" is not correct.`;
