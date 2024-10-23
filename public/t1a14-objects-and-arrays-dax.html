@@ -21,6 +21,7 @@
 
 <h1>Guess the Item Game</h1>
 
+<!-- Original Guessing Game -->
 <h2>Select a Category:</h2>
 <select id="category-select">
     <option value="numbers">Numbers</option>
@@ -40,8 +41,59 @@
 <h2>Feedback:</h2>
 <ul id="correct-numbers"></ul>
 
+<!-- New Examples Section -->
+<h1>New Categories to Guess</h1>
+
+<!-- New Category 1: Fashion Brands -->
+<h2>Fashion Brands</h2>
+<p>Guess a popular fashion brand:</p>
+<input type="text" id="fashion-guess" placeholder="Enter a fashion brand">
+<button id="fashion-submit">Submit Guess</button>
+<ul id="fashion-guess-list"></ul>
+<ul id="fashion-feedback-list"></ul>
+
+<!-- New Category 2: Famous Authors -->
+<h2>Famous Authors</h2>
+<p>Guess a famous author:</p>
+<input type="text" id="author-guess" placeholder="Enter an author">
+<button id="author-submit">Submit Guess</button>
+<ul id="author-guess-list"></ul>
+<ul id="author-feedback-list"></ul>
+
+<!-- New Category 3: World Cuisines -->
+<h2>World Cuisines</h2>
+<p>Guess a type of world cuisine:</p>
+<input type="text" id="cuisine-guess" placeholder="Enter a cuisine">
+<button id="cuisine-submit">Submit Guess</button>
+<ul id="cuisine-guess-list"></ul>
+<ul id="cuisine-feedback-list"></ul>
+
+<!-- New Category 4: Historical Events -->
+<h2>Historical Events</h2>
+<p>Guess a historical event:</p>
+<input type="text" id="event-guess" placeholder="Enter a historical event">
+<button id="event-submit">Submit Guess</button>
+<ul id="event-guess-list"></ul>
+<ul id="event-feedback-list"></ul>
+
+<!-- New Category 5: Space Missions -->
+<h2>Space Missions</h2>
+<p>Guess a famous space mission:</p>
+<input type="text" id="mission-guess" placeholder="Enter a space mission">
+<button id="mission-submit">Submit Guess</button>
+<ul id="mission-guess-list"></ul>
+<ul id="mission-feedback-list"></ul>
+
+<!-- New Category 6: Art Movements -->
+<h2>Art Movements</h2>
+<p>Guess an art movement:</p>
+<input type="text" id="art-guess" placeholder="Enter an art movement">
+<button id="art-submit">Submit Guess</button>
+<ul id="art-guess-list"></ul>
+<ul id="art-feedback-list"></ul>
+
 <script>
-    // Object containing categories with their corresponding correct answers
+    // Original categories
     const categories = {
         numbers: {
             correctAnswers: [3, 5, 7],
@@ -70,13 +122,32 @@
         }
     };
 
-    // Set default category
-    let currentCategory = 'numbers';
+    // New categories for the second set of examples
+    const newCategories = {
+        fashion: {
+            correctAnswers: ["gucci", "prada", "chanel", "versace"],
+        },
+        authors: {
+            correctAnswers: ["shakespeare", "hemingway", "twain", "orwell"],
+        },
+        cuisines: {
+            correctAnswers: ["italian", "chinese", "mexican", "indian"],
+        },
+        historicalEvents: {
+            correctAnswers: ["moon landing", "world war ii", "industrial revolution", "french revolution"],
+        },
+        spaceMissions: {
+            correctAnswers: ["apollo 11", "voyager 1", "hubble", "curiosity rover"],
+        },
+        artMovements: {
+            correctAnswers: ["impressionism", "cubism", "surrealism", "baroque"],
+        }
+    };
 
-    // Update input placeholder based on initial category
+    // Original game functionality
+    let currentCategory = 'numbers';
     updatePlaceholder();
 
-    // Event listener for category selection
     document.getElementById('category-select').addEventListener('change', (event) => {
         currentCategory = event.target.value;
         updatePlaceholder();
@@ -90,35 +161,67 @@
         document.getElementById('guess').placeholder = placeholder;
     }
 
-    // Event listener for the button
     document.getElementById('submit').addEventListener('click', () => {
         const guess = document.getElementById('guess').value.trim().toLowerCase();
         const guessList = document.getElementById('guess-list');
 
-        // Add the guess to the list
         const listItem = document.createElement('li');
         listItem.textContent = `You guessed: ${guess}`;
         guessList.appendChild(listItem);
 
         const category = categories[currentCategory];
-
-        // Check if the guess is correct
-        if (category.correctAnswers.includes(guess) || (currentCategory === 'numbers' && category.correctAnswers.includes(Number(guess)))) {
-            const correctListItem = document.createElement('li');
-            correctListItem.textContent = `Correct guess: ${guess}`;
-            correctListItem.className = 'correct'; // Add class for correct guesses
-            document.getElementById('correct-numbers').appendChild(correctListItem);
+        const correctList = document.getElementById('correct-numbers');
+        
+        if (category.correctAnswers.includes(guess) || (category.min <= guess && guess <= category.max)) {
+            const feedbackListItem = document.createElement('li');
+            feedbackListItem.textContent = `"${guess}" is a correct guess!`;
+            feedbackListItem.classList.add('correct');
+            correctList.appendChild(feedbackListItem);
         } else {
-            const wrongListItem = document.createElement('li');
-            wrongListItem.textContent = `Wrong guess: ${guess}`;
-            wrongListItem.className = 'wrong'; // Add class for wrong guesses
-            document.getElementById('correct-numbers').appendChild(wrongListItem);
+            const feedbackListItem = document.createElement('li');
+            feedbackListItem.textContent = `"${guess}" is not correct.`;
+            feedbackListItem.classList.add('wrong');
+            correctList.appendChild(feedbackListItem);
         }
 
-        // Clear the input
-        document.getElementById('guess').value = '';
+        document.getElementById('guess').value = ''; // Resetting input
     });
-</script>
 
+    // New categories functionality
+    function setupNewCategory(categoryKey, inputId, guessListId, feedbackListId) {
+        document.getElementById(`${inputId}-submit`).addEventListener('click', () => {
+            const guess = document.getElementById(inputId).value.trim().toLowerCase();
+            const guessList = document.getElementById(guessListId);
+            const feedbackList = document.getElementById(feedbackListId);
+
+            const listItem = document.createElement('li');
+            listItem.textContent = `You guessed: ${guess}`;
+            guessList.appendChild(listItem);
+
+            if (newCategories[categoryKey].correctAnswers.includes(guess)) {
+                const feedbackListItem = document.createElement('li');
+                feedbackListItem.textContent = `"${guess}" is a correct guess!`;
+                feedbackListItem.classList.add('correct');
+                feedbackList.appendChild(feedbackListItem);
+            } else {
+                const feedbackListItem = document.createElement('li');
+                feedbackListItem.textContent = `"${guess}" is not correct.`;
+                feedbackListItem.classList.add('wrong');
+                feedbackList.appendChild(feedbackListItem);
+            }
+
+            document.getElementById(inputId).value = ''; // Resetting input
+        });
+    }
+
+    // Setup new categories
+    setupNewCategory('fashion', 'fashion-guess', 'fashion-guess-list', 'fashion-feedback-list');
+    setupNewCategory('authors', 'author-guess', 'author-guess-list', 'author-feedback-list');
+    setupNewCategory('cuisines', 'cuisine-guess', 'cuisine-guess-list', 'cuisine-feedback-list');
+    setupNewCategory('historicalEvents', 'event-guess', 'event-guess-list', 'event-feedback-list');
+    setupNewCategory('spaceMissions', 'mission-guess', 'mission-guess-list', 'mission-feedback-list');
+    setupNewCategory('artMovements', 'art-guess', 'art-guess-list', 'art-feedback-list');
+
+</script>
 </body>
 </html>
