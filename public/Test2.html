@@ -3,83 +3,1014 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenAI API Generic Prompt</title>
+    <title>Banana Quiz</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
         }
-        textarea {
-            width: 100%;
-            height: 100px;
+
+        h1 {
+            text-align: center;
+            color: #ffcc00;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .question {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 0;
+        }
+
+        .question:last-child {
+            border-bottom: none;
+        }
+
+        .question p {
+            font-weight: bold;
             margin-bottom: 10px;
         }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
+
+        ul {
+            list-style-type: none;
+            padding: 0;
         }
-        #response {
-            margin-top: 20px;
-            border: 1px solid #ccc;
+
+        li {
+            background: #f0f0f0;
+            border-radius: 5px;
             padding: 10px;
-            background-color: #f9f9f9;
+            margin: 5px 0;
+            transition: background 0.3s;
+        }
+
+        li:hover {
+            background: #e0e0e0;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .quiz-container {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
 
-<h1>DeepAI API Prompt Generator</h1>
-<p>Enter a prompt to generate a response:</p>
+<h1>Banana Quiz</h1>
 
-<textarea id="inputPrompt" placeholder="Type your prompt here..."></textarea>
-<button id="generateButton">Generate Response</button>
+<div class="question">
+    <p>1. What is the scientific name of the banana plant?</p>
+    <ul>
+        <li>A) Musa acuminata</li>
+        <li>B) Musa balbisiana</li>
+        <li>C) Musa paradisiaca</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
 
-<div id="response"></div>
+<div class="question">
+    <p>2. Which country is the largest producer of bananas?</p>
+    <ul>
+        <li>A) India</li>
+        <li>B) China</li>
+        <li>C) Ecuador</li>
+        <li>D) Brazil</li>
+    </ul>
+</div>
 
-<script>
-    const apiKey = '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'; // Replace with your actual API key
-    const baseURL = 'https://integrate.api.nvidia.com/v1/chat/completions';
+<div class="question">
+    <p>3. What vitamin is most abundant in bananas?</p>
+    <ul>
+        <li>A) Vitamin C</li>
+        <li>B) Vitamin B6</li>
+        <li>C) Vitamin A</li>
+        <li>D) Vitamin D</li>
+    </ul>
+</div>
 
-    document.getElementById('generateButton').addEventListener('click', async () => {
-        const prompt = document.getElementById('inputPrompt').value;
+<div class="question">
+    <p>4. Bananas are known to be high in which mineral?</p>
+    <ul>
+        <li>A) Calcium</li>
+        <li>B) Iron</li>
+        <li>C) Potassium</li>
+        <li>D) Magnesium</li>
+    </ul>
+</div>
 
-        if (!prompt) {
-            document.getElementById('response').innerText = 'Please enter a prompt.';
-            return;
-        }
+<div class="question">
+    <p>5. In which year did bananas first become a popular fruit in the United States?</p>
+    <ul>
+        <li>A) 1876</li>
+        <li>B) 1900</li>
+        <li>C) 1920</li>
+        <li>D) 1950</li>
+    </ul>
+</div>
 
-        const requestData = {
-            model: "meta/llama3-70b-instruct",
-            messages: [{ role: "user", content: prompt }],
-            temperature: 0.5,
-            top_p: 1,
-            max_tokens: 1024,
-            stream: false,
-        };
+<div class="question">
+    <p>6. The banana is believed to have originated in which region?</p>
+    <ul>
+        <li>A) Southeast Asia</li>
+        <li>B) Central America</li>
+        <li>C) Africa</li>
+        <li>D) South America</li>
+    </ul>
+</div>
 
-        try {
-            const response = await fetch(baseURL, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${apiKey}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestData),
-            });
+<div class="question">
+    <p>7. What is the average weight of a banana?</p>
+    <ul>
+        <li>A) 100 grams</li>
+        <li>B) 150 grams</li>
+        <li>C) 200 grams</li>
+        <li>D) 250 grams</li>
+    </ul>
+</div>
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+<div class="question">
+    <p>8. True or False: Bananas grow on trees.</p>
+</div>
 
-            const data = await response.json();
-            const output = data.choices[0].message.content;
-            document.getElementById('response').innerText = output;
-        } catch (error) {
-            console.error('Error:', error);
-            document.getElementById('response').innerText = 'Error fetching response from OpenAI.';
-        }
-    });
-</script>
+<div class="question">
+    <p>9. Which part of the banana plant is edible?</p>
+    <ul>
+        <li>A) Root</li>
+        <li>B) Stem</li>
+        <li>C) Flower</li>
+        <li>D) Fruit</li>
+    </ul>
+</div>
 
-</body>
-</html>
+<div class="question">
+    <p>10. What is the color of a ripe banana?</p>
+    <ul>
+        <li>A) Green</li>
+        <li>B) Yellow</li>
+        <li>C) Brown</li>
+        <li>D) Red</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>11. Which country consumes the most bananas per capita?</p>
+    <ul>
+        <li>A) Uganda</li>
+        <li>B) India</li>
+        <li>C) Ecuador</li>
+        <li>D) China</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>12. Bananas are classified as which type of fruit?</p>
+    <ul>
+        <li>A) Berry</li>
+        <li>B) Drupe</li>
+        <li>C) Pome</li>
+        <li>D) Stone fruit</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>13. What chemical compound gives bananas their sweet smell?</p>
+    <ul>
+        <li>A) Ethanol</li>
+        <li>B) Isoamyl acetate</li>
+        <li>C) Acetic acid</li>
+        <li>D) Limonene</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>14. Which of the following is a popular banana-based dish?</p>
+    <ul>
+        <li>A) Banana bread</li>
+        <li>B) Banana pudding</li>
+        <li>C) Banana foster</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>15. How many varieties of bananas are there worldwide?</p>
+    <ul>
+        <li>A) About 100</li>
+        <li>B) About 500</li>
+        <li>C) About 1,000</li>
+        <li>D) About 2,000</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>16. What is the largest banana-producing region in the world?</p>
+    <ul>
+        <li>A) Caribbean</li>
+        <li>B) Southeast Asia</li>
+        <li>C) Latin America</li>
+        <li>D) Africa</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>17. Which vitamin helps bananas promote heart health?</p>
+    <ul>
+        <li>A) Vitamin B12</li>
+        <li>B) Vitamin B6</li>
+        <li>C) Vitamin C</li>
+        <li>D) Vitamin K</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>18. What type of banana is commonly used for cooking?</p>
+    <ul>
+        <li>A) Cavendish</li>
+        <li>B) Plantain</li>
+        <li>C) Lady Finger</li>
+        <li>D) Red Banana</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>19. True or False: Bananas can float in water.</p>
+</div>
+
+<div class="question">
+    <p>20. How many calories are approximately in a medium banana?</p>
+    <ul>
+        <li>A) 50</li>
+        <li>B) 90</li>
+        <li>C) 120</li>
+        <li>D) 150</li>
+    </ul>
+</div>
+
+<!-- Additional Questions -->
+<div class="question">
+    <p>21. What is the main use of banana peels in agriculture?</p>
+    <ul>
+        <li>A) Fertilizer</li>
+        <li>B) Pest control</li>
+        <li>C) Mulching</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>22. Which type of banana is typically smaller and sweeter?</p>
+    <ul>
+        <li>A) Cavendish</li>
+        <li>B) Red banana</li>
+        <li>C) Lady Finger</li>
+        <li>D) Plantain</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>23. True or False: Bananas can help with muscle cramps.</p>
+</div>
+
+<div class="question">
+    <p>24. What chemical process causes bananas to ripen?</p>
+    <ul>
+        <li>A) Photosynthesis</li>
+        <li>B) Respiration</li>
+        <li>C) Fermentation</li>
+        <li>D) Transpiration</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>25. How long does it typically take for a banana to ripen?</p>
+    <ul>
+        <li>A) 1-2 days</li>
+        <li>B) 3-5 days</li>
+        <li>C) 1 week</li>
+        <li>D) 2 weeks</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>26. Bananas were first cultivated in which ancient civilization?</p>
+    <ul>
+        <li>A) Egyptian</li>
+        <li>B) Indian</li>
+        <li>C) Mesopotamian</li>
+        <li>D) Mayan</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>27. What flavor is often associated with banana-flavored candies?</p>
+    <ul>
+        <li>A) Real banana flavor</li>
+        <li>B) Artificial flavor</li>
+        <li>C) Green banana flavor</li>
+        <li>D) Dried banana flavor</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>28. Which part of the banana plant is used to make fibers for textiles?</p>
+    <ul>
+        <li>A) Fruit</li>
+        <li>B) Leaves</li>
+        <li>C) Stem</li>
+        <li>D) Roots</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>29. How many bananas can a banana plant produce in a year?</p>
+    <ul>
+        <li>A) 10-20</li>
+        <li>B) 30-50</li>
+        <li>C) 50-100</li>
+        <li>D) 100-150</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>30. What is the main sugar found in bananas?</p>
+    <ul>
+        <li>A) Fructose</li>
+        <li>B) Sucrose</li>
+        <li>C) Glucose</li>
+        <li>D) Maltose</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>31. Bananas are considered a good source of which type of fiber?</p>
+    <ul>
+        <li>A) Soluble fiber</li>
+        <li>B) Insoluble fiber</li>
+        <li>C) Both A and B</li>
+        <li>D) None of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>32. What is the primary benefit of the antioxidants found in bananas?</p>
+    <ul>
+        <li>A) Boosting energy</li>
+        <li>B) Reducing inflammation</li>
+        <li>C) Improving digestion</li>
+        <li>D) Enhancing memory</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>33. What unique feature does a banana plant have in terms of its growth?</p>
+    <ul>
+        <li>A) It can grow in cold climates</li>
+        <li>B) It is a perennial plant</li>
+        <li>C) It produces flowers every month</li>
+        <li>D) It requires no sunlight</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>34. What percentage of a banana's weight is water?</p>
+    <ul>
+        <li>A) 60%</li>
+        <li>B) 70%</li>
+        <li>C) 80%</li>
+        <li>D) 90%</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>35. Bananas contain tryptophan, which can help produce which hormone?</p>
+    <ul>
+        <li>A) Insulin</li>
+        <li>B) Serotonin</li>
+        <li>C) Melatonin</li>
+        <li>D) Adrenaline</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>36. What do you call the small, undeveloped bananas that grow in a bunch?</p>
+    <ul>
+        <li>A) Hands</li>
+        <li>B) Fingers</li>
+        <li>C) Clusters</li>
+        <li>D) Stalks</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>37. What disease primarily affects banana plants and is caused by a fungus?</p>
+    <ul>
+        <li>A) Panama disease</li>
+        <li>B) Banana bunchy top</li>
+        <li>C) Sigatoka</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>38. How long can bananas last in the refrigerator?</p>
+    <ul>
+        <li>A) 1-2 days</li>
+        <li>B) 3-5 days</li>
+        <li>C) 7-10 days</li>
+        <li>D) 1-2 weeks</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>39. What is a common misconception about bananas?</p>
+    <ul>
+        <li>A) They are berries</li>
+        <li>B) They grow on trees</li>
+        <li>C) They are high in protein</li>
+        <li>D) They can be frozen</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>40. Which part of the banana plant is often used in traditional medicine?</p>
+    <ul>
+        <li>A) Roots</li>
+        <li>B) Leaves</li>
+        <li>C) Flowers</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>41. What chemical is responsible for the browning of bananas when cut?</p>
+    <ul>
+        <li>A) Oxidase</li>
+        <li>B) Catalase</li>
+        <li>C) Polyphenol oxidase</li>
+        <li>D) Amylase</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>42. Which popular dessert is made with bananas and cream?</p>
+    <ul>
+        <li>A) Banana pie</li>
+        <li>B) Banana pudding</li>
+        <li>C) Banana split</li>
+        <li>D) Banana foster</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>43. True or False: Bananas can be fermented to produce alcohol.</p>
+</div>
+
+<div class="question">
+    <p>44. What insect is known to feed on bananas?</p>
+    <ul>
+        <li>A) Aphids</li>
+        <li>B) Spider mites</li>
+        <li>C) Banana weevil</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>45. Which country is known for producing the highest quality bananas?</p>
+    <ul>
+        <li>A) Philippines</li>
+        <li>B) Costa Rica</li>
+        <li>C) Ecuador</li>
+        <li>D) Colombia</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>46. What is the main cause of banana ripening?</p>
+    <ul>
+        <li>A) Temperature</li>
+        <li>B) Ethylene gas</li>
+        <li>C) Humidity</li>
+        <li>D) Light</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>47. What are bananas commonly used for in smoothies?</p>
+    <ul>
+        <li>A) Thickening</li>
+        <li>B) Flavoring</li>
+        <li>C) Nutritional content</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>48. Which fruit is often compared to bananas in terms of potassium content?</p>
+    <ul>
+        <li>A) Oranges</li>
+        <li>B) Apples</li>
+        <li>C) Avocados</li>
+        <li>D) Grapes</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>49. What type of banana is often used in Asian cooking?</p>
+    <ul>
+        <li>A) Cavendish</li>
+        <li>B) Plantain</li>
+        <li>C) Red banana</li>
+        <li>D) Lady Finger</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>50. How can you speed up the ripening process of bananas?</p>
+    <ul>
+        <li>A) Place them in the fridge</li>
+        <li>B) Put them in a paper bag</li>
+        <li>C) Expose them to sunlight</li>
+        <li>D) Soak them in water</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>51. What happens to bananas when they are exposed to ethylene gas?</p>
+    <ul>
+        <li>A) They rot</li>
+        <li>B) They become sweeter</li>
+        <li>C) They turn brown</li>
+        <li>D) They grow larger</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>52. What color are the flowers of the banana plant?</p>
+    <ul>
+        <li>A) White</li>
+        <li>B) Red</li>
+        <li>C) Yellow</li>
+        <li>D) Purple</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>53. True or False: Bananas are native to the Americas.</p>
+</div>
+
+<div class="question">
+    <p>54. What is the main reason bananas are often exported?</p>
+    <ul>
+        <li>A) They are easy to transport</li>
+        <li>B) They have a long shelf life</li>
+        <li>C) They are popular worldwide</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>55. What type of banana is commonly used in desserts like banana cream pie?</p>
+    <ul>
+        <li>A) Cavendish</li>
+        <li>B) Red banana</li>
+        <li>C) Plantain</li>
+        <li>D) Lady Finger</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>56. What is the main environmental issue surrounding banana plantations?</p>
+    <ul>
+        <li>A) Deforestation</li>
+        <li>B) Soil erosion</li>
+        <li>C) Water pollution</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>57. How do banana plants reproduce?</p>
+    <ul>
+        <li>A) Seeds</li>
+        <li>B) Offsets</li>
+        <li>C) Cuttings</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>58. What is the average length of a banana?</p>
+    <ul>
+        <li>A) 5-6 inches</li>
+        <li>B) 6-8 inches</li>
+        <li>C) 8-10 inches</li>
+        <li>D) 10-12 inches</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>59. True or False: Bananas are always yellow when ripe.</p>
+</div>
+
+<div class="question">
+    <p>60. Which fruit is known as the "poor man's banana"?</p>
+    <ul>
+        <li>A) Apple</li>
+        <li>B) Pear</li>
+        <li>C) Plantain</li>
+        <li>D) Papaya</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>61. What is a common health benefit of bananas?</p>
+    <ul>
+        <li>A) Boosting immunity</li>
+        <li>B) Improving vision</li>
+        <li>C) Aiding digestion</li>
+        <li>D) Reducing cholesterol</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>62. Which part of the banana plant is often used for natural dye?</p>
+    <ul>
+        <li>A) Fruit</li>
+        <li>B) Leaves</li>
+        <li>C) Flowers</li>
+        <li>D) Stem</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>63. What type of cuisine commonly features fried plantains?</p>
+    <ul>
+        <li>A) Italian</li>
+        <li>B) Caribbean</li>
+        <li>C) Chinese</li>
+        <li>D) Indian</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>64. How many calories are in a large banana?</p>
+    <ul>
+        <li>A) 80</li>
+        <li>B) 100</li>
+        <li>C) 120</li>
+        <li>D) 150</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>65. Which nutrient is bananas particularly low in?</p>
+    <ul>
+        <li>A) Protein</li>
+        <li>B) Carbohydrates</li>
+        <li>C) Fats</li>
+        <li>D) Fiber</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>66. Which country is known for its banana festivals?</p>
+    <ul>
+        <li>A) Philippines</li>
+        <li>B) Costa Rica</li>
+        <li>C) Ecuador</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>67. True or False: Bananas can be used in baking.</p>
+</div>
+
+<div class="question">
+    <p>68. What is the common name for the plant known scientifically as Musa basjoo?</p>
+    <ul>
+        <li>A) Japanese banana</li>
+        <li>B) Apple banana</li>
+        <li>C) Dwarf banana</li>
+        <li>D) Giant banana</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>69. How do you store ripe bananas to extend their shelf life?</p>
+    <ul>
+        <li>A) In the fridge</li>
+        <li>B) In a dark place</li>
+        <li>C) In a paper bag</li>
+        <li>D) In a sunny place</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>70. What is the most common variety of banana sold in grocery stores?</p>
+    <ul>
+        <li>A) Cavendish</li>
+        <li>B) Lady Finger</li>
+        <li>C) Red banana</li>
+        <li>D) Plantain</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>71. Which banana variety is often used for making banana chips?</p>
+    <ul>
+        <li>A) Cavendish</li>
+        <li>B) Plantain</li>
+        <li>C) Red banana</li>
+        <li>D) Apple banana</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>72. True or False: Bananas can be used to treat skin conditions.</p>
+</div>
+
+<div class="question">
+    <p>73. What is the banana's main carbohydrate?</p>
+    <ul>
+        <li>A) Starch</li>
+        <li>B) Glucose</li>
+        <li>C) Fructose</li>
+        <li>D) Sucrose</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>74. Which vitamin found in bananas supports the immune system?</p>
+    <ul>
+        <li>A) Vitamin A</li>
+        <li>B) Vitamin C</li>
+        <li>C) Vitamin D</li>
+        <li>D) Vitamin K</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>75. How are bananas harvested?</p>
+    <ul>
+        <li>A) By hand</li>
+        <li>B) By machine</li>
+        <li>C) Both A and B</li>
+        <li>D) None of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>76. What is the most popular way to eat bananas?</p>
+    <ul>
+        <li>A) Raw</li>
+        <li>B) Cooked</li>
+        <li>C) Dried</li>
+        <li>D) Fried</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>77. What is the main purpose of banana plants in tropical regions?</p>
+    <ul>
+        <li>A) Food production</li>
+        <li>B) Erosion control</li>
+        <li) C) Shade</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>78. Which country is famous for its banana bread?</p>
+    <ul>
+        <li>A) USA</li>
+        <li>B) Jamaica</li>
+        <li>C) Ecuador</li>
+        <li>D) Philippines</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>79. What is a popular way to preserve bananas?</p>
+    <ul>
+        <li>A) Canning</li>
+        <li>B) Freezing</li>
+        <li>C) Drying</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>80. Which tropical fruit is known to enhance the flavor of bananas when combined?</p>
+    <ul>
+        <li>A) Pineapple</li>
+        <li>B) Mango</li>
+        <li>C) Coconut</li>
+        <li>D) Papaya</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>81. What common breakfast item often features bananas?</p>
+    <ul>
+        <li>A) Pancakes</li>
+        <li>B) Oatmeal</li>
+        <li>C) Cereal</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>82. How do bananas impact mood due to their tryptophan content?</p>
+    <ul>
+        <li>A) They cause sleepiness</li>
+        <li>B) They improve mood</li>
+        <li>C) They reduce anxiety</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>83. What is the typical shelf life of a banana at room temperature?</p>
+    <ul>
+        <li>A) 1-2 days</li>
+        <li>B) 3-7 days</li>
+        <li>C) 1-2 weeks</li>
+        <li>D) 3 weeks</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>84. Which nutrient in bananas aids in muscle recovery after exercise?</p>
+    <ul>
+        <li>A) Carbohydrates</li>
+        <li>B) Potassium</li>
+        <li>C) Vitamin C</li>
+        <li>D) Fiber</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>85. What is the significance of the banana's high potassium content?</p>
+    <ul>
+        <li>A) It helps regulate blood pressure</li>
+        <li>B) It supports muscle function</li>
+        <li>C) It aids in hydration</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>86. What is the banana's main health risk when consumed in excess?</p>
+    <ul>
+        <li>A) High sugar intake</li>
+        <li>B) Weight gain</li>
+        <li>C) Digestive issues</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+<div class="question">
+    <p>87. What is the term for the process by which bananas ripen and produce ethylene gas?</p>
+    <ul>
+        <li>A) Respiration</li>
+        <li>B) Fermentation</li>
+        <li>C) Photosynthesis</li>
+        <li>D) Germination</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>88. How can overripe bananas be used in cooking?</p>
+    <ul>
+        <li>A) In smoothies</li>
+        <li>B) In baking</li>
+        <li>C) In pancakes</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>89. What mineral found in bananas helps prevent muscle cramps?</p>
+    <ul>
+        <li>A) Calcium</li>
+        <li>B) Iron</li>
+        <li>C) Potassium</li>
+        <li>D) Magnesium</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>90. Which type of banana is typically used for cooking rather than eating raw?</p>
+    <ul>
+        <li>A) Cavendish</li>
+        <li>B) Plantain</li>
+        <li>C) Red banana</li>
+        <li>D) Dwarf banana</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>91. True or False: Bananas are high in fat.</p>
+</div>
+
+<div class="question">
+    <p>92. What is the primary use of banana leaves in cooking?</p>
+    <ul>
+        <li>A) Wrapping food</li>
+        <li>B) Serving food</li>
+        <li>C) For decoration</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>93. Which banana variety is known for its sweet flavor and small size?</p>
+    <ul>
+        <li>A) Cavendish</li>
+        <li>B) Lady Finger</li>
+        <li>C) Red banana</li>
+        <li>D) Blue Java</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>94. What health condition can bananas help manage due to their fiber content?</p>
+    <ul>
+        <li>A) Diabetes</li>
+        <li>B) Hypertension</li>
+        <li>C) Constipation</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>95. What is the best way to prevent bananas from browning after being cut?</p>
+    <ul>
+        <li>A) Apply lemon juice</li>
+        <li>B) Store in water</li>
+        <li>C) Wrap in plastic</li>
+        <li>D) Refrigerate</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>96. How many grams of fiber are typically in a medium banana?</p>
+    <ul>
+        <li>A) 1 g</li>
+        <li>B) 2 g</li>
+        <li>C) 3 g</li>
+        <li>D) 4 g</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>97. What is a common misconception about bananas and their protein content?</p>
+    <ul>
+        <li>A) They are a good source of protein</li>
+        <li>B) They contain no protein</li>
+        <li>C) They are high in amino acids</li>
+        <li>D) They contain protein similar to meat</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>98. What environmental benefit do banana plants provide?</p>
+    <ul>
+        <li>A) Air purification</li>
+        <li>B) Soil stabilization</li>
+        <li>C) Carbon sequestration</li>
+        <li>D) All of the above</li>
+    </ul>
+</div>
+
+<div class="question">
+    <p>99. True or False: Bananas can be grown in temperate climates.</p>
+</div>
+
+<div class="question">
+    <p>100. What is the name of the banana variety that is also known as the "ice cream banana"?</p>
+    <ul>
+        <li>A) Red banana</li>
+        <li>B) Blue Java</li>
+        <li>C) Lady Finger</li>
+        <li>D) Plantain</li>
+    </ul>
+</div>
