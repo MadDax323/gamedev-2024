@@ -54,7 +54,8 @@ h1 {
 <body>
     <h1>Simple Chess Game</h1>
     <div id="chessboard" class="chessboard"></div>
-    <script>const chessboard = document.getElementById('chessboard');
+    <script>
+        const chessboard = document.getElementById('chessboard');
 
 // Initial setup of chess pieces
 const pieces = [
@@ -84,15 +85,52 @@ let selectedSquare = null;
 // Handle piece selection
 function selectPiece(square, index) {
     if (selectedPiece) {
-        // Move the piece
-        square.innerHTML = selectedPiece.innerHTML;
-        selectedSquare.innerHTML = '';
-        resetSelection();
+        if (isValidMove(selectedPiece, square, index)) {
+            square.innerHTML = selectedPiece.innerHTML;
+            selectedSquare.innerHTML = '';
+            resetSelection();
+        } else {
+            alert('Invalid move!');
+        }
     } else {
-        // Select the piece
-        selectedPiece = square;
-        selectedSquare = square;
-        square.classList.add('selected');
+        if (square.innerHTML) {
+            selectedPiece = square;
+            selectedSquare = square;
+            square.classList.add('selected');
+        }
+    }
+}
+
+// Check if the move is valid
+function isValidMove(selected, target, targetIndex) {
+    const selectedIndex = Number(selected.getAttribute('data-index'));
+    const piece = selected.innerHTML;
+
+    // Basic rules for each piece
+    const rowDiff = Math.abs(Math.floor(targetIndex / 8) - Math.floor(selectedIndex / 8));
+    const colDiff = Math.abs(targetIndex % 8 - selectedIndex % 8);
+
+    switch (piece) {
+        case '♙': // White pawn
+            return (selectedIndex - targetIndex === 8 && colDiff === 0) || // Move forward
+                   (selectedIndex - targetIndex === 16 && selectedIndex < 48 && colDiff === 0) || // Double move
+                   (selectedIndex - targetIndex === 7 && colDiff === 1); // Capture diagonally
+        case '♟': // Black pawn
+            return (targetIndex - selectedIndex === 8 && colDiff === 0) || // Move forward
+                   (targetIndex - selectedIndex === 16 && selectedIndex > 16 && colDiff === 0) || // Double move
+                   (targetIndex - selectedIndex === 9 && colDiff === 1); // Capture diagonally
+        case '♖': // Rook
+            return rowDiff === 0 || colDiff === 0; // Straight lines
+        case '♘': // Knight
+            return (rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2); // L shape
+        case '♗': // Bishop
+            return rowDiff === colDiff; // Diagonal
+        case '♕': // Queen
+            return rowDiff === colDiff || rowDiff === 0 || colDiff === 0; // Any direction
+        case '♔': // King
+            return rowDiff <= 1 && colDiff <= 1; // One square in any direction
+        default:
+            return false;
     }
 }
 
