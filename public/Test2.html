@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Chess Game</title>
-    <style>body {
+    <style>
+        body {
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
@@ -22,12 +23,13 @@ h1 {
     grid-template-columns: repeat(8, 60px);
     grid-template-rows: repeat(8, 60px);
     gap: 0;
-    border: 2px solid #333;
+    border: 2px solid #333; /* Outer border of the chessboard */
 }
 
 .square {
     width: 60px;
     height: 60px;
+    border: 1px solid #666; /* Grid outline for each square */
 }
 
 .square:nth-child(even) {
@@ -47,7 +49,7 @@ h1 {
 }
 
 .selected {
-    outline: 2px solid blue;
+    outline: 2px solid blue; /* Highlight the selected piece */
 }
     </style>
 </head>
@@ -55,7 +57,7 @@ h1 {
     <h1>Simple Chess Game</h1>
     <div id="chessboard" class="chessboard"></div>
     <script>
-        const chessboard = document.getElementById('chessboard');
+       const chessboard = document.getElementById('chessboard');
 
 // Initial setup of chess pieces
 const pieces = [
@@ -105,20 +107,36 @@ function selectPiece(square, index) {
 function isValidMove(selected, target, targetIndex) {
     const selectedIndex = Number(selected.getAttribute('data-index'));
     const piece = selected.innerHTML;
-
-    // Basic rules for each piece
+    const isWhite = piece === '♙' || piece === '♖' || piece === '♗' || piece === '♕' || piece === '♔';
+    
     const rowDiff = Math.abs(Math.floor(targetIndex / 8) - Math.floor(selectedIndex / 8));
     const colDiff = Math.abs(targetIndex % 8 - selectedIndex % 8);
+    
+    // Handle pawn movement
+    if (piece === '♙') { // White pawn
+        if (targetIndex === selectedIndex - 8 && colDiff === 0 && !target.innerHTML) {
+            return true; // Move forward
+        }
+        if (selectedIndex < 48 && targetIndex === selectedIndex - 16 && colDiff === 0 && !target.innerHTML && !selected.innerHTML) {
+            return true; // Double move
+        }
+        if (targetIndex === selectedIndex - 7 && colDiff === 1 && target.innerHTML && target.innerHTML !== '♙') {
+            return true; // Capture diagonally
+        }
+    } else if (piece === '♟') { // Black pawn
+        if (targetIndex === selectedIndex + 8 && colDiff === 0 && !target.innerHTML) {
+            return true; // Move forward
+        }
+        if (selectedIndex > 16 && targetIndex === selectedIndex + 16 && colDiff === 0 && !target.innerHTML && !selected.innerHTML) {
+            return true; // Double move
+        }
+        if (targetIndex === selectedIndex + 7 && colDiff === 1 && target.innerHTML && target.innerHTML !== '♟') {
+            return true; // Capture diagonally
+        }
+    }
 
+    // Handle other pieces
     switch (piece) {
-        case '♙': // White pawn
-            return (selectedIndex - targetIndex === 8 && colDiff === 0) || // Move forward
-                   (selectedIndex - targetIndex === 16 && selectedIndex < 48 && colDiff === 0) || // Double move
-                   (selectedIndex - targetIndex === 7 && colDiff === 1); // Capture diagonally
-        case '♟': // Black pawn
-            return (targetIndex - selectedIndex === 8 && colDiff === 0) || // Move forward
-                   (targetIndex - selectedIndex === 16 && selectedIndex > 16 && colDiff === 0) || // Double move
-                   (targetIndex - selectedIndex === 9 && colDiff === 1); // Capture diagonally
         case '♖': // Rook
             return rowDiff === 0 || colDiff === 0; // Straight lines
         case '♘': // Knight
