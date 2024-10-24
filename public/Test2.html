@@ -117,7 +117,8 @@ function isValidMove(selected, target, targetIndex) {
         if (rowDiff === -1 && colDiff === 0 && !target.innerHTML) {
             return true; // Move forward 1
         }
-        if (selectedIndex >= 48 && rowDiff === -2 && colDiff === 0 && !target.innerHTML && !document.querySelector(`div[data-index="${selectedIndex - 8}"]`).innerHTML) {
+        if (selectedIndex >= 48 && rowDiff === -2 && colDiff === 0 &&
+            !target.innerHTML && !document.querySelector(`div[data-index="${selectedIndex - 8}"]`).innerHTML) {
             return true; // Move forward 2 from starting position
         }
         if (rowDiff === -1 && Math.abs(colDiff) === 1 && target.innerHTML && target.innerHTML !== '♙') {
@@ -127,7 +128,8 @@ function isValidMove(selected, target, targetIndex) {
         if (rowDiff === 1 && colDiff === 0 && !target.innerHTML) {
             return true; // Move forward 1
         }
-        if (selectedIndex <= 15 && rowDiff === 2 && colDiff === 0 && !target.innerHTML && !document.querySelector(`div[data-index="${selectedIndex + 8}"]`).innerHTML) {
+        if (selectedIndex <= 15 && rowDiff === 2 && colDiff === 0 &&
+            !target.innerHTML && !document.querySelector(`div[data-index="${selectedIndex + 8}"]`).innerHTML) {
             return true; // Move forward 2 from starting position
         }
         if (rowDiff === 1 && Math.abs(colDiff) === 1 && target.innerHTML && target.innerHTML !== '♟') {
