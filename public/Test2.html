@@ -57,7 +57,7 @@ h1 {
     <h1>Simple Chess Game</h1>
     <div id="chessboard" class="chessboard"></div>
     <script>
-       const chessboard = document.getElementById('chessboard');
+     const chessboard = document.getElementById('chessboard');
 
 // Initial setup of chess pieces
 const pieces = [
@@ -107,30 +107,30 @@ function selectPiece(square, index) {
 function isValidMove(selected, target, targetIndex) {
     const selectedIndex = Number(selected.getAttribute('data-index'));
     const piece = selected.innerHTML;
-    const isWhite = piece === '♙' || piece === '♖' || piece === '♗' || piece === '♕' || piece === '♔';
-    
-    const rowDiff = Math.abs(Math.floor(targetIndex / 8) - Math.floor(selectedIndex / 8));
-    const colDiff = Math.abs(targetIndex % 8 - selectedIndex % 8);
-    
+    const isWhite = piece === '♙'; // True if it's a white pawn
+
+    const rowDiff = Math.floor(targetIndex / 8) - Math.floor(selectedIndex / 8);
+    const colDiff = targetIndex % 8 - selectedIndex % 8;
+
     // Handle pawn movement
-    if (piece === '♙') { // White pawn
-        if (targetIndex === selectedIndex - 8 && colDiff === 0 && !target.innerHTML) {
-            return true; // Move forward
+    if (isWhite) { // White pawn
+        if (rowDiff === -1 && colDiff === 0 && !target.innerHTML) {
+            return true; // Move forward 1
         }
-        if (selectedIndex < 48 && targetIndex === selectedIndex - 16 && colDiff === 0 && !target.innerHTML && !selected.innerHTML) {
-            return true; // Double move
+        if (selectedIndex >= 48 && rowDiff === -2 && colDiff === 0 && !target.innerHTML && !document.querySelector(`div[data-index="${selectedIndex - 8}"]`).innerHTML) {
+            return true; // Move forward 2 from starting position
         }
-        if (targetIndex === selectedIndex - 7 && colDiff === 1 && target.innerHTML && target.innerHTML !== '♙') {
+        if (rowDiff === -1 && Math.abs(colDiff) === 1 && target.innerHTML && target.innerHTML !== '♙') {
             return true; // Capture diagonally
         }
-    } else if (piece === '♟') { // Black pawn
-        if (targetIndex === selectedIndex + 8 && colDiff === 0 && !target.innerHTML) {
-            return true; // Move forward
+    } else { // Black pawn
+        if (rowDiff === 1 && colDiff === 0 && !target.innerHTML) {
+            return true; // Move forward 1
         }
-        if (selectedIndex > 16 && targetIndex === selectedIndex + 16 && colDiff === 0 && !target.innerHTML && !selected.innerHTML) {
-            return true; // Double move
+        if (selectedIndex <= 15 && rowDiff === 2 && colDiff === 0 && !target.innerHTML && !document.querySelector(`div[data-index="${selectedIndex + 8}"]`).innerHTML) {
+            return true; // Move forward 2 from starting position
         }
-        if (targetIndex === selectedIndex + 7 && colDiff === 1 && target.innerHTML && target.innerHTML !== '♟') {
+        if (rowDiff === 1 && Math.abs(colDiff) === 1 && target.innerHTML && target.innerHTML !== '♟') {
             return true; // Capture diagonally
         }
     }
@@ -140,13 +140,13 @@ function isValidMove(selected, target, targetIndex) {
         case '♖': // Rook
             return rowDiff === 0 || colDiff === 0; // Straight lines
         case '♘': // Knight
-            return (rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2); // L shape
+            return (Math.abs(rowDiff) === 2 && Math.abs(colDiff) === 1) || (Math.abs(rowDiff) === 1 && Math.abs(colDiff) === 2); // L shape
         case '♗': // Bishop
-            return rowDiff === colDiff; // Diagonal
+            return Math.abs(rowDiff) === Math.abs(colDiff); // Diagonal
         case '♕': // Queen
-            return rowDiff === colDiff || rowDiff === 0 || colDiff === 0; // Any direction
+            return Math.abs(rowDiff) === Math.abs(colDiff) || rowDiff === 0 || colDiff === 0; // Any direction
         case '♔': // King
-            return rowDiff <= 1 && colDiff <= 1; // One square in any direction
+            return Math.abs(rowDiff) <= 1 && Math.abs(colDiff) <= 1; // One square in any direction
         default:
             return false;
     }
