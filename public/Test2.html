@@ -56,26 +56,32 @@
         const sudokuGrid = Array.from({ length: 9 }, () => Array(9).fill(0));
 
         function generateSudoku() {
+            clearGrid();
             fillSudoku(sudokuGrid);
             removeNumbers(sudokuGrid, 40); // Remove 40 numbers
             displaySudoku(sudokuGrid);
         }
 
         function fillSudoku(grid) {
-            for (let num = 1; num <= 9; num++) {
-                for (let i = 0; i < 9; i++) {
-                    for (let j = 0; j < 9; j++) {
-                        if (grid[i][j] === 0) {
-                            grid[i][j] = num;
-                            if (isValid(grid, i, j, num) && fillSudoku(grid)) {
-                                return true;
+            for (let row = 0; row < 9; row++) {
+                for (let col = 0; col < 9; col++) {
+                    if (grid[row][col] === 0) {
+                        const numbers = [...Array(9).keys()].map(n => n + 1);
+                        shuffleArray(numbers); // Shuffle numbers 1-9
+                        for (const num of numbers) {
+                            if (isValid(grid, row, col, num)) {
+                                grid[row][col] = num;
+                                if (fillSudoku(grid)) {
+                                    return true;
+                                }
+                                grid[row][col] = 0; // Backtrack
                             }
-                            grid[i][j] = 0; // Backtrack
                         }
+                        return false; // No valid number found
                     }
                 }
             }
-            return false;
+            return true; // Puzzle solved
         }
 
         function removeNumbers(grid, count) {
@@ -196,7 +202,7 @@
                                 grid[i][j] = 0; // Backtrack
                             }
                         }
-                        return false;
+                        return false; // No valid number found
                     }
                 }
             }
@@ -217,19 +223,29 @@
             return true;
         }
 
-        function clearBoard() {
-            const inputs = document.querySelectorAll('#sudoku-grid input');
-            inputs.forEach(input => {
-                input.value = '';
-            });
-            generateSudoku();
+        function clearGrid() {
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    sudokuGrid[i][j] = 0; // Reset the grid
+                }
+            }
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
         }
 
         document.getElementById("generate-button").addEventListener("click", generateSudoku);
         document.getElementById("solve-button").addEventListener("click", solveSudoku);
-        document.getElementById("clear-button").addEventListener("click", clearBoard);
+        document.getElementById("clear-button").addEventListener("click", () => {
+            clearGrid();
+            displaySudoku(sudokuGrid);
+        });
 
-        // Initial grid generation can be removed if you want to start with an empty grid
+        // Optionally generate a Sudoku at the start
         // generateSudoku();
     </script>
 </body>
