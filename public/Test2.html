@@ -58,30 +58,41 @@
         function generateSudoku() {
             clearGrid();
             fillSudoku(sudokuGrid);
-            removeNumbers(sudokuGrid, 40); // Remove 40 numbers
+            removeNumbers(sudokuGrid, 40); // Remove 40 numbers to create a puzzle
             displaySudoku(sudokuGrid);
         }
 
         function fillSudoku(grid) {
+            let emptyCells = findEmptyCells(grid);
+            if (emptyCells.length === 0) return true; // Puzzle is complete
+
+            // Choose a random empty cell
+            const [row, col] = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+            const numbers = [...Array(9).keys()].map(n => n + 1);
+            shuffleArray(numbers); // Shuffle numbers 1-9
+
+            for (const num of numbers) {
+                if (isValid(grid, row, col, num)) {
+                    grid[row][col] = num;
+                    if (fillSudoku(grid)) {
+                        return true;
+                    }
+                    grid[row][col] = 0; // Backtrack
+                }
+            }
+            return false; // No valid number found
+        }
+
+        function findEmptyCells(grid) {
+            const cells = [];
             for (let row = 0; row < 9; row++) {
                 for (let col = 0; col < 9; col++) {
                     if (grid[row][col] === 0) {
-                        const numbers = [...Array(9).keys()].map(n => n + 1);
-                        shuffleArray(numbers); // Shuffle numbers 1-9
-                        for (const num of numbers) {
-                            if (isValid(grid, row, col, num)) {
-                                grid[row][col] = num;
-                                if (fillSudoku(grid)) {
-                                    return true;
-                                }
-                                grid[row][col] = 0; // Backtrack
-                            }
-                        }
-                        return false; // No valid number found
+                        cells.push([row, col]);
                     }
                 }
             }
-            return true; // Puzzle solved
+            return cells;
         }
 
         function removeNumbers(grid, count) {
@@ -244,9 +255,6 @@
             clearGrid();
             displaySudoku(sudokuGrid);
         });
-
-        // Optionally generate a Sudoku at the start
-        // generateSudoku();
     </script>
 </body>
 </html>
