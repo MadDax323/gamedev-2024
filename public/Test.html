@@ -47,9 +47,9 @@
     <div class="container">
         <h1>Sudoku Game</h1>
         <table id="sudoku-grid" class="sudoku-grid"></table>
+        <button id="generate-button">Generate Sudoku</button>
         <button id="solve-button">Solve</button>
         <button id="clear-button">Clear</button>
-        <button id="randomize-button">Randomize</button>
         <div class="tracker" id="number-tracker"></div>
     </div>
     <script>
@@ -58,7 +58,6 @@
         function generateSudoku() {
             fillSudoku(sudokuGrid);
             removeNumbers(sudokuGrid, 40); // Remove 40 numbers
-            clearBoard();
             displaySudoku(sudokuGrid);
         }
 
@@ -226,12 +225,12 @@
             generateSudoku();
         }
 
+        document.getElementById("generate-button").addEventListener("click", generateSudoku);
         document.getElementById("solve-button").addEventListener("click", solveSudoku);
         document.getElementById("clear-button").addEventListener("click", clearBoard);
-        document.getElementById("randomize-button").addEventListener("click", generateSudoku);
 
-        // Initialize the Sudoku grid
-        generateSudoku();
+        // Initial grid generation can be removed if you want to start with an empty grid
+        // generateSudoku();
     </script>
 </body>
 </html>
