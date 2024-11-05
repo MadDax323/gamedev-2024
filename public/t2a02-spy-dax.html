@@ -1,1 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+}
 
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+select, button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+    </style>
+  
+    <title>Text Encryption Tool</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Text Encryption Tool</h1>
+        <textarea id="inputText" rows="5" placeholder="Enter text to encrypt or decrypt..."></textarea>
+        <select id="encryptionMethod">
+            <option value="caesar">Caesar Cipher</option>
+            <option value="base64">Base64 Encoding</option>
+            <option value="xor">XOR Encryption</option>
+        </select>
+        <button id="encryptButton">Encrypt</button>
+        <button id="decryptButton">Decrypt</button>
+        <h2>Result Text</h2>
+        <textarea id="outputText" rows="5" readonly></textarea>
+    </div>
+    <script>
+      document.getElementById('encryptButton').addEventListener('click', function() {
+    const text = document.getElementById('inputText').value;
+    const method = document.getElementById('encryptionMethod').value;
+    let encryptedText;
+
+    switch (method) {
+        case 'caesar':
+            encryptedText = caesarCipher(text, 3); // Encrypting with a shift of 3
+            break;
+        case 'base64':
+            encryptedText = btoa(text); // Encoding to Base64
+            break;
+        case 'xor':
+            encryptedText = xorEncrypt(text, 'key'); // Custom XOR encryption
+            break;
+        default:
+            encryptedText = "Unknown method!";
+    }
+
+    document.getElementById('outputText').value = encryptedText;
+});
+
+document.getElementById('decryptButton').addEventListener('click', function() {
+    const text = document.getElementById('inputText').value;
+    const method = document.getElementById('encryptionMethod').value;
+    let decryptedText;
+
+    switch (method) {
+        case 'caesar':
+            decryptedText = caesarCipher(text, -3); // Decrypting with a shift of -3
+            break;
+        case 'base64':
+            decryptedText = atob(text); // Decoding from Base64
+            break;
+        case 'xor':
+            decryptedText = xorDecrypt(text, 'key'); // Custom XOR decryption
+            break;
+        default:
+            decryptedText = "Unknown method!";
+    }
+
+    document.getElementById('outputText').value = decryptedText;
+});
+
+function caesarCipher(text, shift) {
+    return text.split('').map(char => {
+        if (/[a-zA-Z]/.test(char)) {
+            const code = char.charCodeAt(0);
+            const shiftBase = code >= 65 && code <= 90 ? 65 : 97; // Upper or lower case
+            return String.fromCharCode(((code - shiftBase + shift + 26) % 26) + shiftBase); // Added +26 for negative shifts
+        }
+        return char; // Non-alphabet characters are unchanged
+    }).join('');
+}
+
+function xorEncrypt(text, key) {
+    return text.split('').map((char, index) => {
+        return String.fromCharCode(char.charCodeAt(0) ^ key.charCodeAt(index % key.length));
+    }).join('');
+}
+
+function xorDecrypt(text, key) {
+    // XOR decryption function is the same as encryption function
+    return xorEncrypt(text, key); // Since XOR is symmetric
+}
+    </script>
+</body>
+</html>
