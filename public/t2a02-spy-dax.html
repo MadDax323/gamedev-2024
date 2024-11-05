@@ -3,45 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-      body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 20px;
-}
-
-.container {
-    max-width: 600px;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-h1, h2 {
-    text-align: center;
-}
-
-textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-select, button {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-    </style>
-  
     <title>Text Encryption Tool</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        textarea, select, input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 48%;
+            padding: 10px;
+            margin: 10px 1% 0;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        textarea[readonly] {
+            background: #f0f0f0;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -61,189 +70,209 @@ select, button {
             <option value="hash">SHA-256 Hashing</option>
         </select>
         <input type="text" id="key" placeholder="Enter key (if required)">
+        <button id="generateKeyButton">Generate Key</button>
         <button id="encryptButton">Encrypt</button>
         <button id="decryptButton">Decrypt</button>
+        <h2>Generated Key</h2>
+        <textarea id="generatedKey" rows="1" readonly></textarea>
         <h2>Result Text</h2>
         <textarea id="outputText" rows="5" readonly></textarea>
     </div>
     <script>
-   document.getElementById('encryptButton').addEventListener('click', function() {
-    const text = document.getElementById('inputText').value;
-    const method = document.getElementById('encryptionMethod').value;
-    const key = document.getElementById('key').value || 'default'; // Default key if not provided
-    let resultText;
+        document.getElementById('generateKeyButton').addEventListener('click', function() {
+            const keyLength = 16; // You can adjust the length of the key here
+            const generatedKey = generateRandomKey(keyLength);
+            document.getElementById('generatedKey').value = generatedKey;
+        });
 
-    switch (method) {
-        case 'caesar':
-            resultText = caesarCipher(text, 3); // Encrypting with a shift of 3
-            break;
-        case 'base64':
-            resultText = btoa(text); // Encoding to Base64
-            break;
-        case 'xor':
-            resultText = xorEncrypt(text, key); // Custom XOR encryption
-            break;
-        case 'reverse':
-            resultText = reverseString(text); // Reverse string method
-            break;
-        case 'rot13':
-            resultText = rot13(text); // ROT13
-            break;
-        case 'vigenere':
-            resultText = vigenereCipher(text, key); // Vigenère Cipher
-            break;
-        case 'substitution':
-            resultText = simpleSubstitution(text); // Simple Substitution
-            break;
-        case 'atbash':
-            resultText = atbashCipher(text); // Atbash Cipher
-            break;
-        case 'shift':
-            resultText = characterShift(text, 1); // Simple character shifting
-            break;
-        case 'aes':
-            resultText = CryptoJS.AES.encrypt(text, key).toString(); // AES Encryption
-            break;
-        case 'hash':
-            resultText = CryptoJS.SHA256(text).toString(); // SHA-256 Hashing
-            break;
-        default:
-            resultText = "Unknown method!";
-    }
+        document.getElementById('encryptButton').addEventListener('click', function() {
+            const text = document.getElementById('inputText').value;
+            const method = document.getElementById('encryptionMethod').value;
+            const key = document.getElementById('key').value || 'default'; // Default key if not provided
+            let resultText;
 
-    document.getElementById('outputText').value = resultText;
-});
+            switch (method) {
+                case 'caesar':
+                    resultText = caesarCipher(text, 3); // Encrypting with a shift of 3
+                    break;
+                case 'base64':
+                    resultText = btoa(text); // Encoding to Base64
+                    break;
+                case 'xor':
+                    resultText = xorEncrypt(text, key); // Custom XOR encryption
+                    break;
+                case 'reverse':
+                    resultText = reverseString(text); // Reverse string method
+                    break;
+                case 'rot13':
+                    resultText = rot13(text); // ROT13
+                    break;
+                case 'vigenere':
+                    resultText = vigenereCipher(text, key); // Vigenère Cipher
+                    break;
+                case 'substitution':
+                    resultText = simpleSubstitution(text); // Simple Substitution
+                    break;
+                case 'atbash':
+                    resultText = atbashCipher(text); // Atbash Cipher
+                    break;
+                case 'shift':
+                    resultText = characterShift(text, 1); // Simple character shifting
+                    break;
+                case 'aes':
+                    resultText = CryptoJS.AES.encrypt(text, key).toString(); // AES Encryption
+                    break;
+                case 'hash':
+                    resultText = CryptoJS.SHA256(text).toString(); // SHA-256 Hashing
+                    break;
+                default:
+                    resultText = "Unknown method!";
+            }
 
-document.getElementById('decryptButton').addEventListener('click', function() {
-    const text = document.getElementById('inputText').value;
-    const method = document.getElementById('encryptionMethod').value;
-    const key = document.getElementById('key').value || 'default'; // Default key if not provided
-    let resultText;
+            document.getElementById('outputText').value = resultText;
+        });
 
-    switch (method) {
-        case 'caesar':
-            resultText = caesarCipher(text, -3); // Decrypting with a shift of -3
-            break;
-        case 'base64':
-            resultText = atob(text); // Decoding from Base64
-            break;
-        case 'xor':
-            resultText = xorEncrypt(text, key); // Custom XOR decryption
-            break;
-        case 'reverse':
-            resultText = reverseString(text); // Reverse string
-            break;
-        case 'rot13':
-            resultText = rot13(text); // ROT13
-            break;
-        case 'vigenere':
-            resultText = vigenereDecipher(text, key); // Vigenère Decipher
-            break;
-        case 'substitution':
-            resultText = simpleSubstitution(text, true); // Simple Substitution Decrypt
-            break;
-        case 'atbash':
-            resultText = atbashCipher(text); // Atbash Decryption is the same as encryption
-            break;
-        case 'shift':
-            resultText = characterShift(text, -1); // Shift back by -1
-            break;
-        case 'aes':
-            const decrypted = CryptoJS.AES.decrypt(text, key);
-            resultText = decrypted.toString(CryptoJS.enc.Utf8); // AES Decryption
-            break;
-        case 'hash':
-            resultText = "Hashing is not reversible"; // A hash cannot be decrypted
-            break;
-        default:
-            resultText = "Unknown method!";
-    }
+        document.getElementById('decryptButton').addEventListener('click', function() {
+            const text = document.getElementById('inputText').value;
+            const method = document.getElementById('encryptionMethod').value;
+            const key = document.getElementById('key').value || 'default'; // Default key if not provided
+            let resultText;
 
-    document.getElementById('outputText').value = resultText;
-});
+            switch (method) {
+                case 'caesar':
+                    resultText = caesarCipher(text, -3); // Decrypting with a shift of -3
+                    break;
+                case 'base64':
+                    resultText = atob(text); // Decoding from Base64
+                    break;
+                case 'xor':
+                    resultText = xorEncrypt(text, key); // Custom XOR decryption
+                    break;
+                case 'reverse':
+                    resultText = reverseString(text); // Reverse string
+                    break;
+                case 'rot13':
+                    resultText = rot13(text); // ROT13
+                    break;
+                case 'vigenere':
+                    resultText = vigenereDecipher(text, key); // Vigenère Decipher
+                    break;
+                case 'substitution':
+                    resultText = simpleSubstitution(text, true); // Simple Substitution Decrypt
+                    break;
+                case 'atbash':
+                    resultText = atbashCipher(text); // Atbash Decryption is the same as encryption
+                    break;
+                case 'shift':
+                    resultText = characterShift(text, -1); // Shift back by -1
+                    break;
+                case 'aes':
+                    const decrypted = CryptoJS.AES.decrypt(text, key);
+                    resultText = decrypted.toString(CryptoJS.enc.Utf8); // AES Decryption
+                    break;
+                case 'hash':
+                    resultText = "Hashing is not reversible"; // A hash cannot be decrypted
+                    break;
+                default:
+                    resultText = "Unknown method!";
+            }
 
-function caesarCipher(text, shift) {
-    return text.split('').map(char => {
-        if (/[a-zA-Z]/.test(char)) {
-            const code = char.charCodeAt(0);
-            const shiftBase = code >= 65 && code <= 90 ? 65 : 97; // Upper or lower case
-            return String.fromCharCode(((code - shiftBase + shift + 26) % 26) + shiftBase); // Added +26 for negative shifts
+            document.getElementById('outputText').value = resultText;
+        });
+
+        // Key Generator Function
+        function generateRandomKey(length) {
+            const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            let key = "";
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charset.length);
+                key += charset[randomIndex];
+            }
+            return key;
         }
-        return char; // Non-alphabet characters are unchanged
-    }).join('');
-}
 
-function xorEncrypt(text, key) {
-    return text.split('').map((char, index) => {
-        return String.fromCharCode(char.charCodeAt(0) ^ key.charCodeAt(index % key.length));
-    }).join('');
-}
-
-function reverseString(str) {
-    return str.split('').reverse().join('');
-}
-
-function rot13(str) {
-    return str.split('').map(char => {
-        if (/[a-zA-Z]/.test(char)) {
-            const base = char.charCodeAt(0) >= 65 && char.charCodeAt(0) <= 90 ? 65 : 97;
-            return String.fromCharCode(((char.charCodeAt(0) - base + 13) % 26) + base);
+        function caesarCipher(text, shift) {
+            return text.split('').map(char => {
+                if (/[a-zA-Z]/.test(char)) {
+                    const code = char.charCodeAt(0);
+                    const shiftBase = code >= 65 && code <= 90 ? 65 : 97; // Upper or lower case
+                    return String.fromCharCode(((code - shiftBase + shift + 26) % 26) + shiftBase); // Added +26 for negative shifts
+                }
+                return char; // Non-alphabet characters are unchanged
+            }).join('');
         }
-        return char; // Non-alphabet characters are unchanged
-    }).join('');
-}
 
-function vigenereCipher(text, key) {
-    const keyLength = key.length;
-    return text.split('').map((char, index) => {
-        if (/[a-zA-Z]/.test(char)) {
-            const base = char.charCodeAt(0) >= 65 && char.charCodeAt(0) <= 90 ? 65 : 97;
-            const shift = key.charCodeAt(index % keyLength) - base;
-            return String.fromCharCode(((char.charCodeAt(0) - base + shift) % 26) + base);
+        function xorEncrypt(text, key) {
+            return text.split('').map((char, index) => {
+                return String.fromCharCode(char.charCodeAt(0) ^ key.charCodeAt(index % key.length));
+            }).join('');
         }
-        return char; // Non-alphabet characters are unchanged
-    }).join('');
-}
 
-function vigenereDecipher(text, key) {
-    const keyLength = key.length;
-    return text.split('').map((char, index) => {
-        if (/[a-zA-Z]/.test(char)) {
-            const base = char.charCodeAt(0) >= 65 && char.charCodeAt(0) <= 90 ? 65 : 97;
-            const shift = key.charCodeAt(index % keyLength) - base;
-            return String.fromCharCode(((char.charCodeAt(0) - base - shift + 26) % 26) + base);
+        function reverseString(str) {
+            return str.split('').reverse().join('');
         }
-        return char; // Non-alphabet characters are unchanged
-    }).join('');
-}
 
-function simpleSubstitution(text, decrypt = false) {
-    const alphabet = "abcdefghijklmnopqrstuvwxyz";
-    const substitution = "qwertyuiopasdfghjklzxcvbnm"; // Example substitution
-    const substituteMap = decrypt ? 
-        Object.fromEntries([...substitution].map((s, i) => [s, alphabet[i]])) :
-        Object.fromEntries([...alphabet].map((s, i) => [s, substitution[i]]));
-
-    return text.toLowerCase().split('').map(char => {
-        return substituteMap[char] || char; // Substitute or return the original character
-    }).join('');
-}
-
-function atbashCipher(text) {
-    return text.split('').map(char => {
-        if (/[a-zA-Z]/.test(char)) {
-            const base = char.charCodeAt(0) >= 65 && char.charCodeAt(0) <= 90 ? 65 : 97;
-            return String.fromCharCode(25 - (char.charCodeAt(0) - base) + base);
+        function rot13(str) {
+            return str.split('').map(char => {
+                if (/[a-zA-Z]/.test(char)) {
+                    const base = char.charCodeAt(0) >= 65 && char.charCodeAt(0) <= 90 ? 65 : 97;
+                    return String.fromCharCode(((char.charCodeAt(0) - base + 13) % 26) + base);
+                }
+                return char; // Non-alphabet characters are unchanged
+            }).join('');
         }
-        return char; // Non-alphabet characters are unchanged
-    }).join('');
-}
 
-function characterShift(text, shift) {
-    return text.split('').map(char => {
-        return String.fromCharCode(char.charCodeAt(0) + shift);
-    }).join('');
-}
+        function vigenereCipher(text, key) {
+            const keyLength = key.length;
+            return text.split('').map((char, index) => {
+                if (/[a-zA-Z]/.test(char)) {
+                    const base = char.charCodeAt(0) >= 65 && char.charCodeAt(0) <= 90 ? 65 : 97;
+                    const shift = key.charCodeAt(index % keyLength) - base;
+                    return String.fromCharCode(((char.charCodeAt(0) - base + shift) % 26) + base);
+                }
+                return char; // Non-alphabet characters are unchanged
+            }).join('');
+        }
+
+        function vigenereDecipher(text, key) {
+            const keyLength = key.length;
+            return text.split('').map((char, index) => {
+                if (/[a-zA-Z]/.test(char)) {
+                    const base = char.charCodeAt(0) >= 65 && char.charCodeAt(0) <= 90 ? 65 : 97;
+                    const shift = key.charCodeAt(index % keyLength) - base;
+                    return String.fromCharCode(((char.charCodeAt(0) - base - shift + 26) % 26) + base);
+                }
+                return char; // Non-alphabet characters are unchanged
+            }).join('');
+        }
+
+        function simpleSubstitution(text, decrypt = false) {
+            const alphabet = "abcdefghijklmnopqrstuvwxyz";
+            const substitution = "qwertyuiopasdfghjklzxcvbnm"; // Example substitution
+            const substituteMap = decrypt ? 
+                Object.fromEntries([...substitution].map((s, i) => [s, alphabet[i]])) :
+                Object.fromEntries([...alphabet].map((s, i) => [s, substitution[i]]));
+
+            return text.toLowerCase().split('').map(char => {
+                return substituteMap[char] || char; // Substitute or return the original character
+            }).join('');
+        }
+
+        function atbashCipher(text) {
+            return text.split('').map(char => {
+                if (/[a-zA-Z]/.test(char)) {
+                    const base = char.charCodeAt(0) >= 65 && char.charCodeAt(0) <= 90 ? 65 : 97;
+                    return String.fromCharCode(25 - (char.charCodeAt(0) - base) + base);
+                }
+                return char; // Non-alphabet characters are unchanged
+            }).join('');
+        }
+
+        function characterShift(text, shift) {
+            return text.split('').map(char => {
+                return String.fromCharCode(char.charCodeAt(0) + shift);
+            }).join('');
+        }
     </script>
 </body>
 </html>
