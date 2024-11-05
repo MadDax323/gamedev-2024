@@ -25,10 +25,15 @@
         }
         textarea, select, input {
             width: 100%;
-            padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 4px;
+            padding: 10px;
+            box-sizing: border-box; /* Include padding in the element's total width and height */
+        }
+        textarea {
+            height: 100px; /* Fixed height for text areas */
+            resize: none;  /* Prevent resizing */
         }
         button {
             width: 48%;
@@ -55,7 +60,7 @@
 <body>
     <div class="container">
         <h1>Text Encryption Tool</h1>
-        <textarea id="inputText" rows="5" placeholder="Enter text to encrypt or decrypt..."></textarea>
+        <textarea id="inputText" placeholder="Enter text to encrypt or decrypt..."></textarea>
         <select id="encryptionMethod">
             <option value="caesar">Caesar Cipher</option>
             <option value="base64">Base64 Encoding</option>
