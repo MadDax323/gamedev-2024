@@ -1,107 +1,160 @@
-<h2 align=center>t2a08-canvas by Fred</h2>
-You use loops and variables to make fast fancy drawings <br><br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Showcase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-<input type=button value=".lineTo(30,200)" onclick="{
-   myContext.beginPath();
-   myContext.lineWidth = 1;   
-   myContext.moveTo(20,10);
-   myContext.lineTo(30,200);
-   myContext.stroke();
-}">
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
 
-<input type=button value=".arc(95, 50, 40, 0, 2 * Math.PI)" onclick="{
-   myContext.beginPath();
-   myContext.lineWidth = 10;
-   myContext.strokeStyle = 'green';
-   myContext.arc(95, 50, 40, 0, 2 * Math.PI);
-   myContext.stroke();
-}">
+        input[type="button"] {
+            background-color: #6200ea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-<input type=button value=".fillText('Hello World', 400, 100)" onclick="{
-   myContext.font = '20px Arial';
-   myContext.fillText('Hello World', 400, 100);
-   myContext.translate(400, 100);  
-   myContext.rotate(60 * Math.PI / 180); 
-   myContext.fillText('Hello World', 10, 10);
-   myContext.stroke();
-   myContext.resetTransform();  
-}">
+        input[type="button"]:hover {
+            background-color: #3700b3;
+        }
 
-<input type=button value=".quadraticCurveTo(100,220,240,110)" onclick="{
-   myContext.beginPath();
-   myContext.moveTo(300,100);
-   myContext.quadraticCurveTo(100,220,240,110);
-   myContext.stroke();
-}">
+        canvas {
+            border: 1px solid #000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
 
-<input type=button value=".createLinearGradient(100, 300, 200, 400)" onclick="{
-   let myGradient = myContext.createLinearGradient(100, 300, 200, 400);
-   myGradient.addColorStop(0, 'red');
-   myGradient.addColorStop(0.5, 'blue');
-   myGradient.addColorStop(1, 'yellow');
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 800px;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
 
-   myContext.fillStyle = myGradient;
-   myContext.fillRect(100, 300, 200, 100); // Modified height for better visibility
-   myContext.fillStyle = 'black'; // Reset fillstyle
-}">
-<br><br>
+<h2 align=center>Canvas Showcase</h2>
 
-<!-- New Buttons Added -->
-<input type=button value=".rect(300, 250, 100, 50)" onclick="{
-   myContext.fillStyle = 'orange';
-   myContext.fillRect(300, 250, 100, 50);
-}">
+<div class="button-container">
+    <input type=button value=".lineTo(30,200)" onclick="{
+       myContext.beginPath();
+       myContext.lineWidth = 1;   
+       myContext.moveTo(20,10);
+       myContext.lineTo(30,200);
+       myContext.stroke();
+    }">
 
-<input type=button value=".line(50, 50, 400, 50)" onclick="{
-   myContext.beginPath();
-   myContext.moveTo(50, 50);
-   myContext.lineTo(400, 50);
-   myContext.strokeStyle = 'purple';
-   myContext.stroke();
-}">
+    <input type=button value=".arc(95, 50, 40, 0, 2 * Math.PI)" onclick="{
+       myContext.beginPath();
+       myContext.lineWidth = 10;
+       myContext.strokeStyle = 'green';
+       myContext.arc(95, 50, 40, 0, 2 * Math.PI);
+       myContext.stroke();
+    }">
 
-<input type=button value=".bezierCurveTo(100,300,400,200,500,300)" onclick="{
-   myContext.beginPath();
-   myContext.moveTo(100, 200);
-   myContext.bezierCurveTo(100,300,400,200,500,300);
-   myContext.strokeStyle = 'blue';
-   myContext.stroke();
-}">
+    <input type=button value=".fillText('Hello World', 400, 100)" onclick="{
+       myContext.font = '20px Arial';
+       myContext.fillText('Hello World', 400, 100);
+       myContext.translate(400, 100);  
+       myContext.rotate(60 * Math.PI / 180); 
+       myContext.fillText('Hello World', 10, 10);
+       myContext.stroke();
+       myContext.resetTransform();  
+    }">
 
-<input type=button value=".ellipse(700, 100, 50, 25, Math.PI / 4, 0, 2 * Math.PI)" onclick="{
-   myContext.beginPath();
-   myContext.ellipse(700, 100, 50, 25, Math.PI / 4, 0, 2 * Math.PI);
-   myContext.fillStyle = 'pink';
-   myContext.fill();
-}">
+    <input type=button value=".quadraticCurveTo(100,220,240,110)" onclick="{
+       myContext.beginPath();
+       myContext.moveTo(300,100);
+       myContext.quadraticCurveTo(100,220,240,110);
+       myContext.stroke();
+    }">
 
-<input type=button value=".arcTo(600, 200, 700, 200, 100)" onclick="{
-   myContext.beginPath();
-   myContext.moveTo(500, 200);
-   myContext.arcTo(600, 200, 700, 200, 100);
-   myContext.strokeStyle = 'brown';
-   myContext.stroke();
-}">
+    <input type=button value=".createLinearGradient(100, 300, 200, 400)" onclick="{
+       let myGradient = myContext.createLinearGradient(100, 300, 200, 400);
+       myGradient.addColorStop(0, 'red');
+       myGradient.addColorStop(0.5, 'blue');
+       myGradient.addColorStop(1, 'yellow');
 
-<input type=button value=".translate(50, 50)" onclick="{
-   myContext.translate(50, 50);
-   myContext.fillStyle = 'black';
-   myContext.fillText('Translated Text', 200, 200);
-   myContext.resetTransform();
-}">
+       myContext.fillStyle = myGradient;
+       myContext.fillRect(100, 300, 200, 100); // Modified height for better visibility
+       myContext.fillStyle = 'black'; // Reset fillstyle
+    }">
 
-<input type=button value="Manual Draw" onclick="toggleDrawMode()">
-<input type=button value="Stop Drawing" onclick="stopDrawing()"><br><br>
+    <input type=button value=".rect(300, 250, 100, 50)" onclick="{
+       myContext.fillStyle = 'orange';
+       myContext.fillRect(300, 250, 100, 50);
+    }">
 
-<input type=button value="clearRect(20, 20, 50, 50)" onclick="{
-   myContext.clearRect(20, 20, 50, 50);
-}">
+    <input type=button value=".line(50, 50, 400, 50)" onclick="{
+       myContext.beginPath();
+       myContext.moveTo(50, 50);
+       myContext.lineTo(400, 50);
+       myContext.strokeStyle = 'purple';
+       myContext.stroke();
+    }">
 
-<input type=button value="Clear all" onclick="{
-   myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
-}"><br><br>
+    <input type=button value=".bezierCurveTo(100,300,400,200,500,300)" onclick="{
+       myContext.beginPath();
+       myContext.moveTo(100, 200);
+       myContext.bezierCurveTo(100,300,400,200,500,300);
+       myContext.strokeStyle = 'blue';
+       myContext.stroke();
+    }">
 
-<canvas id="myCoolTag" width="1000" height="600" style="border:1px solid #000000;"></canvas>
+    <input type=button value=".ellipse(700, 100, 50, 25, Math.PI / 4, 0, 2 * Math.PI)" onclick="{
+       myContext.beginPath();
+       myContext.ellipse(700, 100, 50, 25, Math.PI / 4, 0, 2 * Math.PI);
+       myContext.fillStyle = 'pink';
+       myContext.fill();
+    }">
+
+    <input type=button value=".arcTo(600, 200, 700, 200, 100)" onclick="{
+       myContext.beginPath();
+       myContext.moveTo(500, 200);
+       myContext.arcTo(600, 200, 700, 200, 100);
+       myContext.strokeStyle = 'brown';
+       myContext.stroke();
+    }">
+
+    <input type=button value=".translate(50, 50)" onclick="{
+       myContext.translate(50, 50);
+       myContext.fillStyle = 'black';
+       myContext.fillText('Translated Text', 200, 200);
+       myContext.resetTransform();
+    }">
+
+    <input type=button value="Manual Draw" onclick="toggleDrawMode()">
+    <input type=button value="Stop Drawing" onclick="stopDrawing()"><br><br>
+
+    <input type=button value="clearRect(20, 20, 50, 50)" onclick="{
+       myContext.clearRect(20, 20, 50, 50);
+    }">
+
+    <input type=button value="Clear all" onclick="{
+       myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+    }"><br><br>
+</div>
+
+<canvas id="myCoolTag" width="1000" height="600"></canvas>
 
 <script>
    // Set up global variables
@@ -155,3 +208,5 @@ You use loops and variables to make fast fancy drawings <br><br>
       myCanvas.removeEventListener('mouseout', endDrawing);
    }
 </script>
+</body>
+</html>
