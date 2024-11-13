@@ -1,0 +1,53 @@
+<h6> Version 0.0.2 </h6>
+
+<body id="myBody" style="background-repeat:repeat; background-size: 80%" background="gameBackground.jpg">
+
+<h1 align="center">Simple Game Template</h1>
+<br><br><br><br>
+
+<script>
+    // global variables
+    let myGlobalX = 0;
+    let myClock;
+
+    // check if two elements are colliding
+    function isCollision(obj1, obj2) {
+        let rect1 = document.getElementById(obj1).getBoundingClientRect();
+        let rect2 = document.getElementById(obj2).getBoundingClientRect();
+
+        return !(
+            rect1.right < rect2.left ||
+            rect1.left > rect2.right ||
+            rect1.bottom < rect2.top ||
+            rect1.top > rect2.bottom
+        );
+    }
+
+    function checkCollisions() {
+        if (isCollision('player', 'obstacle')) {
+            alert('Collision Detected! Game Over.');
+            document.getElementById('player').style.left = '20px';  // Reset player position
+            location = 'nextLevel.html';  // Redirect to the next level
+        }
+    }
+</script>
+
+<!-- Game Elements -->
+<img id="player" style="position:absolute; width:100px; height:80px; top:0px; left:50px;" src="playerAsset.png">
+<img id="obstacle" style="position:absolute; width:100px; height:80px; top:0px; left:250px;" src="obstacleAsset.png">
+
+<!-- Control Buttons -->
+<input type="button" value="Move Background Left" onclick="{
+    clearInterval(myClock);
+    myClock = setInterval(() => {
+        myGlobalX -= 5;
+        document.getElementById('myBody').style.backgroundPosition = myGlobalX + 'px 0px';
+    }, 100);
+}">
+
+<input type="button" value="Move Player Right" onclick="{
+    document.getElementById('player').style.left = parseInt(document.getElementById('player').style.left) + 10 + 'px';
+    checkCollisions();  // Check for collisions after moving
+}"><br><br>
+
+</body>
