@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII Roguelike</title>
+    <style>
+        body {
+            font-family: monospace;
+            background-color: #000;
+            color: #0f0;
+        }
+        #game {
+            white-space: pre;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple ASCII Roguelike</h1>
+    <div id="game"></div>
+
+    <script>
+        const width = 10;
+        const height = 10;
+        let playerPos = { x: 1, y: 1 };
+
+        const gameMap = [
+            "##########",
+            "#........#",
+            "#........#",
+            "#........#",
+            "#........#",
+            "#........#",
+            "#........#",
+            "#........#",
+            "#........#",
+            "##########",
+        ];
+
+        function draw() {
+            let output = "";
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    if (x === playerPos.x && y === playerPos.y) {
+                        output += "@"; // Player
+                    } else {
+                        output += gameMap[y][x]; // Map
+                    }
+                }
+                output += "\n";
+            }
+            document.getElementById('game').textContent = output;
+        }
+
+        function movePlayer(dx, dy) {
+            const newX = playerPos.x + dx;
+            const newY = playerPos.y + dy;
+
+            // Check for wall
+            if (gameMap[newY][newX] !== '#') {
+                playerPos.x = newX;
+                playerPos.y = newY;
+                draw();
+            }
+        }
+
+        window.addEventListener("keydown", (e) => {
+            switch (e.key) {
+                case "ArrowUp":
+                    movePlayer(0, -1);
+                    break;
+                case "ArrowDown":
+                    movePlayer(0, 1);
+                    break;
+                case "ArrowLeft":
+                    movePlayer(-1, 0);
+                    break;
+                case "ArrowRight":
+                    movePlayer(1, 0);
+                    break;
+            }
+        });
+
+        draw();
+    </script>
+</body>
+</html>
