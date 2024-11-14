@@ -10,6 +10,8 @@
             font-family: monospace;
             background-color: #000;
             color: #0f0;
+            line-height: 1.2;
+            padding: 10px;
         }
 
         #game {
@@ -18,6 +20,36 @@
             border: 1px solid #0f0;
             padding: 10px;
             line-height: 1.2;
+        }
+
+        #inventory {
+            border: 1px solid #0f0;
+            padding: 5px;
+            display: none; /* Hidden until opened */
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .slot {
+            border: 1px solid #0f0;
+            width: 3ch;
+            height: 3ch;
+            display: inline-block;
+            vertical-align: top;
+            text-align: center;
+        }
+
+        #items { 
+            margin-top: 10px; 
+            max-height: 150px; 
+            overflow-y: auto; 
+            border-top: 1px solid #0f0; 
+        }
+
+        .item {
+            cursor: pointer;
         }
 
         #message {
@@ -32,44 +64,63 @@
     <div id="game"></div>
     <div id="message"></div>
 
+    <div id="inventory">
+        <h3>Inventory</h3>
+        <div>
+            <span class="slot" id="headSlot"></span>
+            <span class="slot" id="chestSlot"></span>
+            <span class="slot" id="legsSlot"></span>
+            <span class="slot" id="beltSlot"></span>
+            <span class="slot" id="feetSlot"></span>
+            <span class="slot" id="handsSlot"></span>
+            <span class="slot" id="backSlot"></span>
+        </div>
+        <div id="items"></div>
+    </div>
+
     <script>
-        const width = 40; // Map width
-        const height = 20; // Map height
+        // Game and Inventory Configuration
+        const width = 40; 
+        const height = 20; 
         const playerSymbol = '@';
         const wallSymbol = '#';
         const floorSymbol = '.';
         const exitSymbol = 'E';
+        const chestSymbol = 'C';
         const unexploredSymbol = ' ';
+        const inventorySlots = {
+            head: null,
+            chest: null,
+            legs: null,
+            belt: null,
+            feet: null,
+            hands: null,
+            back: null,
+        };
+        const items = [];
+        const allItems = [
+            { name: 'Leather Helmet', type: 'head' },
+            { name: 'Iron Chestplate', type: 'chest' },
+            { name: 'Leather Boots', type: 'feet' },
+            { name: 'Iron Leggings', type: 'legs' },
+            { name: 'Wool Belt', type: 'belt' },
+            { name: 'Wooden Shield', type: 'back' },
+            { name: 'Iron Sword', type: 'hands' },
+            { name: 'Healing Potion', type: 'item' }
+        ];
 
         let playerPos = { x: 0, y: 0 };
         let gameMap = [];
         let visibilityMap = [];
-        let currentLevel = 0; // Track the number of generated maps
-        const maxRooms = 10; // Increase the number of rooms per map
-        const roomMinSize = 3;
-        const roomMaxSize = 6;
+        let currentLevel = 0; 
 
+        // Initialize Game
         function initializeMap() {
-            gameMap = [];
-            for (let y = 0; y < height; y++) {
-                let row = '';
-                for (let x = 0; x < width; x++) {
-                    row += wallSymbol; // Start with walls
-                }
-                gameMap.push(row);
-            }
-            initializeVisibility();
+            gameMap = Array.from({ length: height }, () => wallSymbol.repeat(width));
         }
 
         function initializeVisibility() {
-            visibilityMap = [];
-            for (let y = 0; y < height; y++) {
-                let row = '';
-                for (let x = 0; x < width; x++) {
-                    row += unexploredSymbol; // Initialize all as unexplored
-                }
-                visibilityMap.push(row);
-            }
+            visibilityMap = Array.from({ length: height }, () => unexploredSymbol.repeat(width));
             visibilityMap[playerPos.y] = visibilityMap[playerPos.y].substring(0, playerPos.x) + floorSymbol.repeat(width - playerPos.x);
         }
 
@@ -87,7 +138,6 @@
             const x2 = room2.x + Math.floor(room2.width / 2);
             const y2 = room2.y + Math.floor(room2.height / 2);
 
-            // Draw a hallway between the two rooms
             if (Math.random() < 0.5) {
                 drawHorizontalHallway(x1, x2, y1);
                 drawVerticalHallway(y1, y2, x2);
@@ -113,16 +163,17 @@
             initializeMap();
             const rooms = [];
 
+            // Room generation logic...
+            const maxRooms = 10;
             while (rooms.length < maxRooms) {
-                const roomWidth = Math.floor(Math.random() * (roomMaxSize - roomMinSize + 1)) + roomMinSize;
-                const roomHeight = Math.floor(Math.random() * (roomMaxSize - roomMinSize + 1)) + roomMinSize;
-                const x = Math.floor(Math.random() * (width - roomWidth - 1)) + 1; // Exclude walls
-                const y = Math.floor(Math.random() * (height - roomHeight - 1)) + 1; // Exclude walls
+                const roomWidth = Math.floor(Math.random() * 4) + 3;
+                const roomHeight = Math.floor(Math.random() * 4) + 3;
+                const x = Math.floor(Math.random() * (width - roomWidth - 1)) + 1;
+                const y = Math.floor(Math.random() * (height - roomHeight - 1)) + 1;
 
                 const newRoom = { x, y, width: roomWidth, height: roomHeight };
 
-                // Check for overlaps with other rooms
-                let overlap = rooms.some(otherRoom =>
+                let overlap = rooms.some(otherRoom => 
                     x < otherRoom.x + otherRoom.width &&
                     x + roomWidth > otherRoom.x &&
                     y < otherRoom.y + otherRoom.height &&
@@ -132,23 +183,28 @@
                 if (!overlap) {
                     createRoom(x, y, roomWidth, roomHeight);
                     rooms.push(newRoom);
-                    // Connect to the previous room if it exists
-                    if (rooms.length > 1) {
-                        connectRooms(rooms[rooms.length - 2], newRoom);
-                    }
+                    if (rooms.length > 1) connectRooms(rooms[rooms.length - 2], newRoom);
                 }
             }
 
-            // Place an exit in the last room created
+            // Place an exit
             const lastRoom = rooms[rooms.length - 1];
             const exitX = lastRoom.x + Math.floor(lastRoom.width / 2);
             const exitY = lastRoom.y + Math.floor(lastRoom.height / 2);
             gameMap[exitY] = gameMap[exitY].substring(0, exitX) + exitSymbol + gameMap[exitY].substring(exitX + 1);
 
-            // Ensure the player's starting position is within a floor tile
-            playerPos.x = Math.floor(width / 2);
-            playerPos.y = Math.floor(height / 2);
+            // Place a chest randomly
+            const chestX = Math.floor(Math.random() * width);
+            const chestY = Math.floor(Math.random() * height);
+            gameMap[chestY] = gameMap[chestY].substring(0, chestX) + chestSymbol + gameMap[chestY].substring(chestX + 1);
+            items.push(randomItem()); // Add random item to inventory for the demo
+
+            playerPos = { x: Math.floor(width / 2), y: Math.floor(height / 2) };
             gameMap[playerPos.y] = gameMap[playerPos.y].substring(0, playerPos.x) + floorSymbol + gameMap[playerPos.y].substring(playerPos.x + 1);
+        }
+
+        function randomItem() {
+            return allItems[Math.floor(Math.random() * allItems.length)];
         }
 
         function draw() {
@@ -156,11 +212,11 @@
             for (let y = 0; y < height; y++) {
                 for (let x = 0; x < width; x++) {
                     if (x === playerPos.x && y === playerPos.y) {
-                        output += playerSymbol; // Player
+                        output += playerSymbol; 
                     } else if (visibilityMap[y][x] !== unexploredSymbol) {
-                        output += gameMap[y][x]; // Revealed map
+                        output += gameMap[y][x]; 
                     } else {
-                        output += unexploredSymbol; // Fog of war
+                        output += unexploredSymbol; 
                     }
                 }
                 output += '\n';
@@ -172,30 +228,28 @@
             const newX = playerPos.x + dx;
             const newY = playerPos.y + dy;
 
-            // Check for wall or exit
             if (gameMap[newY][newX] !== wallSymbol) {
                 if (gameMap[newY][newX] === exitSymbol) {
                     currentLevel++;
                     if (currentLevel < 5) {
                         generateRandomMap();
                     } else {
-                        // Transition to boss arena
-                        document.getElementById('message').textContent = "You have entered the boss arena!";
                         generateBossArena();
                     }
-                } else {
-                    playerPos.x = newX;
-                    playerPos.y = newY;
-
-                    // Update the visibility map
-                    revealSurroundings();
-                    draw();
+                } else if (gameMap[newY][newX] === chestSymbol) {
+                    pickUpItems();
                 }
+                playerPos.x = newX;
+                playerPos.y = newY;
+
+                // Update visibility
+                revealSurroundings();
+                draw();
             }
         }
 
         function revealSurroundings() {
-            const revealDistance = 2; // How far the player can see
+            const revealDistance = 2; 
             for (let dy = -revealDistance; dy <= revealDistance; dy++) {
                 for (let dx = -revealDistance; dx <= revealDistance; dx++) {
                     const checkX = playerPos.x + dx;
@@ -207,18 +261,57 @@
             }
         }
 
+        function pickUpItems() {
+            const newItem = randomItem();
+            items.push(newItem);
+            drawInventory();
+            document.getElementById('message').textContent = `Picked up ${newItem.name}!`;
+        }
+
+        function drawInventory() {
+            const itemList = document.getElementById('items');
+            itemList.innerHTML = '';
+            items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.textContent = item.name;
+                itemDiv.className = 'item';
+                itemDiv.onclick = () => equipItem(item);
+                itemDiv.ondblclick = () => useItem(item);
+                itemList.appendChild(itemDiv);
+            });
+        }
+
+        function equipItem(item) {
+            const slotType = item.type;
+            if (inventorySlots[slotType] === null) {
+                inventorySlots[slotType] = item;
+                drawInventory();
+                updateSlots();
+            }
+        }
+
+        function updateSlots() {
+            for (const [type, item] of Object.entries(inventorySlots)) {
+                document.getElementById(type + 'Slot').textContent = item ? item.name : '';
+            }
+        }
+
+        function useItem(item) {
+            if (item.name === 'Healing Potion') {
+                document.getElementById('message').textContent = `You used a healing potion!`;
+                items.splice(items.indexOf(item), 1); // Remove from inventory
+                drawInventory();
+            }
+        }
+
         function generateBossArena() {
             // Create a 10x10 arena
             const arenaWidth = 10;
             const arenaHeight = 10;
             let arenaMap = Array(arenaHeight).fill('#'.repeat(arenaWidth));
-
-            // Center the player in the arena
             playerPos.x = Math.floor(arenaWidth / 2);
             playerPos.y = Math.floor(arenaHeight / 2);
             arenaMap[playerPos.y] = arenaMap[playerPos.y].substring(0, playerPos.x) + floorSymbol + arenaMap[playerPos.y].substring(playerPos.x + 1);
-
-            // Update the game map and draw the boss arena
             gameMap = arenaMap;
             revealSurroundings();
             draw();
@@ -238,8 +331,21 @@
                 case "ArrowRight":
                     movePlayer(1, 0);
                     break;
+                case "i":
+                    toggleInventory();
+                    break;
+                case "r":
+                    if (gameMap[playerPos.y][playerPos.x] === chestSymbol) {
+                        pickUpItems();
+                    }
+                    break;
             }
         });
+
+        function toggleInventory() {
+            const inventory = document.getElementById('inventory');
+            inventory.style.display = inventory.style.display === 'none' ? 'block' : 'none';
+        }
 
         // Initialize the game
         generateRandomMap();
