@@ -1,41 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASCII Roguelike with Rooms and Hallways</title>
+    <title>ASCII Roguelike Game</title>
     <style>
         body {
             font-family: monospace;
             background-color: #000;
             color: #0f0;
         }
+
         #game {
             white-space: pre;
             font-size: 16px;
             border: 1px solid #0f0;
             padding: 10px;
+            line-height: 1.2;
+        }
+
+        #message {
+            color: #FF0000;
+            text-align: center;
         }
     </style>
 </head>
+
 <body>
-    <h1>ASCII Roguelike with Rooms and Hallways</h1>
+    <h1>ASCII Roguelike Game</h1>
     <div id="game"></div>
+    <div id="message"></div>
 
     <script>
-        const width = 40; // Increase map width
-        const height = 20; // Increase map height
+        const width = 40; // Map width
+        const height = 20; // Map height
         const playerSymbol = '@';
         const wallSymbol = '#';
         const floorSymbol = '.';
-        const doorSymbol = 'D';
+        const exitSymbol = 'E';
         const unexploredSymbol = ' ';
 
         let playerPos = { x: 0, y: 0 };
         let gameMap = [];
         let visibilityMap = [];
-        
-        const maxRooms = 8;
+        let currentLevel = 0; // Track the number of generated maps
+        const maxRooms = 10; // Increase the number of rooms per map
         const roomMinSize = 3;
         const roomMaxSize = 6;
 
@@ -103,7 +113,7 @@
             initializeMap();
             const rooms = [];
 
-            for (let r = 0; r < maxRooms; r++) {
+            while (rooms.length < maxRooms) {
                 const roomWidth = Math.floor(Math.random() * (roomMaxSize - roomMinSize + 1)) + roomMinSize;
                 const roomHeight = Math.floor(Math.random() * (roomMaxSize - roomMinSize + 1)) + roomMinSize;
                 const x = Math.floor(Math.random() * (width - roomWidth - 1)) + 1; // Exclude walls
@@ -112,7 +122,7 @@
                 const newRoom = { x, y, width: roomWidth, height: roomHeight };
 
                 // Check for overlaps with other rooms
-                let overlap = rooms.some(otherRoom => 
+                let overlap = rooms.some(otherRoom =>
                     x < otherRoom.x + otherRoom.width &&
                     x + roomWidth > otherRoom.x &&
                     y < otherRoom.y + otherRoom.height &&
@@ -128,6 +138,13 @@
                     }
                 }
             }
+
+            // Place an exit in the last room created
+            const lastRoom = rooms[rooms.length - 1];
+            const exitX = lastRoom.x + Math.floor(lastRoom.width / 2);
+            const exitY = lastRoom.y + Math.floor(lastRoom.height / 2);
+            gameMap[exitY] = gameMap[exitY].substring(0, exitX) + exitSymbol + gameMap[exitY].substring(exitX + 1);
+
             // Ensure the player's starting position is within a floor tile
             playerPos.x = Math.floor(width / 2);
             playerPos.y = Math.floor(height / 2);
@@ -155,14 +172,25 @@
             const newX = playerPos.x + dx;
             const newY = playerPos.y + dy;
 
-            // Check for wall
+            // Check for wall or exit
             if (gameMap[newY][newX] !== wallSymbol) {
-                playerPos.x = newX;
-                playerPos.y = newY;
+                if (gameMap[newY][newX] === exitSymbol) {
+                    currentLevel++;
+                    if (currentLevel < 5) {
+                        generateRandomMap();
+                    } else {
+                        // Transition to boss arena
+                        document.getElementById('message').textContent = "You have entered the boss arena!";
+                        generateBossArena();
+                    }
+                } else {
+                    playerPos.x = newX;
+                    playerPos.y = newY;
 
-                // Update the visibility map
-                revealSurroundings();
-                draw();
+                    // Update the visibility map
+                    revealSurroundings();
+                    draw();
+                }
             }
         }
 
@@ -177,6 +205,23 @@
                     }
                 }
             }
+        }
+
+        function generateBossArena() {
+            // Create a 10x10 arena
+            const arenaWidth = 10;
+            const arenaHeight = 10;
+            let arenaMap = Array(arenaHeight).fill('#'.repeat(arenaWidth));
+
+            // Center the player in the arena
+            playerPos.x = Math.floor(arenaWidth / 2);
+            playerPos.y = Math.floor(arenaHeight / 2);
+            arenaMap[playerPos.y] = arenaMap[playerPos.y].substring(0, playerPos.x) + floorSymbol + arenaMap[playerPos.y].substring(playerPos.x + 1);
+
+            // Update the game map and draw the boss arena
+            gameMap = arenaMap;
+            revealSurroundings();
+            draw();
         }
 
         window.addEventListener("keydown", (e) => {
@@ -202,4 +247,5 @@
         draw();
     </script>
 </body>
+
 </html>
