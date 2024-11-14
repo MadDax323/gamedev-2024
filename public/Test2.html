@@ -3,235 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sudoku Game</title>
+    <title>Sudoku Puzzle</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-        .container {
-            text-align: center;
-        }
-        .sudoku-grid {
-            border-collapse: collapse;
-            margin: 20px auto;
-        }
-        .sudoku-grid td {
-            width: 40px;
-            height: 40px;
-            border: 1px solid #ccc;
-            text-align: center;
-            font-size: 24px;
-        }
-        .sudoku-grid td input {
-            width: 100%;
-            height: 100%;
-            border: none;
-            font-size: 24px;
-            text-align: center;
-            outline: none;
-        }
-        .sudoku-grid td input:focus {
-            border: 1px solid #007bff;
-        }
-        .tracker {
-            margin-top: 20px;
-        }
+        /* General styling */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f5;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Container styling */
+#sudoku-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Table styling */
+#sudoku-board {
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+#sudoku-board td {
+    border: 1px solid #ccc;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+}
+
+#sudoku-board input {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 1.2em;
+    border: none;
+    outline: none;
+    background-color: #fafafa;
+}
+
+/* Highlighting 3x3 grid sections */
+#sudoku-board tr:nth-child(3n) td {
+    border-bottom: 2px solid #666;
+}
+
+#sudoku-board tr td:nth-child(3n) {
+    border-right: 2px solid #666;
+}
+
+/* Controls styling */
+.controls {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 1em;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+button:active {
+    background-color: #3e8e41;
+}
+
+button#clear-button {
+    background-color: #f44336;
+}
+
+button#clear-button:hover {
+    background-color: #e53935;
+}
+
+button#clear-button:active {
+    background-color: #d32f2f;
+}
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Sudoku Game</h1>
-        <table id="sudoku-grid" class="sudoku-grid"></table>
-        <button id="solve-button">Solve</button>
-        <button id="clear-button">Clear</button>
-        <button id="generate-button">Generate New Sudoku</button>
-        <div class="tracker" id="number-tracker"></div>
+    <h1>It's Soduku Time</h1>
+    <div id="sudoku-container">
+        <table id="sudoku-board"></table>
+        <div class="controls">
+            <button id="solve-button">Solve</button>
+            <button id="clear-button">Clear</button>
+            <button id="check-button">Check Solution</button>
+        </div>
     </div>
     <script>
-        const gridSize = 9;
-        let sudokuGrid = Array.from({ length: gridSize }, () => Array(gridSize).fill(0));
-
-        function displaySudoku(grid) {
-            const table = document.getElementById("sudoku-grid");
-            table.innerHTML = ''; // Clear previous grid
-            for (let row = 0; row < gridSize; row++) {
-                const tr = document.createElement("tr");
-                for (let col = 0; col < gridSize; col++) {
-                    const td = document.createElement("td");
-                    if (grid[row][col] !== 0) {
-                        td.textContent = grid[row][col];
-                    } else {
-                        const input = document.createElement("input");
-                        input.type = "number";
-                        input.min = "1";
-                        input.max = "9";
-                        input.addEventListener("input", updateTracker);
-                        td.appendChild(input);
-                    }
-                    tr.appendChild(td);
-                }
-                table.appendChild(tr);
+        document.addEventListener('DOMContentLoaded', function() {
+    const sudokuBoard = document.getElementById('sudoku-board');
+    const solveButton = document.getElementById('solve-button');
+    const clearButton = document.getElementById('clear-button');
+    const checkButton = document.getElementById('check-button');
+ 
+    function createBoard() {
+        for (let row = 0; row < 9; row++) {
+            const tr = document.createElement('tr');
+            for (let col = 0; col < 9; col++) {
+                const td = document.createElement('td');
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.min = '1';
+                input.max = '9';
+                td.appendChild(input);
+                tr.appendChild(td);
             }
-            updateTracker();
+            sudokuBoard.appendChild(tr);
         }
-
-        function updateTracker() {
-            const count = Array(9).fill(0);
-            const inputs = document.querySelectorAll('#sudoku-grid input');
-            inputs.forEach(input => {
-                if (input.value) {
-                    count[input.value - 1]++;
-                }
-            });
-
-            const tracker = document.getElementById("number-tracker");
-            tracker.innerHTML = '';
-            count.forEach((c, i) => {
-                tracker.innerHTML += `Number ${i + 1}: ${c} placed<br>`;
-            });
+    }
+ 
+    createBoard();
+ 
+    function getBoard() {
+        return Array.from(sudokuBoard.querySelectorAll('tr')).map(row => 
+            Array.from(row.querySelectorAll('td input')).map(cell => 
+                cell.value ? parseInt(cell.value) : 0
+            )
+        );
+    }
+ 
+    function setBoard(board) {
+        const cells = sudokuBoard.querySelectorAll('td input');
+        cells.forEach((cell, index) => {
+            cell.value = board[Math.floor(index / 9)][index % 9] || '';
+        });
+    }
+ 
+    function isValid(board, row, col, num) {
+        for (let i = 0; i < 9; i++) {
+            if (board[row][i] === num || board[i][col] === num) return false;
         }
-
-        function isValid(grid, row, col, num) {
-            for (let i = 0; i < gridSize; i++) {
-                if (grid[row][i] === num || grid[i][col] === num) return false;
-            }
-            const boxRow = Math.floor(row / 3) * 3;
-            const boxCol = Math.floor(col / 3) * 3;
-            for (let i = 0; i < 3; i++) {
-                for (let j = 0; j < 3; j++) {
-                    if (grid[boxRow + i][boxCol + j] === num) return false;
-                }
-            }
-            return true;
-        }
-
-        function fillSudoku(grid) {
-            for (let i = 0; i < gridSize; i++) {
-                for (let j = 0; j < gridSize; j++) {
-                    if (grid[i][j] === 0) {
-                        const nums = [...Array(9).keys()].map(x => x + 1).sort(() => Math.random() - 0.5);
-                        for (const num of nums) {
-                            if (isValid(grid, i, j, num)) {
-                                grid[i][j] = num;
-                                if (fillSudoku(grid)) return true;
-                                grid[i][j] = 0; // Backtrack
-                            }
-                        }
-                        return false; // No valid number found
-                    }
-                }
-            }
-            return true; // Puzzle filled
-        }
-
-        function removeNumbers(grid, count) {
-            let removed = 0;
-
-            while (removed < count) {
-                const i = Math.floor(Math.random() * gridSize);
-                const j = Math.floor(Math.random() * gridSize);
-                if (grid[i][j] !== 0) {
-                    const temp = grid[i][j];
-                    grid[i][j] = 0;
-
-                    // Check if the grid is still solvable
-                    if (isUniqueSolution(grid)) {
-                        removed++;
-                    } else {
-                        grid[i][j] = temp; // Restore if removing invalidates uniqueness
-                    }
-                }
+ 
+        const boxRowStart = Math.floor(row / 3) * 3;
+        const boxColStart = Math.floor(col / 3) * 3;
+ 
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (board[boxRowStart + i][boxColStart + j] === num) return false;
             }
         }
-
-        function isUniqueSolution(grid) {
-            let solutions = 0;
-            const backtrack = (g) => {
-                for (let i = 0; i < gridSize; i++) {
-                    for (let j = 0; j < gridSize; j++) {
-                        if (g[i][j] === 0) {
-                            for (let num = 1; num <= 9; num++) {
-                                if (isValid(g, i, j, num)) {
-                                    g[i][j] = num;
-                                    backtrack(g);
-                                    g[i][j] = 0;
-
-                                    if (solutions > 1) return; // More than one solution found
-                                }
-                            }
-                            return;
+        return true;
+    }
+ 
+    function solveSudoku(board) {
+        for (let row = 0; row < 9; row++) {
+            for (let col = 0; col < 9; col++) {
+                if (board[row][col] === 0) {
+                    for (let num = 1; num <= 9; num++) {
+                        if (isValid(board, row, col, num)) {
+                            board[row][col] = num;
+                            if (solveSudoku(board)) return true;
+                            board[row][col] = 0;
                         }
                     }
+                    return false;
                 }
-                solutions++;
-            };
-            backtrack(grid);
-            return solutions === 1; // Must have exactly one solution
+            }
         }
-
-        function generateSudoku() {
-            const tempGrid = Array.from({ length: gridSize }, () => Array(gridSize).fill(0));
-            fillSudoku(tempGrid); // Fill the grid
-            removeNumbers(tempGrid, 40); // Remove numbers to create a puzzle
-            sudokuGrid = tempGrid; // Update the main grid
-            displaySudoku(sudokuGrid);
+        return true;
+    }
+ 
+    function isValidSudoku(board) {
+        const rows = Array.from({ length: 9 }, () => new Set());
+        const cols = Array.from({ length: 9 }, () => new Set());
+        const boxes = Array.from({ length: 9 }, () => new Set());
+ 
+        for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+                const num = board[r][c];
+                if (num === 0) continue;
+                if (rows[r].has(num) || cols[c].has(num) || boxes[Math.floor(r / 3) * 3 + Math.floor(c / 3)].has(num)) {
+                    return false;
+                }
+                rows[r].add(num);
+                cols[c].add(num);
+                boxes[Math.floor(r / 3) * 3 + Math.floor(c / 3)].add(num);
+            }
         }
-
-        function generateBasedOnExisting() {
-            const tempGrid = Array.from({ length: gridSize }, (_, i) => 
-                Array.from({ length: gridSize }, (_, j) => {
-                    const input = document.querySelectorAll('#sudoku-grid input')[i * gridSize + j];
-                    return input && input.value ? parseInt(input.value) : sudokuGrid[i][j];
-                })
-            );
-
-            removeNumbers(tempGrid, 40); // Remove numbers to create a puzzle
-            sudokuGrid = tempGrid; // Update the main grid
-            displaySudoku(sudokuGrid);
+        return true;
+    }
+ 
+    solveButton.addEventListener('click', function() {
+        const board = getBoard();
+        if (solveSudoku(board)) {
+            setBoard(board);
+            alert('Solution found! Check the board.');
+        } else {
+            alert('Sudoku cannot be solved.');
         }
-
-        function solveSudoku() {
-            const inputs = document.querySelectorAll('#sudoku-grid input');
-            const grid = Array.from({ length: gridSize }, (_, i) => 
-                Array.from({ length: gridSize }, (_, j) => 
-                    sudokuGrid[i][j] || (inputs[i * gridSize + j].value ? parseInt(inputs[i * gridSize + j].value) : 0)
-                )
-            );
-
-            if (backtrack(grid)) {
-                grid.forEach((row, i) => {
-                    row.forEach((value, j) => {
-                        if (value !== 0) {
-                            if (inputs[i * gridSize + j]) {
-                                inputs[i * gridSize + j].value = value;
-                            }
-                        }
-                    });
-                });
+    });
+ 
+    checkButton.addEventListener('click', function() {
+        const board = getBoard();
+        if (isBoardFull(board)) {
+            if (isValidSudoku(board)) {
+                alert('Congratulations! You solved the Sudoku correctly!');
             } else {
-                alert("No solution found!");
+                alert('The solution is incorrect. click clear and then solve to see the correct solution:');
+                const solvedBoard = JSON.parse(JSON.stringify(board));
+                if (solveSudoku(solvedBoard)) {
+                    setBoard(solvedBoard);
+                }
             }
+        } else {
+            alert('Please fill all the cells before checking the solution.');
         }
-
-        function clearGrid() {
-            const inputs = document.querySelectorAll('#sudoku-grid input');
-            inputs.forEach(input => {
-                input.value = '';
-            });
-            displaySudoku(sudokuGrid); // Reset the grid to initial puzzle
-        }
-
-        document.getElementById("solve-button").addEventListener("click", solveSudoku);
-        document.getElementById("clear-button").addEventListener("click", clearGrid);
-        document.getElementById("generate-button").addEventListener("click", generateBasedOnExisting);
-
-        // Initialize the Sudoku grid
-        generateSudoku();
+    });
+ 
+    function isBoardFull(board) {
+        return board.every(row => row.every(cell => cell !== 0));
+    }
+ 
+    clearButton.addEventListener('click', function() {
+        document.querySelectorAll('input').forEach(input => input.value = '');
+    });
     </script>
 </body>
 </html>
