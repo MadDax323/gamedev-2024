@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASCII Roguelike</title>
+    <title>ASCII Roguelike with Doors and Fog of War</title>
     <style>
         body {
             font-family: monospace;
@@ -13,6 +13,8 @@
         #game {
             white-space: pre;
             font-size: 16px;
+            border: 1px solid #0f0;
+            padding: 10px;
         }
     </style>
 </head>
@@ -23,32 +25,67 @@
     <script>
         const width = 10;
         const height = 10;
-        let playerPos = { x: 1, y: 1 };
+        const playerSymbol = '@';
+        const wallSymbol = '#';
+        const floorSymbol = '.';
+        const doorSymbol = 'D';
+        const unexploredSymbol = ' ';
 
-        const gameMap = [
-            "##########",
-            "#........#",
-            "#........#",
-            "#........#",
-            "#........#",
-            "#........#",
-            "#........#",
-            "#........#",
-            "#........#",
-            "##########",
-        ];
+        let playerPos = { x: 1, y: 1 };
+        let gameMap = [];
+        let visibilityMap = [];
+
+        function generateRandomMap() {
+            gameMap = [];
+            for (let y = 0; y < height; y++) {
+                let row = '';
+                for (let x = 0; x < width; x++) {
+                    // Set boundaries
+                    if (x === 0 || x === width - 1 || y === 0 || y === height - 1) {
+                        row += wallSymbol; // Walls
+                    } else {
+                        // Randomly generate walls and floors
+                        const tileType = Math.random();
+                        if (tileType < 0.2) {
+                            row += wallSymbol; // 20% chance for wall
+                        } else if (tileType < 0.4) {
+                            row += doorSymbol; // 20% chance for door
+                        } else {
+                            row += floorSymbol; // 60% chance for floor
+                        }
+                    }
+                }
+                gameMap.push(row);
+            }
+            // Ensure the player starts in a floor space
+            gameMap[playerPos.y][playerPos.x] = floorSymbol;
+        }
+
+        function initializeVisibility() {
+            visibilityMap = [];
+            for (let y = 0; y < height; y++) {
+                let row = '';
+                for (let x = 0; x < width; x++) {
+                    row += unexploredSymbol; // Initialize all as unexplored
+                }
+                visibilityMap.push(row);
+            }
+            visibilityMap[playerPos.y] = visibilityMap[playerPos.y].substring(0, playerPos.x) + floorSymbol.repeat(width - playerPos.x);
+        }
 
         function draw() {
-            let output = "";
+            let output = '';
             for (let y = 0; y < height; y++) {
                 for (let x = 0; x < width; x++) {
                     if (x === playerPos.x && y === playerPos.y) {
-                        output += "@"; // Player
+                        output += playerSymbol; // Player
+                    } else if (visibilityMap[y][x] !== unexploredSymbol) {
+                        output += gameMap[y][x]; // Revealed map
                     } else {
-                        output += gameMap[y][x]; // Map
+                        output += unexploredSymbol; // Fog of war
                     }
                 }
-                output += "\n";
+                output += '\n';
             }
             document.getElementById('game').textContent = output;
         }
@@ -58,10 +95,26 @@
             const newY = playerPos.y + dy;
 
             // Check for wall
-            if (gameMap[newY][newX] !== '#') {
+            if (gameMap[newY][newX] !== wallSymbol) {
                 playerPos.x = newX;
                 playerPos.y = newY;
+
+                // Update the visibility map
+                revealSurroundings();
                 draw();
+            }
+        }
+
+        function revealSurroundings() {
+            const revealDistance = 1; // How far the player can see
+            for (let dy = -revealDistance; dy <= revealDistance; dy++) {
+                for (let dx = -revealDistance; dx <= revealDistance; dx++) {
+                    const checkX = playerPos.x + dx;
+                    const checkY = playerPos.y + dy;
+                    if (checkX >= 0 && checkX < width && checkY >= 0 && checkY < height) {
+                        visibilityMap[checkY] = visibilityMap[checkY].substring(0, checkX) + gameMap[checkY][checkX] + visibilityMap[checkY].substring(checkX + 1);
+                    }
+                }
             }
         }
 
@@ -82,6 +135,9 @@
             }
         });
 
+        // Initialize the game
+        generateRandomMap();
+        initializeVisibility();
         draw();
     </script>
 </body>
