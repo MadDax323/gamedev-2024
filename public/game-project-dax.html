@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASCII Roguelike with Doors and Fog of War</title>
+    <title>ASCII Roguelike with Rooms and Hallways</title>
     <style>
         body {
             font-family: monospace;
@@ -19,46 +19,36 @@
     </style>
 </head>
 <body>
-    <h1>Simple ASCII Roguelike</h1>
+    <h1>ASCII Roguelike with Rooms and Hallways</h1>
     <div id="game"></div>
 
     <script>
-        const width = 10;
-        const height = 10;
+        const width = 40; // Increase map width
+        const height = 20; // Increase map height
         const playerSymbol = '@';
         const wallSymbol = '#';
         const floorSymbol = '.';
         const doorSymbol = 'D';
         const unexploredSymbol = ' ';
 
-        let playerPos = { x: 1, y: 1 };
+        let playerPos = { x: 0, y: 0 };
         let gameMap = [];
         let visibilityMap = [];
+        
+        const maxRooms = 8;
+        const roomMinSize = 3;
+        const roomMaxSize = 6;
 
-        function generateRandomMap() {
+        function initializeMap() {
             gameMap = [];
             for (let y = 0; y < height; y++) {
                 let row = '';
                 for (let x = 0; x < width; x++) {
-                    // Set boundaries
-                    if (x === 0 || x === width - 1 || y === 0 || y === height - 1) {
-                        row += wallSymbol; // Walls
-                    } else {
-                        // Randomly generate walls and floors
-                        const tileType = Math.random();
-                        if (tileType < 0.2) {
-                            row += wallSymbol; // 20% chance for wall
-                        } else if (tileType < 0.4) {
-                            row += doorSymbol; // 20% chance for door
-                        } else {
-                            row += floorSymbol; // 60% chance for floor
-                        }
-                    }
+                    row += wallSymbol; // Start with walls
                 }
                 gameMap.push(row);
             }
-            // Ensure the player starts in a floor space
-            gameMap[playerPos.y][playerPos.x] = floorSymbol;
+            initializeVisibility();
         }
 
         function initializeVisibility() {
@@ -71,6 +61,77 @@
                 visibilityMap.push(row);
             }
             visibilityMap[playerPos.y] = visibilityMap[playerPos.y].substring(0, playerPos.x) + floorSymbol.repeat(width - playerPos.x);
+        }
+
+        function createRoom(x, y, roomWidth, roomHeight) {
+            for (let i = x; i < x + roomWidth; i++) {
+                for (let j = y; j < y + roomHeight; j++) {
+                    gameMap[j] = gameMap[j].substring(0, i) + floorSymbol + gameMap[j].substring(i + 1);
+                }
+            }
+        }
+
+        function connectRooms(room1, room2) {
+            const x1 = room1.x + Math.floor(room1.width / 2);
+            const y1 = room1.y + Math.floor(room1.height / 2);
+            const x2 = room2.x + Math.floor(room2.width / 2);
+            const y2 = room2.y + Math.floor(room2.height / 2);
+
+            // Draw a hallway between the two rooms
+            if (Math.random() < 0.5) {
+                drawHorizontalHallway(x1, x2, y1);
+                drawVerticalHallway(y1, y2, x2);
+            } else {
+                drawVerticalHallway(y1, y2, x1);
+                drawHorizontalHallway(x1, x2, y2);
+            }
+        }
+
+        function drawHorizontalHallway(x1, x2, y) {
+            for (let x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
+                gameMap[y] = gameMap[y].substring(0, x) + floorSymbol + gameMap[y].substring(x + 1);
+            }
+        }
+
+        function drawVerticalHallway(y1, y2, x) {
+            for (let y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
+                gameMap[y] = gameMap[y].substring(0, x) + floorSymbol + gameMap[y].substring(x + 1);
+            }
+        }
+
+        function generateRandomMap() {
+            initializeMap();
+            const rooms = [];
+
+            for (let r = 0; r < maxRooms; r++) {
+                const roomWidth = Math.floor(Math.random() * (roomMaxSize - roomMinSize + 1)) + roomMinSize;
+                const roomHeight = Math.floor(Math.random() * (roomMaxSize - roomMinSize + 1)) + roomMinSize;
+                const x = Math.floor(Math.random() * (width - roomWidth - 1)) + 1; // Exclude walls
+                const y = Math.floor(Math.random() * (height - roomHeight - 1)) + 1; // Exclude walls
+
+                const newRoom = { x, y, width: roomWidth, height: roomHeight };
+
+                // Check for overlaps with other rooms
+                let overlap = rooms.some(otherRoom => 
+                    x < otherRoom.x + otherRoom.width &&
+                    x + roomWidth > otherRoom.x &&
+                    y < otherRoom.y + otherRoom.height &&
+                    y + roomHeight > otherRoom.y
+                );
+
+                if (!overlap) {
+                    createRoom(x, y, roomWidth, roomHeight);
+                    rooms.push(newRoom);
+                    // Connect to the previous room if it exists
+                    if (rooms.length > 1) {
+                        connectRooms(rooms[rooms.length - 2], newRoom);
+                    }
+                }
+            }
+            // Ensure the player's starting position is within a floor tile
+            playerPos.x = Math.floor(width / 2);
+            playerPos.y = Math.floor(height / 2);
+            gameMap[playerPos.y] = gameMap[playerPos.y].substring(0, playerPos.x) + floorSymbol + gameMap[playerPos.y].substring(playerPos.x + 1);
         }
 
         function draw() {
@@ -106,7 +167,7 @@
         }
 
         function revealSurroundings() {
-            const revealDistance = 1; // How far the player can see
+            const revealDistance = 2; // How far the player can see
             for (let dy = -revealDistance; dy <= revealDistance; dy++) {
                 for (let dx = -revealDistance; dx <= revealDistance; dx++) {
                     const checkX = playerPos.x + dx;
