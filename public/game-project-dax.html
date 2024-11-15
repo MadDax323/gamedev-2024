@@ -60,8 +60,8 @@
 
     <script>
         // Game configuration
-        const MAP_WIDTH = 50;
-        const MAP_HEIGHT = 20;
+        const MAP_WIDTH = 80;
+        const MAP_HEIGHT = 40;
         const PLAYER_SYMBOL = '@';
         const WALL_SYMBOL = '#';
         const FLOOR_SYMBOL = '.';
@@ -70,11 +70,38 @@
         const CHEST_SYMBOL = 'C';
 
         let gameMap = [];
-        let playerPos = { x: 5, y: 5 };
+        let rooms = [];
+        let playerPos = { x: 0, y: 0 };
         let enemies = [];
         let inventory = [];
         let equippedItem = null;
         let gameMessage = "";
+
+        // Room class
+        class Room {
+            constructor(x, y, width, height) {
+                this.x = x;
+                this.y = y;
+                this.width = width;
+                this.height = height;
+            }
+
+            center() {
+                return {
+                    x: Math.floor(this.x + this.width / 2),
+                    y: Math.floor(this.y + this.height / 2)
+                };
+            }
+
+            intersects(other) {
+                return (
+                    this.x < other.x + other.width &&
+                    this.x + this.width > other.x &&
+                    this.y < other.y + other.height &&
+                    this.y + this.height > other.y
+                );
+            }
+        }
 
         // Procedural map generation
         function generateMap() {
@@ -82,47 +109,82 @@
                 Array.from({ length: MAP_WIDTH }, () => WALL_SYMBOL)
             );
 
-            // Generate random rooms
-            for (let i = 0; i < 5; i++) {
-                const roomWidth = Math.floor(Math.random() * 8) + 4;
-                const roomHeight = Math.floor(Math.random() * 6) + 4;
-                const roomX = Math.floor(Math.random() * (MAP_WIDTH - roomWidth - 1)) + 1;
-                const roomY = Math.floor(Math.random() * (MAP_HEIGHT - roomHeight - 1)) + 1;
+            const MAX_ROOMS = 10;
+            const MIN_ROOM_SIZE = 6;
+            const MAX_ROOM_SIZE = 12;
 
-                for (let y = roomY; y < roomY + roomHeight; y++) {
-                    for (let x = roomX; x < roomX + roomWidth; x++) {
-                        gameMap[y][x] = FLOOR_SYMBOL;
+            for (let i = 0; i < MAX_ROOMS; i++) {
+                const width = Math.floor(Math.random() * (MAX_ROOM_SIZE - MIN_ROOM_SIZE + 1)) + MIN_ROOM_SIZE;
+                const height = Math.floor(Math.random() * (MAX_ROOM_SIZE - MIN_ROOM_SIZE + 1)) + MIN_ROOM_SIZE;
+                const x = Math.floor(Math.random() * (MAP_WIDTH - width - 1)) + 1;
+                const y = Math.floor(Math.random() * (MAP_HEIGHT - height - 1)) + 1;
+
+                const newRoom = new Room(x, y, width, height);
+
+                if (!rooms.some(room => room.intersects(newRoom))) {
+                    rooms.push(newRoom);
+
+                    for (let row = y; row < y + height; row++) {
+                        for (let col = x; col < x + width; col++) {
+                            gameMap[row][col] = FLOOR_SYMBOL;
+                        }
+                    }
+
+                    // Connect rooms
+                    if (rooms.length > 1) {
+                        const prevRoom = rooms[rooms.length - 2];
+                        const { x: x1, y: y1 } = prevRoom.center();
+                        const { x: x2, y: y2 } = newRoom.center();
+
+                        if (Math.random() < 0.5) {
+                            createHorizontalTunnel(x1, x2, y1);
+                            createVerticalTunnel(y1, y2, x2);
+                        } else {
+                            createVerticalTunnel(y1, y2, x1);
+                            createHorizontalTunnel(x1, x2, y2);
+                        }
                     }
                 }
             }
 
-            // Place exit
-            const exitX = Math.floor(Math.random() * MAP_WIDTH);
-            const exitY = Math.floor(Math.random() * MAP_HEIGHT);
-            if (gameMap[exitY][exitX] === FLOOR_SYMBOL) {
-                gameMap[exitY][exitX] = EXIT_SYMBOL;
+            // Place player in the first room
+            const { x, y } = rooms[0].center();
+            playerPos = { x, y };
+
+            // Place exit in the last room
+            const { x: exitX, y: exitY } = rooms[rooms.length - 1].center();
+            gameMap[exitY][exitX] = EXIT_SYMBOL;
+        }
+
+        function createHorizontalTunnel(x1, x2, y) {
+            for (let x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
+                gameMap[y][x] = FLOOR_SYMBOL;
+            }
+        }
+
+        function createVerticalTunnel(y1, y2, x) {
+            for (let y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
+                gameMap[y][x] = FLOOR_SYMBOL;
             }
         }
 
         function spawnEnemies(count) {
             enemies = [];
             for (let i = 0; i < count; i++) {
-                const x = Math.floor(Math.random() * MAP_WIDTH);
-                const y = Math.floor(Math.random() * MAP_HEIGHT);
-                if (gameMap[y][x] === FLOOR_SYMBOL) {
-                    enemies.push({ x, y, health: 20 });
-                    gameMap[y][x] = ENEMY_SYMBOL;
-                }
+                const room = rooms[Math.floor(Math.random() * rooms.length)];
+                const x = Math.floor(Math.random() * room.width) + room.x;
+                const y = Math.floor(Math.random() * room.height) + room.y;
+                enemies.push({ x, y, health: 20 });
+                gameMap[y][x] = ENEMY_SYMBOL;
             }
         }
 
         function spawnChests(count) {
             for (let i = 0; i < count; i++) {
-                const x = Math.floor(Math.random() * MAP_WIDTH);
-                const y = Math.floor(Math.random() * MAP_HEIGHT);
-                if (gameMap[y][x] === FLOOR_SYMBOL) {
-                    gameMap[y][x] = CHEST_SYMBOL;
-                }
+                const room = rooms[Math.floor(Math.random() * rooms.length)];
+                const x = Math.floor(Math.random() * room.width) + room.x;
+                const y = Math.floor(Math.random() * room.height) + room.y;
+                gameMap[y][x] = CHEST_SYMBOL;
             }
         }
 
@@ -154,52 +216,9 @@
                 gameMessage = "You found the exit! Victory!";
                 drawMap();
                 return;
-            } else if (tile === CHEST_SYMBOL) {
-                openChest();
-                gameMap[newY][newX] = FLOOR_SYMBOL;
-            } else if (tile === ENEMY_SYMBOL) {
-                startCombat(newX, newY);
-                return;
             }
 
             playerPos = { x: newX, y: newY };
-            drawMap();
-        }
-
-        function openChest() {
-            const loot = { name: "Sword", type: "weapon", power: 10 };
-            inventory.push(loot);
-            gameMessage = `You found a ${loot.name}!`;
-            updateInventory();
-        }
-
-        function updateInventory() {
-            const inventoryDiv = document.getElementById('inventory');
-            inventoryDiv.innerHTML = '';
-            inventory.forEach((item, index) => {
-                const slot = document.createElement('div');
-                slot.className = 'slot';
-                slot.textContent = item.name;
-                slot.onclick = () => equipItem(index);
-                inventoryDiv.appendChild(slot);
-            });
-        }
-
-        function equipItem(index) {
-            equippedItem = inventory[index];
-            gameMessage = `Equipped ${equippedItem.name}!`;
-            updateInventory();
-        }
-
-        function startCombat(x, y) {
-            const enemy = enemies.find(e => e.x === x && e.y === y);
-            gameMessage = "You encountered an enemy!";
-            enemy.health -= equippedItem ? equippedItem.power : 5;
-            if (enemy.health <= 0) {
-                gameMessage += " You defeated the enemy!";
-                gameMap[y][x] = FLOOR_SYMBOL;
-                enemies = enemies.filter(e => e !== enemy);
-            }
             drawMap();
         }
 
