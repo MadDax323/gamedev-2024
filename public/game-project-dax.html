@@ -15,7 +15,7 @@
 
         #game {
             white-space: pre;
-            font-size: 10px;
+            font-size: 8px; /* Reduced font size for better fit */
             border: 1px solid #0f0;
             padding: 10px;
             line-height: 1.2;
@@ -87,6 +87,7 @@
         const height = 250; 
         const playerSymbol = '@';
         const wallSymbol = '#';
+        const doorSymbol = '+';
         const floorSymbol = '.';
         const exitSymbol = 'E';
         const enemySymbols = ['G', 'S', 'W']; // Goblin, Skeleton, Witch
@@ -108,8 +109,8 @@
         let playerPower = playerBasePower; 
         let playerDefense = playerBaseDefense;
 
-        // Static Map with rooms, enemies, and chests
-        let gameMap = [];
+        let gameMap = []; 
+        let fogMap = []; // For fog of war effect
         let playerPos = { x: 1, y: 1 };
         let enemies = [];
 
@@ -131,10 +132,10 @@
 
         // Initialize game environment
         function initializeMap() {
-            // Create empty map
             gameMap = Array.from({ length: height }, () => Array(width).fill(unexploredSymbol));
+            fogMap = Array.from({ length: height }, () => Array(width).fill(true)); // Default to fogged
 
-            // Create rooms with walls
+            // Create rooms with walls and doors
             createRoom(2, 2, 20, 20); // Room 1
             createRoom(25, 2, 20, 20); // Room 2
             createRoom(2, 25, 20, 20); // Room 3
@@ -159,6 +160,12 @@
                     }
                 }
             }
+            // Place doors
+            const doorX = x + Math.floor(Math.random() * (width - 2)) + 1;
+            const doorY = y;
+
+            gameMap[doorY][doorX] = doorSymbol; // Top door
+            fogMap[doorY][doorX] = false; // Doors should not be fogged
         }
 
         function spawnEnemies(count) {
@@ -202,8 +209,10 @@
                 for (let x = 0; x < width; x++) {
                     if (x === playerPos.x && y === playerPos.y) {
                         output += playerSymbol; 
+                    } else if (!fogMap[y][x]) {
+                        output += gameMap[y][x]; // Show visible tiles
                     } else {
-                        output += gameMap[y][x];
+                        output += unexploredSymbol; // Fog of war tiles
                     }
                 }
                 output += '\n';
@@ -225,9 +234,26 @@
                 } else if (tile === 'C') {
                     openChest(newX, newY);
                 }
+
+                // Reveal fog of war in a certain radius around the player
+                revealFog(newX, newY);
+                
                 playerPos.x = newX;
                 playerPos.y = newY;
                 draw();
+            }
+        }
+
+        function revealFog(x, y) {
+            const revealDistance = 5; // The radius to reveal; increase for wider visibility
+            for (let dy = -revealDistance; dy <= revealDistance; dy++) {
+                for (let dx = -revealDistance; dx <= revealDistance; dx++) {
+                    const checkX = x + dx;
+                    const checkY = y + dy;
+                    if (checkX >= 0 && checkX < width && checkY >= 0 && checkY < height) {
+                        fogMap[checkY][checkX] = false; // Mark this tile as revealed
+                    }
+                }
             }
         }
 
@@ -243,9 +269,8 @@
             document.getElementById('message').textContent += ` You hit the ${enemy.name} for ${damageToEnemy} damage!`;
             if (enemy.health <= 0) {
                 document.getElementById('message').textContent += ` You defeated the ${enemy.name}!`;
-                // Remove enemy from the game map
                 gameMap[enemy.y][enemy.x] = floorSymbol; // Reset to floor
-                enemies = enemies.filter(e => e !== enemy); // Remove enemy from list
+                enemies = enemies.filter(e => e !== enemy);
                 return;
             }
 
@@ -266,7 +291,7 @@
             drawInventory();
 
             // Remove the chest from the map
-            gameMap[y][x] = floorSymbol;
+            gameMap[y][x] = floorSymbol; // Change chest to floor
         }
 
         function drawInventory() {
@@ -352,8 +377,7 @@
                     } else if (distY < 0) {
                         enemy.y++;
                     }
-                    // Move enemy on the map
-                    gameMap[enemy.y][enemy.x] = enemy.symbol;
+                    gameMap[enemy.y][enemy.x] = enemy.symbol; // Move enemy on the map
                 }
             });
         }
