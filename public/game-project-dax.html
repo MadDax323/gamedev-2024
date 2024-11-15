@@ -3,197 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Improved Roguelike Game</title>
+    <title>ASCII Roguelike Game</title>
     <style>
         body {
             font-family: monospace;
             background-color: #000;
             color: #0f0;
-            margin: 0;
+            line-height: 1.2;
             padding: 10px;
         }
 
         #game {
             white-space: pre;
-            font-size: 14px;
-            overflow: auto;
-            max-height: 70vh;
+            font-size: 10px;
             border: 1px solid #0f0;
             padding: 10px;
+            line-height: 1.2;
+            margin-bottom: 60px; /* Space for inventory */
         }
 
         #inventory {
-            margin-top: 10px;
             border: 1px solid #0f0;
-            padding: 10px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            background-color: rgba(0, 0, 0, 0.7);
+            padding: 5px;
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-gap: 5px;
         }
 
         .slot {
             border: 1px solid #0f0;
-            padding: 5px;
-            text-align: center;
-            flex: 1 0 120px;
-            background-color: rgba(0, 0, 0, 0.9);
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
             color: #0f0;
         }
 
-        .slot.equipped {
-            background-color: #00ff00;
-            color: #000;
+        #items {
+            margin-top: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            border-top: 1px solid #0f0;
+            color: #FFFFFF;
+        }
+
+        .item {
+            cursor: pointer;
         }
 
         #message {
-            margin-top: 10px;
-            color: #ff0;
+            color: #FF0000;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 10px;
+            right: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>Improved Roguelike Game</h1>
+    <h1>ASCII Roguelike Game</h1>
     <div id="game"></div>
-    <div id="inventory"></div>
     <div id="message"></div>
 
+    <div id="inventory">
+        <div class="slot" id="headSlot">Head</div>
+        <div class="slot" id="chestSlot">Chest</div>
+        <div class="slot" id="legsSlot">Legs</div>
+        <div class="slot" id="beltSlot">Belt</div>
+        <div class="slot" id="feetSlot">Feet</div>
+        <div class="slot" id="handsSlot">Hands</div>
+    </div>
+
     <script>
-        // Game configuration
-        const MAP_WIDTH = 80;
-        const MAP_HEIGHT = 40;
-        const PLAYER_SYMBOL = '@';
-        const WALL_SYMBOL = '#';
-        const FLOOR_SYMBOL = '.';
-        const ENEMY_SYMBOL = 'E';
-        const EXIT_SYMBOL = 'X';
-        const CHEST_SYMBOL = 'C';
+        // Game and Inventory Configuration
+        const width = 250; 
+        const height = 250; 
+        const playerSymbol = '@';
+        const wallSymbol = '#';
+        const floorSymbol = '.';
+        const exitSymbol = 'E';
+        const enemySymbols = ['G', 'S', 'W']; // Goblin, Skeleton, Witch
+        const unexploredSymbol = ' ';
+        const inventorySlots = {
+            head: null,
+            chest: null,
+            legs: null,
+            belt: null,
+            feet: null,
+            hands: null,
+        };
+        const items = [];
+        const playerBaseHealth = 100;
+        const playerBasePower = 5;
+        const playerBaseDefense = 2;
 
+        let playerHealth = playerBaseHealth; 
+        let playerPower = playerBasePower; 
+        let playerDefense = playerBaseDefense;
+
+        // Static Map with rooms, enemies, and chests
         let gameMap = [];
-        let rooms = [];
-        let playerPos = { x: 0, y: 0 };
+        let playerPos = { x: 1, y: 1 };
         let enemies = [];
-        let inventory = [];
-        let equippedItem = null;
-        let gameMessage = "";
 
-        // Room class
-        class Room {
-            constructor(x, y, width, height) {
-                this.x = x;
-                this.y = y;
-                this.width = width;
-                this.height = height;
-            }
+        // Enemy configurations
+        const enemyStats = [
+            { name: "Goblin", health: 50, damage: 10, symbol: 'G' },
+            { name: "Skeleton", health: 60, damage: 12, symbol: 'S' },
+            { name: "Witch", health: 40, damage: 15, symbol: 'W' }
+        ];
 
-            center() {
-                return {
-                    x: Math.floor(this.x + this.width / 2),
-                    y: Math.floor(this.y + this.height / 2)
-                };
-            }
+        // Items and loot
+        const lootItems = [
+            { name: 'Gold Coin', type: 'item' },
+            { name: 'Healing Potion', type: 'item' },
+            { name: 'Iron Sword', type: 'hands', power: 5 },
+            { name: 'Leather Armor', type: 'chest', defense: 3 },
+            { name: 'Wooden Shield', type: 'back', defense: 2 }
+        ];
 
-            intersects(other) {
-                return (
-                    this.x < other.x + other.width &&
-                    this.x + this.width > other.x &&
-                    this.y < other.y + other.height &&
-                    this.y + this.height > other.y
-                );
-            }
+        // Initialize game environment
+        function initializeMap() {
+            // Create empty map
+            gameMap = Array.from({ length: height }, () => Array(width).fill(unexploredSymbol));
+
+            // Create rooms with walls
+            createRoom(2, 2, 20, 20); // Room 1
+            createRoom(25, 2, 20, 20); // Room 2
+            createRoom(2, 25, 20, 20); // Room 3
+            createRoom(25, 25, 20, 20); // Room 4
+            createRoom(2, 50, 40, 40); // Room 5
+            createRoom(50, 2, 30, 30); // Room 6
+            createRoom(80, 20, 50, 15); // Room 7
+            createRoom(120, 80, 30, 30); // Room 8
+            createRoom(160, 160, 50, 50); // Room 9
+
+            spawnEnemies(15);
+            spawnChests(5);
         }
 
-        // Procedural map generation
-        function generateMap() {
-            gameMap = Array.from({ length: MAP_HEIGHT }, () =>
-                Array.from({ length: MAP_WIDTH }, () => WALL_SYMBOL)
-            );
-
-            const MAX_ROOMS = 10;
-            const MIN_ROOM_SIZE = 6;
-            const MAX_ROOM_SIZE = 12;
-
-            for (let i = 0; i < MAX_ROOMS; i++) {
-                const width = Math.floor(Math.random() * (MAX_ROOM_SIZE - MIN_ROOM_SIZE + 1)) + MIN_ROOM_SIZE;
-                const height = Math.floor(Math.random() * (MAX_ROOM_SIZE - MIN_ROOM_SIZE + 1)) + MIN_ROOM_SIZE;
-                const x = Math.floor(Math.random() * (MAP_WIDTH - width - 1)) + 1;
-                const y = Math.floor(Math.random() * (MAP_HEIGHT - height - 1)) + 1;
-
-                const newRoom = new Room(x, y, width, height);
-
-                if (!rooms.some(room => room.intersects(newRoom))) {
-                    rooms.push(newRoom);
-
-                    for (let row = y; row < y + height; row++) {
-                        for (let col = x; col < x + width; col++) {
-                            gameMap[row][col] = FLOOR_SYMBOL;
-                        }
-                    }
-
-                    // Connect rooms
-                    if (rooms.length > 1) {
-                        const prevRoom = rooms[rooms.length - 2];
-                        const { x: x1, y: y1 } = prevRoom.center();
-                        const { x: x2, y: y2 } = newRoom.center();
-
-                        if (Math.random() < 0.5) {
-                            createHorizontalTunnel(x1, x2, y1);
-                            createVerticalTunnel(y1, y2, x2);
-                        } else {
-                            createVerticalTunnel(y1, y2, x1);
-                            createHorizontalTunnel(x1, x2, y2);
-                        }
+        function createRoom(x, y, width, height) {
+            for (let i = y; i < y + height; i++) {
+                for (let j = x; j < x + width; j++) {
+                    if (i === y || i === y + height - 1 || j === x || j === x + width - 1) {
+                        gameMap[i][j] = wallSymbol; // Walls
+                    } else {
+                        gameMap[i][j] = floorSymbol; // Floors
                     }
                 }
-            }
-
-            // Place player in the first room
-            const { x, y } = rooms[0].center();
-            playerPos = { x, y };
-
-            // Place exit in the last room
-            const { x: exitX, y: exitY } = rooms[rooms.length - 1].center();
-            gameMap[exitY][exitX] = EXIT_SYMBOL;
-        }
-
-        function createHorizontalTunnel(x1, x2, y) {
-            for (let x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
-                gameMap[y][x] = FLOOR_SYMBOL;
-            }
-        }
-
-        function createVerticalTunnel(y1, y2, x) {
-            for (let y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
-                gameMap[y][x] = FLOOR_SYMBOL;
             }
         }
 
         function spawnEnemies(count) {
-            enemies = [];
+            const availableTiles = [];
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    if (gameMap[y][x] === floorSymbol) {
+                        availableTiles.push({ x, y });
+                    }
+                }
+            }
+
             for (let i = 0; i < count; i++) {
-                const room = rooms[Math.floor(Math.random() * rooms.length)];
-                const x = Math.floor(Math.random() * room.width) + room.x;
-                const y = Math.floor(Math.random() * room.height) + room.y;
-                enemies.push({ x, y, health: 20 });
-                gameMap[y][x] = ENEMY_SYMBOL;
+                const enemy = enemyStats[Math.floor(Math.random() * enemyStats.length)];
+                const position = availableTiles.splice(Math.floor(Math.random() * availableTiles.length), 1)[0];
+
+                gameMap[position.y][position.x] = enemy.symbol;
+                enemies.push({ ...enemy, x: position.x, y: position.y });
             }
         }
 
         function spawnChests(count) {
+            const availableTiles = [];
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    if (gameMap[y][x] === floorSymbol) {
+                        availableTiles.push({ x, y });
+                    }
+                }
+            }
+
             for (let i = 0; i < count; i++) {
-                const room = rooms[Math.floor(Math.random() * rooms.length)];
-                const x = Math.floor(Math.random() * room.width) + room.x;
-                const y = Math.floor(Math.random() * room.height) + room.y;
-                gameMap[y][x] = CHEST_SYMBOL;
+                const position = availableTiles.splice(Math.floor(Math.random() * availableTiles.length), 1)[0];
+                gameMap[position.y][position.x] = 'C';
             }
         }
 
-        function drawMap() {
+        function draw() {
             let output = '';
-            for (let y = 0; y < MAP_HEIGHT; y++) {
-                for (let x = 0; x < MAP_WIDTH; x++) {
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
                     if (x === playerPos.x && y === playerPos.y) {
-                        output += PLAYER_SYMBOL;
+                        output += playerSymbol; 
                     } else {
                         output += gameMap[y][x];
                     }
@@ -201,41 +209,163 @@
                 output += '\n';
             }
             document.getElementById('game').textContent = output;
-            document.getElementById('message').textContent = gameMessage;
         }
 
         function movePlayer(dx, dy) {
             const newX = playerPos.x + dx;
             const newY = playerPos.y + dy;
 
-            if (gameMap[newY][newX] === WALL_SYMBOL) return;
+            if (gameMap[newY] && gameMap[newY][newX] !== wallSymbol) {
+                const tile = gameMap[newY][newX];
+                if (tile === exitSymbol) {
+                    window.location.href = "https://example.com"; // Replace with your desired endpoint
+                } else if (enemySymbols.includes(tile)) {
+                    const enemy = enemies.find(e => e.symbol === tile);
+                    startCombat(enemy);
+                } else if (tile === 'C') {
+                    openChest(newX, newY);
+                }
+                playerPos.x = newX;
+                playerPos.y = newY;
+                draw();
+            }
+        }
 
-            const tile = gameMap[newY][newX];
+        function startCombat(enemy) {
+            document.getElementById('message').textContent = `A wild ${enemy.name} appears!`;
+            combatTurn(enemy);
+        }
 
-            if (tile === EXIT_SYMBOL) {
-                gameMessage = "You found the exit! Victory!";
-                drawMap();
+        function combatTurn(enemy) {
+            const damageToEnemy = Math.floor(Math.random() * 10) + playerPower; // Player damage
+            enemy.health -= damageToEnemy;
+
+            document.getElementById('message').textContent += ` You hit the ${enemy.name} for ${damageToEnemy} damage!`;
+            if (enemy.health <= 0) {
+                document.getElementById('message').textContent += ` You defeated the ${enemy.name}!`;
+                // Remove enemy from the game map
+                gameMap[enemy.y][enemy.x] = floorSymbol; // Reset to floor
+                enemies = enemies.filter(e => e !== enemy); // Remove enemy from list
                 return;
             }
 
-            playerPos = { x: newX, y: newY };
-            drawMap();
+            const damageToPlayer = Math.max(0, enemy.damage - playerDefense);
+            document.getElementById('message').textContent += ` The ${enemy.name} hit you back for ${damageToPlayer} damage!`;
+            playerHealth -= damageToPlayer;
+
+            if (playerHealth <= 0) {
+                document.getElementById('message').textContent += ` You have been defeated! Game Over.`;
+                gameOver();
+            }
+        }
+
+        function openChest(x, y) {
+            const loot = lootItems[Math.floor(Math.random() * lootItems.length)];
+            document.getElementById('message').textContent = `You opened a chest and found a ${loot.name}!`;
+            items.push(loot);
+            drawInventory();
+
+            // Remove the chest from the map
+            gameMap[y][x] = floorSymbol;
+        }
+
+        function drawInventory() {
+            const itemList = document.getElementById('items');
+            itemList.innerHTML = '';
+            items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.textContent = item.name;
+                itemDiv.className = 'item';
+                itemDiv.onclick = () => equipItem(item);
+                itemList.appendChild(itemDiv);
+            });
+        }
+
+        function equipItem(item) {
+            const slotType = item.type;
+            if (inventorySlots[slotType] === null) {
+                inventorySlots[slotType] = item;
+                updatePlayerStats(item);
+                drawInventory();
+                updateSlots();
+            }
+        }
+
+        function updatePlayerStats(item) {
+            if (item.power) {
+                playerPower += item.power;
+            }
+            if (item.defense) {
+                playerDefense += item.defense;
+            }
+        }
+
+        function updateSlots() {
+            for (const [type, item] of Object.entries(inventorySlots)) {
+                document.getElementById(type + 'Slot').textContent = item ? item.name : type.charAt(0).toUpperCase() + type.slice(1);
+            }
+        }
+
+        window.addEventListener("keydown", (e) => {
+            switch (e.key) {
+                case "ArrowUp":
+                    movePlayer(0, -1);
+                    break;
+                case "ArrowDown":
+                    movePlayer(0, 1);
+                    break;
+                case "ArrowLeft":
+                    movePlayer(-1, 0);
+                    break;
+                case "ArrowRight":
+                    movePlayer(1, 0);
+                    break;
+                case "i":
+                    toggleInventory();
+                    break;
+            }
+            moveEnemies();
+        });
+
+        function toggleInventory() {
+            const inventory = document.getElementById('inventory');
+            inventory.style.display = (inventory.style.display === 'none' || inventory.style.display === '') ? 'grid' : 'none';
+            if (inventory.style.display === 'grid') {
+                document.getElementById('message').textContent = 'Inventory Opened';
+            } else {
+                document.getElementById('message').textContent = '';
+            }
+        }
+
+        function moveEnemies() {
+            enemies.forEach(enemy => {
+                const distX = enemy.x - playerPos.x;
+                const distY = enemy.y - playerPos.y;
+                if (Math.abs(distX) <= 5 && Math.abs(distY) <= 5) { // Enemy sees the player
+                    if (distX > 0) {
+                        enemy.x--;
+                    } else if (distX < 0) {
+                        enemy.x++;
+                    }
+                    if (distY > 0) {
+                        enemy.y--;
+                    } else if (distY < 0) {
+                        enemy.y++;
+                    }
+                    // Move enemy on the map
+                    gameMap[enemy.y][enemy.x] = enemy.symbol;
+                }
+            });
+        }
+
+        function gameOver() {
+            document.getElementById('game').textContent = "Game Over!";
+            document.removeEventListener("keydown", onKeyPress);
         }
 
         // Initialize the game
-        generateMap();
-        spawnEnemies(5);
-        spawnChests(3);
-        drawMap();
-
-        window.addEventListener('keydown', (e) => {
-            switch (e.key) {
-                case 'ArrowUp': movePlayer(0, -1); break;
-                case 'ArrowDown': movePlayer(0, 1); break;
-                case 'ArrowLeft': movePlayer(-1, 0); break;
-                case 'ArrowRight': movePlayer(1, 0); break;
-            }
-        });
+        initializeMap();
+        draw();
     </script>
 </body>
 </html>
