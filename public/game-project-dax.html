@@ -12,7 +12,7 @@
             margin: 0;
             padding: 10px;
         }
-        
+
         #game {
             white-space: pre;
             font-size: 14px;
@@ -235,7 +235,7 @@
                 for (let i = 0; i < count; i++) {
                     const { x, y } = room.center(); // Place enemy in the center for simplicity
                     enemies.push(new Enemy(
-                        ENEMY_TYPES[Math.floor(Math.random() * ENEMY_TYPES.length)],
+                        ENEMY_TYPES[Math.floor(Math.random() * ENEMY_TYPES.length)].name,
                         ENEMY_TYPES[Math.floor(Math.random() * ENEMY_TYPES.length)].health,
                         ENEMY_TYPES[Math.floor(Math.random() * ENEMY_TYPES.length)].damage,
                         { x, y }
@@ -282,45 +282,38 @@
         }
 
         function revealMap() {
-            for (let y = 0; y < MAP_HEIGHT; y++) {
-                for (let x = 0; x < MAP_WIDTH; x++) {
-                    visibilityMap[y][x] = false;
-                }
-            }
+            // Clear current visibility
+            visibilityMap = Array.from({ length: MAP_HEIGHT }, () =>
+                Array.from({ length: MAP_WIDTH }, () => false)
+            );
 
-            // Start raycasting from player
-            lineOfSight(playerPos.x, playerPos.y, playerPos.x + 1, playerPos.y);
-            lineOfSight(playerPos.x, playerPos.y, playerPos.x - 1, playerPos.y);
-            lineOfSight(playerPos.x, playerPos.y, playerPos.x, playerPos.y + 1);
-            lineOfSight(playerPos.x, playerPos.y, playerPos.x, playerPos.y - 1);
+            // Raycasting to reveal visible tiles
+            for (let angle = 0; angle < 360; angle += 10) {
+                castRay(playerPos.x, playerPos.y, angle);
+            }
         }
 
-        function lineOfSight(x1, y1, x2, y2) {
-            const dx = Math.abs(x2 - x1);
-            const dy = Math.abs(y2 - y1);
-            const sx = (x1 < x2) ? 1 : -1;
-            const sy = (y1 < y2) ? 1 : -1;
-            let err = dx - dy;
+        function castRay(x, y, angle) {
+            let dx = Math.cos(angle * (Math.PI / 180));
+            let dy = Math.sin(angle * (Math.PI / 180));
+            let distance = 0;
 
-            while (true) {
-                if (x1 >= 0 && x1 < MAP_WIDTH && y1 >= 0 && y1 < MAP_HEIGHT) {
-                    visibilityMap[y1][x1] = true; // Mark as visible
-
-                    // Stop if we hit a wall or a door
-                    if (gameMap[y1][x1] === WALL_SYMBOL || gameMap[y1][x1] === DOOR_SYMBOL) break;
-
-                    if (x1 === x2 && y1 === y2) break;
+            // Continue until a wall is hit
+            while (distance < 100) {
+                const nx = Math.round(x + dx * distance);
+                const ny = Math.round(y + dy * distance);
+                if (nx < 0 || nx >= MAP_WIDTH || ny < 0 || ny >= MAP_HEIGHT) {
+                    break; // Out of bounds
                 }
 
-                const err2 = err * 2;
-                if (err2 > -dy) {
-                    err -= dy;
-                    x1 += sx;
+                // Mark the tile as visible
+                visibilityMap[ny][nx] = true;
+
+                if (gameMap[ny][nx] === WALL_SYMBOL || gameMap[ny][nx] === DOOR_SYMBOL) {
+                    break; // Stop if a wall is hit
                 }
-                if (err2 < dx) {
-                    err += dx;
-                    y1 += sy;
-                }
+
+                distance += 0.5; // Increase distance
             }
         }
 
@@ -354,10 +347,10 @@
             // Check for walls
             if (gameMap[newY][newX] === WALL_SYMBOL) return;
 
-            // Check for doors (that will be opened)
+            // Check for doors
             if (gameMap[newY][newX] === DOOR_SYMBOL) {
                 gameMessage = 'You opened a door.';
-                gameMap[newY][newX] = FLOOR_SYMBOL;
+                gameMap[newY][newX] = FLOOR_SYMBOL; // Open the door
             }
 
             // Check for enemies
