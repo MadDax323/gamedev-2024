@@ -1,1 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background and Image Movement</title>
+    <style>
+        #myBody {
+            background-repeat: repeat;
+            background-size: 80%;
+            background-image: url('myBackground01.jpg');
+            height: 100vh; /* Ensuring the body takes the full height of the viewport */
+            position: relative; /* Important for positioning the image absolutely */
+        }
+        #myImage01 {
+            position: relative; 
+            width: 100px; 
+            height: 80px; 
+            top: 0px; 
+            left: 0px; 
+        }
+    </style>
+</head>
+<body id="myBody">
+
+<script>
+   let myGlobalX = 0;
+   let myClock;
+
+   // Add event listener for keyboard controls
+   document.addEventListener('keydown', function(event) {
+       const img = document.getElementById('myImage01');
+       let leftPosition = parseInt(img.style.left);
+       let topPosition = parseInt(img.style.top);
+
+       switch (event.key) {
+           case 'w': // Move up
+               topPosition -= 10; // Adjust this value for speed
+               break;
+           case 'a': // Move left
+               leftPosition -= 10; // Adjust this value for speed
+               break;
+           case 's': // Move down
+               topPosition += 10; // Adjust this value for speed
+               break;
+           case 'd': // Move right
+               leftPosition += 10; // Adjust this value for speed
+               break;
+       }
+
+       img.style.left = leftPosition + 'px';
+       img.style.top = topPosition + 'px';
+   });
+</script>
+
+<input id="myButton01" type="button" value="Background Move Left" onclick="{
+  myGlobalX -= 5;
+  document.getElementById('myBody').style.backgroundPosition = myGlobalX + 'px 0px';
+}">
+
+<input type="button" value="Auto Background Left" onclick="{
+  clearInterval(myClock);
+  myClock = setInterval(function(){
+     document.getElementById('myButton01').click();
+  }, 100);
+}">
+
+<input type="button" value="Image Right" onclick="{
+  document.getElementById('myImage01').style.left = parseInt(document.getElementById('myImage01').style.left) + 10 + 'px';
+}"><br><br>
+
+<img id="myImage01" src="myImage01.jpg">
+
+</body>
+</html>
 
