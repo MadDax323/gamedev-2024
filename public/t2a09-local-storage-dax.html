@@ -15,7 +15,7 @@
         }
     </style>
 </head>
-<body>
+<body onload="loadAll()">
 
 <h2>Local Storage Examples by Fred</h2>
 
@@ -26,7 +26,61 @@
 <input type="button" value="Retrieve All Texts" onClick="retrieveAllTexts()">
 <div id="storedTexts"></div>
 
+<!-- Example 2: Clear Local Storage -->
+<h3>Clear Local Storage</h3>
+<input type="button" value="Clear All Texts" onClick="clearLocalStorage()">
+
+<!-- Example 3: User Preferences -->
+<h3>User Preferences</h3>
+<select id="themeSelector" onChange="storePreference()">
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+</select>
+
+<!-- Example 4: Form Data Persistence -->
+<h3>Form Data Persistence</h3>
+<form>
+    Name: <input id="nameInput" type="text" size="30"><br>
+    Email: <input id="emailInput" type="email" size="30"><br>
+    <input type="button" value="Save Data" onClick="saveFormData()">
+    <input type="button" value="Clear Data" onClick="clearFormData()">
+</form>
+
+<!-- Example 5: Simple Task List -->
+<h3>Simple Task List</h3>
+<input id="taskInput" type="text" placeholder="Add a new task">
+<input type="button" value="Add Task" onClick="addTask()">
+<div id="taskList"></div>
+
+<!-- Example 6: Countdown Timer -->
+<h3>Countdown Timer</h3>
+<input id="countdownInput" type="number" placeholder="Seconds">
+<input type="button" value="Start Countdown" onClick="startCountdown()">
+<div id="countdownDisplay"></div>
+
+<!-- Example 7: Manage Browser History -->
+<h3>Browser History Management</h3>
+<input id="recentSite" type="text" placeholder="Enter site URL">
+<input type="button" value="Visit Site" onClick="saveSite()">
+<div id="historyList"></div>
+
+<!-- Example 8: Toggle Switch State -->
+<h3>Toggle Switch State</h3>
+<label>
+    <input type="checkbox" id="toggleSwitch" onchange="toggleSwitchState()"> Toggle me
+</label>
+
 <script>
+    function loadAll() {
+        loadStoredTexts();
+        loadPreferences();
+        loadFormData();
+        loadTasks();
+        loadHistory();
+        loadToggleState();
+    }
+
+    // Example 1
     function loadStoredTexts() {
         const texts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
         document.getElementById('storedTexts').innerHTML = texts.join('<br>');
@@ -41,32 +95,13 @@
         loadStoredTexts();
     }
 
-    function retrieveAllTexts() {
-        const texts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
-        alert('Stored texts: ' + texts.join(', '));
-    }
-</script>
-
-<!-- Example 2: Clear Local Storage -->
-<h3>Clear Local Storage</h3>
-<input type="button" value="Clear All Texts" onClick="clearLocalStorage()">
-
-<script>
     function clearLocalStorage() {
         localStorage.removeItem('myStoredTexts');
         loadStoredTexts();
         alert('All stored texts cleared!');
     }
-</script>
 
-<!-- Example 3: User Preferences -->
-<h3>User Preferences</h3>
-<select id="themeSelector" onChange="storePreference()">
-    <option value="light">Light</option>
-    <option value="dark">Dark</option>
-</select>
-
-<script>
+    // Example 3
     function loadPreferences() {
         const theme = localStorage.getItem('themePreference') || 'light';
         document.getElementById('themeSelector').value = theme;
@@ -79,18 +114,8 @@
         document.body.className = selectedTheme;  
         alert('Theme preference saved: ' + selectedTheme);
     }
-</script>
 
-<!-- Example 4: Form Data Persistence -->
-<h3>Form Data Persistence</h3>
-<form>
-    Name: <input id="nameInput" type="text" size="30"><br>
-    Email: <input id="emailInput" type="email" size="30"><br>
-    <input type="button" value="Save Data" onClick="saveFormData()">
-    <input type="button" value="Clear Data" onClick="clearFormData()">
-</form>
-
-<script>
+    // Example 4
     function loadFormData() {
         document.getElementById('nameInput').value = localStorage.getItem('nameData') || '';
         document.getElementById('emailInput').value = localStorage.getItem('emailData') || '';
@@ -101,22 +126,15 @@
         localStorage.setItem('emailData', document.getElementById('emailInput').value);
         alert('Form data saved!');
     }
-    
+
     function clearFormData() {
         localStorage.removeItem('nameData');
         localStorage.removeItem('emailData');
         loadFormData();
         alert('Form data cleared!');
     }
-</script>
 
-<!-- Example 5: Simple Task List -->
-<h3>Simple Task List</h3>
-<input id="taskInput" type="text" placeholder="Add a new task">
-<input type="button" value="Add Task" onClick="addTask()">
-<div id="taskList"></div>
-
-<script>
+    // Example 5
     function loadTasks() {
         const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         document.getElementById('taskList').innerHTML = tasks.map(task => '<div>' + task + '</div>').join('');
@@ -131,17 +149,7 @@
         loadTasks();
     }
 
-    loadTasks(); // Call to load tasks on page load
-</script>
-
-<!-- Example 6: Countdown Timer -->
-<h3>Countdown Timer</h3>
-<input id="countdownInput" type="number" placeholder="Seconds">
-<input type="button" value="Start Countdown" onClick="startCountdown()">
-
-<div id="countdownDisplay"></div>
-
-<script>
+    // Example 6
     function startCountdown() {
         let seconds = parseInt(document.getElementById('countdownInput').value);
         const countdownInterval = setInterval(() => {
@@ -150,19 +158,13 @@
                 document.getElementById('countdownDisplay').innerHTML = "Time's up!";
                 return;
             }
-            seconds--;
+            localStorage.setItem('countdownValue', seconds);
             document.getElementById('countdownDisplay').innerHTML = seconds + ' seconds left';
+            seconds--;
         }, 1000);
     }
-</script>
 
-<!-- Example 7: Manage Browser History -->
-<h3>Browser History Management</h3>
-<input id="recentSite" type="text" placeholder="Enter site URL">
-<input type="button" value="Visit Site" onClick="saveSite()">
-<div id="historyList"></div>
-
-<script>
+    // Example 7
     function loadHistory() {
         const history = JSON.parse(localStorage.getItem('browserHistory')) || [];
         document.getElementById('historyList').innerHTML = history.map(site => '<div>' + site + '</div>').join('');
@@ -177,16 +179,7 @@
         loadHistory();
     }
 
-    loadHistory(); // Call to load browser history on page load
-</script>
-
-<!-- Example 8: Toggle Switch State -->
-<h3>Toggle Switch State</h3>
-<label>
-    <input type="checkbox" id="toggleSwitch" onchange="toggleSwitchState()"> Toggle me
-</label>
-
-<script>
+    // Example 8
     function loadToggleState() {
         const toggleState = localStorage.getItem('toggleSwitchState') === 'true';
         document.getElementById('toggleSwitch').checked = toggleState;
@@ -197,8 +190,6 @@
         localStorage.setItem('toggleSwitchState', toggleSwitch);
         alert('Toggle switch state saved: ' + toggleSwitch);
     }
-
-    loadToggleState(); // Call to load toggle state on page load
 </script>
 
 </body>
