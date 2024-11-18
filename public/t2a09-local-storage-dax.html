@@ -1,29 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Storage Examples</title>
+    <style>
+        .dark {
+            background-color: #333;
+            color: #fff;
+        }
+        .light {
+            background-color: #fff;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
 
-<h2>t2a09-local-storage-name by Fred. Instructions:</h2>
+<h2>Local Storage Examples by Fred</h2>
 
-<body onload="{
-   myStorage = localStorage.getItem('myStoredText')
-   if(myStorage  != null){
-      document.getElementById('myText1').value = myStorage 
+<!-- Example 1: Storing Multiple Items -->
+<h3>Storage Multiple Texts</h3>
+<input id="myText1" type="text" size="70" placeholder="Write here to store"><br>
+<input type="button" value="Store Text" onClick="storeText()">
+<input type="button" value="Retrieve All Texts" onClick="retrieveAllTexts()">
+<div id="storedTexts"></div>
+
+<script>
+    function loadStoredTexts() {
+        const texts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+        document.getElementById('storedTexts').innerHTML = texts.join('<br>');
     }
-}">
 
-<body onunload="{
-   localstorage.setItem('myStoredText',document.getElementById('myText1').value)
-}">   
+    function storeText() {
+        const inputText = document.getElementById('myText1').value;
+        let texts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+        texts.push(inputText);
+        localStorage.setItem('myStoredTexts', JSON.stringify(texts));
+        document.getElementById('myText1').value = '';
+        loadStoredTexts();
+    }
 
-Text example: <input id="myText1" type=text size=70 value="" placeholder="Write here to store"><br>
+    function retrieveAllTexts() {
+        const texts = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+        alert('Stored texts: ' + texts.join(', '));
+    }
+</script>
 
-<input type="button" value="Store Text" onClick="{
-   localStorage.setItem('myStoredText', document.getElementById('myText1').value)
-   alert(document.getElementById('myText1').value + ' \nHas been stored')
-   document.getElementById('myText1').value = ''
-}">
+<!-- Example 2: Clear Local Storage -->
+<h3>Clear Local Storage</h3>
+<input type="button" value="Clear All Texts" onClick="clearLocalStorage()">
 
-<input type="button" value="Retrieve Text" onClick="{
-   document.getElementById('myText1').value = localStorage.getItem('myStoredText')
-}"> 
+<script>
+    function clearLocalStorage() {
+        localStorage.removeItem('myStoredTexts');
+        loadStoredTexts();
+        alert('All stored texts cleared!');
+    }
+</script>
 
+<!-- Example 3: User Preferences -->
+<h3>User Preferences</h3>
+<select id="themeSelector" onChange="storePreference()">
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+</select>
 
+<script>
+    function loadPreferences() {
+        const theme = localStorage.getItem('themePreference') || 'light';
+        document.getElementById('themeSelector').value = theme;
+        document.body.className = theme;
+    }
 
+    function storePreference() {
+        const selectedTheme = document.getElementById('themeSelector').value;
+        localStorage.setItem('themePreference', selectedTheme);
+        document.body.className = selectedTheme;  
+        alert('Theme preference saved: ' + selectedTheme);
+    }
+</script>
 
+<!-- Example 4: Form Data Persistence -->
+<h3>Form Data Persistence</h3>
+<form>
+    Name: <input id="nameInput" type="text" size="30"><br>
+    Email: <input id="emailInput" type="email" size="30"><br>
+    <input type="button" value="Save Data" onClick="saveFormData()">
+    <input type="button" value="Clear Data" onClick="clearFormData()">
+</form>
+
+<script>
+    function loadFormData() {
+        document.getElementById('nameInput').value = localStorage.getItem('nameData') || '';
+        document.getElementById('emailInput').value = localStorage.getItem('emailData') || '';
+    }
+
+    function saveFormData() {
+        localStorage.setItem('nameData', document.getElementById('nameInput').value);
+        localStorage.setItem('emailData', document.getElementById('emailInput').value);
+        alert('Form data saved!');
+    }
+    
+    function clearFormData() {
+        localStorage.removeItem('nameData');
+        localStorage.removeItem('emailData');
+        loadFormData();
+        alert('Form data cleared!');
+    }
+</script>
+
+<!-- Example 5: Simple Task List -->
+<h3>Simple Task List</h3>
+<input id="taskInput" type="text" placeholder="Add a new task">
+<input type="button" value="Add Task" onClick="addTask()">
+<div id="taskList"></div>
+
+<script>
+    function loadTasks() {
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        document.getElementById('taskList').innerHTML = tasks.map(task => '<div>' + task + '</div>').join('');
+    }
+
+    function addTask() {
+        const task = document.getElementById('taskInput').value;
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        tasks.push(task);
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        document.getElementById('taskInput').value = '';
+        loadTasks();
+    }
+
+    loadTasks(); // Call to load tasks on page load
+</script>
+
+<!-- Example 6: Countdown Timer -->
+<h3>Countdown Timer</h3>
+<input id="countdownInput" type="number" placeholder="Seconds">
+<input type="button" value="Start Countdown" onClick="startCountdown()">
+
+<div id="countdownDisplay"></div>
+
+<script>
+    function startCountdown() {
+        let seconds = parseInt(document.getElementById('countdownInput').value);
+        const countdownInterval = setInterval(() => {
+            if (seconds <= 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('countdownDisplay').innerHTML = "Time's up!";
+                return;
+            }
+            seconds--;
+            document.getElementById('countdownDisplay').innerHTML = seconds + ' seconds left';
+        }, 1000);
+    }
+</script>
+
+<!-- Example 7: Manage Browser History -->
+<h3>Browser History Management</h3>
+<input id="recentSite" type="text" placeholder="Enter site URL">
+<input type="button" value="Visit Site" onClick="saveSite()">
+<div id="historyList"></div>
+
+<script>
+    function loadHistory() {
+        const history = JSON.parse(localStorage.getItem('browserHistory')) || [];
+        document.getElementById('historyList').innerHTML = history.map(site => '<div>' + site + '</div>').join('');
+    }
+
+    function saveSite() {
+        const site = document.getElementById('recentSite').value;
+        let history = JSON.parse(localStorage.getItem('browserHistory')) || [];
+        history.push(site);
+        localStorage.setItem('browserHistory', JSON.stringify(history));
+        document.getElementById('recentSite').value = '';
+        loadHistory();
+    }
+
+    loadHistory(); // Call to load browser history on page load
+</script>
+
+<!-- Example 8: Toggle Switch State -->
+<h3>Toggle Switch State</h3>
+<label>
+    <input type="checkbox" id="toggleSwitch" onchange="toggleSwitchState()"> Toggle me
+</label>
+
+<script>
+    function loadToggleState() {
+        const toggleState = localStorage.getItem('toggleSwitchState') === 'true';
+        document.getElementById('toggleSwitch').checked = toggleState;
+    }
+
+    function toggleSwitchState() {
+        const toggleSwitch = document.getElementById('toggleSwitch').checked;
+        localStorage.setItem('toggleSwitchState', toggleSwitch);
+        alert('Toggle switch state saved: ' + toggleSwitch);
+    }
+
+    loadToggleState(); // Call to load toggle state on page load
+</script>
+
+</body>
+</html>
