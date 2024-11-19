@@ -25,6 +25,7 @@
             margin-bottom: 20px;
             font-size: 24px;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            transition: color 0.3s; /* Transition for dark mode */
         }
 
         #move1 {
@@ -34,6 +35,7 @@
             box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
             margin: 0 auto 20px;
             border: 3px solid #2c6e91;
+            transition: border-color 0.3s; /* Transition for dark mode */
         }
 
         .output-container {
@@ -66,6 +68,7 @@
             border-radius: 5px;
             padding: 10px;
             background-color: #f9f9f9; /* Light background for buttons */
+            transition: background-color 0.3s; /* Transition for dark mode */
         }
 
         label {
@@ -73,6 +76,7 @@
             margin: 10px 0 5px;
             font-weight: bold;
             color: #2c6e91; /* Color for labels */
+            transition: color 0.3s; /* Transition for dark mode */
         }
 
         input[type="button"] {
@@ -104,6 +108,14 @@
             color: #e0e0e0;
         }
 
+        h3.dark-mode {
+            color: #66bb6a; /* Change color to green */
+        }
+
+        #move1.dark-mode {
+            border: 3px solid #66bb6a; /* Change border color to green */
+        }
+
         .output-container.dark-mode {
             background-color: #1e1e1e;
             color: #e0e0e0;
@@ -112,6 +124,14 @@
 
         .buttons-container.dark-mode {
             background-color: #2a2a2a;
+        }
+
+        label.dark-mode {
+            color: #66bb6a; /* Change label color to green */
+        }
+
+        input[type="button"].dark-mode {
+            background: linear-gradient(45deg, #66bb6a, #4caf50); /* Green background for buttons in dark mode */
         }
 
         #darkModeButton {
@@ -154,9 +174,18 @@
             const body = document.body;
             const outputContainer = document.querySelector('.output-container');
             const buttonsContainer = document.querySelector('.buttons-container');
+            const labels = document.querySelectorAll('label');
+            const h3 = document.querySelector('h3');
+            const image = document.getElementById('move1');
+            const buttons = document.querySelectorAll('input[type="button"]');
+            
             body.classList.toggle('dark-mode');
             outputContainer.classList.toggle('dark-mode');
             buttonsContainer.classList.toggle('dark-mode');
+            h3.classList.toggle('dark-mode');
+            image.classList.toggle('dark-mode');
+            labels.forEach(label => label.classList.toggle('dark-mode'));
+            buttons.forEach(button => button.classList.toggle('dark-mode'));
 
             const buttonText = body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
             document.getElementById('darkModeButton').textContent = buttonText;
