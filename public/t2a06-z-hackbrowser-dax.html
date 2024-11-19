@@ -11,8 +11,8 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background-color: #e8f6fc;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
             color: #333;
             line-height: 1.6;
             text-align: center;
@@ -22,22 +22,44 @@
         h3 {
             color: #2c6e91;
             margin-bottom: 20px;
+            font-size: 24px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         #move1 {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 400px; /* Set image width */
+            width: 400px;
             height: auto;
             border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            margin: 20px auto; /* Center image with margin */
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+            margin: 0 auto 20px;
+            border: 3px solid #2c6e91;
+        }
+
+        .output-container {
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #fff;
+            color: #333;
+            font-family: monospace;
+            white-space: pre-wrap;
+            overflow: auto;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+        }
+        
+        .output-container:hover {
+            background-color: #f7f7f7;
         }
 
         .buttons-container {
             margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         input[type="button"] {
@@ -45,15 +67,22 @@
             margin: 5px;
             font-size: 14px;
             color: #fff;
-            background-color: #2c6e91;
+            background: linear-gradient(45deg, #2c6e91, #174b63);
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         input[type="button"]:hover {
-            background-color: #174b63;
+            background: linear-gradient(45deg, #174b63, #2c6e91);
+            transform: scale(1.05);
+        }
+        
+        input[type="button"]:active {
+            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
+            transform: scale(0.95);
         }
     </style>
     <script>
@@ -66,8 +95,7 @@
             for (let prop in myObject) {
                 output += `${prop}: ${myObject[prop]}\n`;
             }
-            console.log(output); // Output the properties to the console (or handle as necessary)
-            alert(output); // Displaying properties in an alert for demonstration
+            document.getElementById('output').textContent = output; // Display output in the text box
         }
     </script>
 </head>
@@ -77,6 +105,10 @@
     <h3>Explore Object Properties</h3>
 
     <img id="move1" src="https://www.earthkind.com/wp-content/uploads/2017/01/rat_6_FB.jpg" alt="Moving Object">
+
+    <div class="output-container" id="output">
+        <!-- Output will be displayed here -->
+    </div>
 
     <div class="buttons-container">
         <input type="button" value="1 window" onclick="myObjectData(window)">
@@ -90,7 +122,7 @@
         <input type="button" value="9 document.title" onclick="myObjectData(document.title)">
         <input type="button" value="10 document.body.style" onclick="myObjectData(document.body.style)">
         <input type="button" value="11 document.documentElement" onclick="myObjectData(document.documentElement)">
-        <input type="button" value="12 document.all) " onclick="myObjectData(document.all)">
+        <input type="button" value="12 document.all" onclick="myObjectData(document.all)">
         <input type="button" value="13 document.getElementById('move1')" onclick="myObjectData(document.getElementById('move1'))">
         <input type="button" value="14 window.localStorage" onclick="myObjectData(window.localStorage)">
         <input type="button" value="15 window.sessionStorage" onclick="myObjectData(window.sessionStorage)">
