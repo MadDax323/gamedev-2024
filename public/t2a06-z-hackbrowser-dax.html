@@ -30,7 +30,7 @@
             width: 400px;
             height: auto;
             border-radius: 10px;
-            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
             margin: 0 auto 20px;
             border: 3px solid #2c6e91;
         }
@@ -39,7 +39,7 @@
             margin: 20px auto;
             width: 80%;
             max-width: 600px;
-            border: 1px solid #ccc;
+            border: 2px solid #cccccc;
             border-radius: 5px;
             padding: 10px;
             background-color: #fff;
@@ -60,6 +60,17 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            border: 2px solid #cccccc; /* Border around buttons container */
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f9f9f9; /* Light background for buttons */
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #2c6e91; /* Color for labels */
         }
 
         input[type="button"] {
@@ -104,13 +115,18 @@
 
     <h3>Explore Object Properties</h3>
 
-    <img id="move1" src="https://www.earthkind.com/wp-content/uploads/2017/01/rat_6_FB.jpg" alt="Moving Object">
+    <div>
+        <label for="move1">Image:</label>
+        <img id="move1" src="https://www.earthkind.com/wp-content/uploads/2017/01/rat_6_FB.jpg" alt="Moving Object">
+    </div>
 
     <div class="output-container" id="output">
+        <label for="output">Output:</label>
         <!-- Output will be displayed here -->
     </div>
 
     <div class="buttons-container">
+        <label>Click to view object properties:</label>
         <input type="button" value="1 window" onclick="myObjectData(window)">
         <input type="button" value="2 document" onclick="myObjectData(document)">
         <input type="button" value="3 document.forms" onclick="myObjectData(document.forms)">
