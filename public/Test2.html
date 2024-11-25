@@ -23,7 +23,7 @@
             font-size: 16px;
             cursor: pointer;
         }
-
+        
         #sudokuGrid {
             display: grid;
             grid-template-columns: repeat(9, 40px);
@@ -44,10 +44,6 @@
 
         .cell[readonly] {
             background-color: #e0e0e0;
-        }
-
-        .error {
-            background-color: #ffcccc;
         }
 
         /* Thicker borders for 3x3 grids */
@@ -112,8 +108,7 @@
             sudokuSolution = Array.from({ length: 9 }, () => Array(9).fill(0));
             fillSudoku(sudokuSolution);
             userInput = Array.from({ length: 9 }, () => Array(9).fill(null));
-            counts = {1: 9, 2: 9, 3: 9, 4: 9, 5: 9, 6: 9, 7: 9, 8: 9, 9: 9};
-            removeNumbers(sudokuSolution);
+            resetAndCount(); // Reset the counter and count filled numbers
             renderSudoku(sudokuSolution);
             renderCounter();
         };
@@ -138,6 +133,18 @@
                 }
             }
             return true;
+        };
+
+        const resetAndCount = () => {
+            counts = {1: 9, 2: 9, 3: 9, 4: 9, 5: 9, 6: 9, 7: 9, 8: 9, 9: 9}; // Reset counters
+            for (let row = 0; row < 9; row++) {
+                for (let col = 0; col < 9; col++) {
+                    const number = sudokuSolution[row][col];
+                    if (number !== 0) {
+                        counts[number]--; // Decrease count for each filled number
+                    }
+                }
+            }
         };
 
         const isValidMove = (sudoku, row, col, number) => {
