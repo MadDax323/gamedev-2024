@@ -82,16 +82,6 @@
         .number-7 { color: brown; }
         .number-8 { color: teal; }
         .number-9 { color: magenta; }
-
-        .counter {
-            display: flex;
-            justify-content: space-around;
-            width: 400px;
-        }
-
-        .counter div {
-            text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -103,11 +93,9 @@
     </select>
     <button id="generateBtn">Generate Sudoku</button>
     <div id="sudokuGrid"></div>
-    <div class="counter" id="counter"></div>
     <script>
         let sudokuSolution = [];
         let userInput = Array.from({ length: 9 }, () => Array(9).fill(null));
-        let counts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0};
 
         const difficultySettings = {
             easy: 36,   // 36 cells removed (63 filled)
@@ -122,10 +110,8 @@
             sudokuSolution = Array.from({ length: 9 }, () => Array(9).fill(0));
             fillSudoku(sudokuSolution);
             userInput = Array.from({ length: 9 }, () => Array(9).fill(null));
-            resetAndCount(); // Reset the counter and count filled numbers
             removeNumbers(sudokuSolution, cellsToRemove); // Remove numbers based on difficulty
             renderSudoku(sudokuSolution);
-            renderCounter();
         };
 
         const fillSudoku = (sudoku) => {
@@ -150,26 +136,12 @@
             return true;
         };
 
-        const resetAndCount = () => {
-            // Reset counts for all numbers to 9
-            counts = {1: 9, 2: 9, 3: 9, 4: 9, 5: 9, 6: 9, 7: 9, 8: 9, 9: 9}; 
-            for (let row = 0; row < 9; row++) {
-                for (let col = 0; col < 9; col++) {
-                    const number = sudokuSolution[row][col];
-                    if (number !== 0) {
-                        counts[number]--; // Decrease count for each filled number
-                    }
-                }
-            }
-        };
-
         const removeNumbers = (sudoku, cellsToRemove) => {
             let count = 0;
             while (count < cellsToRemove) {
                 const row = Math.floor(Math.random() * 9);
                 const col = Math.floor(Math.random() * 9);
                 if (sudoku[row][col] !== 0) {
-                    const removedNumber = sudoku[row][col];
                     sudoku[row][col] = 0;
                     count++;
                 }
@@ -220,44 +192,15 @@
 
             // Clear cell if invalid input
             if (userValue < 1 || userValue > 9 || isNaN(userValue)) {
-                if (userInput[row][col] !== null) {
-                    counts[userInput[row][col]]++; // Restore count for the removed number
-                }
                 userInput[row][col] = null;
                 cellDiv.textContent = '';
                 cellDiv.className = 'cell'; // Reset styles
-                cellDiv.setAttribute('contenteditable', 'true');
-                renderCounter();
                 return;
             }
 
-            // Restore previous count if cell was filled
-            if (userInput[row][col] !== null) {
-                counts[userInput[row][col]]++;
-            }
-
-            // Check if the new user input is valid and within available counts
-            if (counts[userValue] > 0) {
-                userInput[row][col] = userValue;
-                counts[userValue]--; // Decrease count for the input number
-                cellDiv.className = 'cell number-' + userValue; // Color the number
-            } else {
-                cellDiv.textContent = '';
-                userInput[row][col] = null;
-                alert('No more of this number left!');
-            }
-
-            renderCounter();
-        };
-
-        const renderCounter = () => {
-            const counterDiv = document.getElementById('counter');
-            counterDiv.innerHTML = ''; // Clear previous counter
-            for (let i = 1; i <= 9; i++) {
-                const countDiv = document.createElement('div');
-                countDiv.textContent = `${i}: ${counts[i]}`;
-                counterDiv.appendChild(countDiv);
-            }
+            // Update user input
+            userInput[row][col] = userValue;
+            cellDiv.className = 'cell number-' + userValue; // Color the number
         };
 
         const shuffleArray = (array) => {
