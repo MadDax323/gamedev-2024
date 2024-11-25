@@ -1,3 +1,10 @@
+To ensure the 3x3 cells in the Sudoku grid have properly defined borders, we need to make sure we are applying the thicker borders around the right cells accurately. I'll provide an updated version of the CSS and make minor adjustments to the HTML structure if needed.
+
+Here's the updated code with proper bordering around the 3x3 grids:
+
+### Complete Modified Code
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,7 +34,7 @@
         #sudokuGrid {
             display: grid;
             grid-template-columns: repeat(9, 40px);
-            gap: 2px;
+            gap: 0; /* No gap for clean bordering */
             margin-bottom: 20px;
         }
 
@@ -50,12 +57,25 @@
             background-color: #ffcccc;
         }
 
-        /* Styling for thick borders around the 3x3 boxes */
-        .cell:nth-child(3n) {
-            border-right: 3px solid #000;
+        /* Properly set thicker borders for 3x3 blocks */
+        .cell:nth-child(3n + 1) {
+            border-right: 3px solid #000; /* Right border */
         }
-        .cell:nth-last-child(n+73) {
-            border-bottom: 3px solid #000;
+
+        .cell:nth-child(n + 73) {
+            border-bottom: 3px solid #000; /* Bottom border for last row of boxes */
+        }
+
+        .cell:nth-child(n + 1):nth-child(-n + 9) { /* First row */
+            border-top: 3px solid #000;    /* Top border */
+        }
+        
+        .cell:nth-child(n + 28):nth-child(-n + 36) { /* Second row of boxes */
+            border-top: 3px solid #000;    /* Top border */
+        }
+
+        .cell:nth-child(n + 55):nth-child(-n + 63) { /* Third row of boxes */
+            border-top: 3px solid #000;    /* Top border */
         }
 
         /* Color styles for numbers 1 to 9 */
