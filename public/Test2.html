@@ -1,10 +1,3 @@
-To ensure the 3x3 cells in the Sudoku grid have properly defined borders, we need to make sure we are applying the thicker borders around the right cells accurately. I'll provide an updated version of the CSS and make minor adjustments to the HTML structure if needed.
-
-Here's the updated code with proper bordering around the 3x3 grids:
-
-### Complete Modified Code
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -198,31 +191,27 @@ Here's the updated code with proper bordering around the 3x3 grids:
             const userValue = parseInt(event.target.textContent);
             const cellDiv = event.target;
 
+            // Clear cell if invalid input
             if (userValue < 1 || userValue > 9 || isNaN(userValue)) {
+                if (userInput[row][col] !== null) {
+                    counts[userInput[row][col]]++; // Restore count for the removed number
+                }
                 cellDiv.textContent = '';
                 cellDiv.className = 'cell'; // Reset styles
                 userInput[row][col] = null;
-                counts[Number(cellDiv.getAttribute('data-value'))]++; // Restore count
                 renderCounter();
                 return;
             }
 
-            // Check the previous value if exists to adjust counts
+            // Restore previous count if cell was filled
             if (userInput[row][col] !== null) {
                 counts[userInput[row][col]]++;
             }
 
+            // Check if the new user input is valid and within available counts
             if (counts[userValue] > 0) {
-                if (sudokuSolution[row][col] !== userValue) {
-                    cellDiv.classList.add('error');
-                } else {
-                    cellDiv.classList.remove('error');
-                }
-
                 userInput[row][col] = userValue;
-                counts[userValue]--;
-
-                // Apply color coding
+                counts[userValue]--; // Decrease count for the input number
                 cellDiv.className = 'cell number-' + userValue; // Color the number
             } else {
                 cellDiv.textContent = '';
