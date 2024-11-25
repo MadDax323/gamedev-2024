@@ -23,7 +23,7 @@
             font-size: 16px;
             cursor: pointer;
         }
-        
+
         #sudokuGrid {
             display: grid;
             grid-template-columns: repeat(9, 40px);
@@ -50,25 +50,30 @@
             background-color: #ffcccc;
         }
 
-        /* Properly set thicker borders for 3x3 blocks */
+        /* Thicker borders for 3x3 grids */
         .cell:nth-child(3n + 1) {
-            border-right: 3px solid #000; /* Right border */
+            border-right: 3px solid #000; /* Right border between 3-column segments */
         }
 
         .cell:nth-child(n + 73) {
-            border-bottom: 3px solid #000; /* Bottom border for last row of boxes */
+            border-bottom: 3px solid #000; /* Bottom border for the last row of boxes */
         }
 
         .cell:nth-child(n + 1):nth-child(-n + 9) { /* First row */
             border-top: 3px solid #000;    /* Top border */
         }
-        
+
         .cell:nth-child(n + 28):nth-child(-n + 36) { /* Second row of boxes */
             border-top: 3px solid #000;    /* Top border */
         }
 
         .cell:nth-child(n + 55):nth-child(-n + 63) { /* Third row of boxes */
             border-top: 3px solid #000;    /* Top border */
+        }
+
+        /* Vertical dividers for each group of 3 columns */
+        .cell:nth-child(3n + 1):nth-child(-n + 81) {
+            border-left: 3px solid #000; /* Left border */
         }
 
         /* Color styles for numbers 1 to 9 */
