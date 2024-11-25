@@ -17,7 +17,7 @@
             margin-bottom: 20px;
         }
 
-        button {
+        button, select {
             margin-bottom: 20px;
             padding: 10px 20px;
             font-size: 16px;
@@ -96,6 +96,11 @@
 </head>
 <body>
     <h1>Sudoku Generator</h1>
+    <select id="difficultySelect">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+    </select>
     <button id="generateBtn">Generate Sudoku</button>
     <div id="sudokuGrid"></div>
     <div class="counter" id="counter"></div>
@@ -104,11 +109,21 @@
         let userInput = Array.from({ length: 9 }, () => Array(9).fill(null));
         let counts = {1: 9, 2: 9, 3: 9, 4: 9, 5: 9, 6: 9, 7: 9, 8: 9, 9: 9};
 
+        const difficultySettings = {
+            easy: 36,   // 36 cells removed (63 filled)
+            medium: 45, // 45 cells removed (54 filled)
+            hard: 54    // 54 cells removed (45 filled)
+        };
+
         const generateSudoku = () => {
+            const selectedDifficulty = document.getElementById('difficultySelect').value;
+            const cellsToRemove = difficultySettings[selectedDifficulty];
+
             sudokuSolution = Array.from({ length: 9 }, () => Array(9).fill(0));
             fillSudoku(sudokuSolution);
             userInput = Array.from({ length: 9 }, () => Array(9).fill(null));
             resetAndCount(); // Reset the counter and count filled numbers
+            removeNumbers(sudokuSolution, cellsToRemove); // Remove numbers based on difficulty
             renderSudoku(sudokuSolution);
             renderCounter();
         };
@@ -147,6 +162,18 @@
             }
         };
 
+        const removeNumbers = (sudoku, cellsToRemove) => {
+            let count = 0;
+            while (count < cellsToRemove) {
+                const row = Math.floor(Math.random() * 9);
+                const col = Math.floor(Math.random() * 9);
+                if (sudoku[row][col] !== 0) {
+                    sudoku[row][col] = 0;
+                    count++;
+                }
+            }
+        };
+
         const isValidMove = (sudoku, row, col, number) => {
             for (let i = 0; i < 9; i++) {
                 if (sudoku[row][i] === number || sudoku[i][col] === number) {
@@ -165,19 +192,6 @@
                 }
             }
             return true;
-        };
-
-        const removeNumbers = (sudoku) => {
-            const cellsToRemove = 40; // Number of cells to empty
-            let count = 0;
-            while (count < cellsToRemove) {
-                const row = Math.floor(Math.random() * 9);
-                const col = Math.floor(Math.random() * 9);
-                if (sudoku[row][col] !== 0) {
-                    sudoku[row][col] = 0;
-                    count++;
-                }
-            }
         };
 
         const renderSudoku = (sudoku) => {
