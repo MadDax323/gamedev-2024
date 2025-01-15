@@ -8,12 +8,14 @@
     body {
       margin: 0;
       overflow: hidden;
+      font-family: Arial, sans-serif;
     }
   </style>
 </head>
-<body id="myBody" style="background-repeat:repeat; background-size: 100%; background-position: 0px 0px;" background="https://wallpapercave.com/wp/wp6957163.png" onload="startGame()">
+<body id="myBody" 
+  style="background-image: url('https://wallpapercave.com/wp/wp6957163.png'); background-repeat: repeat-x; background-size: cover; background-position: 0 0;">
 
-  <h1 align="center" style="color: red;">T4A04 Maze by Fred</h1>
+  <h1 align="center" style="color: red;">Click Anywhere to Start</h1>
 
   <img id="myImg01" src="https://wallpapercave.com/wp/wp6957163.png" style="position:absolute; width:100px; height:80px; left:50px; top:190px;">
   <img id="myImg02" src="myImgNew.jpg" style="position:absolute; width:10px; height:200px; left:350px; top:90px;">
@@ -26,21 +28,31 @@
     let myJump = -20; // Jump height
     let myGlobalX = 0; // Background scroll position
     let myVerticalSpeed = 0; // Speed of the character's vertical movement
-    let isGameRunning = true;
+    let isGameRunning = false; // Tracks if the game is running
+    let scrollInterval, gravityInterval;
 
+    // Function to start the game on the first click
     function startGame() {
-      // Start the background scrolling
-      scrollBackground();
+      if (!isGameRunning) {
+        isGameRunning = true;
 
-      // Start the gravity loop
-      applyGravity();
+        // Remove the "Click Anywhere to Start" message
+        document.querySelector("h1").innerText = "";
 
-      // Add click listener for jumping
-      document.addEventListener("click", jump);
+        // Start the background scrolling
+        scrollBackground();
+
+        // Start the gravity loop
+        applyGravity();
+
+        // Add click listener for jumping
+        document.addEventListener("click", jump);
+      }
     }
 
+    // Function to scroll the background
     function scrollBackground() {
-      setInterval(() => {
+      scrollInterval = setInterval(() => {
         if (isGameRunning) {
           myGlobalX -= 2; // Move background left
           document.getElementById("myBody").style.backgroundPosition = `${myGlobalX}px 0px`;
@@ -48,8 +60,9 @@
       }, 20);
     }
 
+    // Function to apply gravity
     function applyGravity() {
-      setInterval(() => {
+      gravityInterval = setInterval(() => {
         if (isGameRunning) {
           let character = document.getElementById("myImg01");
           let currentTop = parseInt(character.style.top);
@@ -77,12 +90,14 @@
       }, 20);
     }
 
+    // Function to make the character jump
     function jump() {
       if (isGameRunning) {
         myVerticalSpeed = myJump; // Apply an upward force
       }
     }
 
+    // Function to check collisions
     function myHitOther(my1, my2) {
       let left1 = parseInt(document.getElementById(my1).style.left);
       let right1 = left1 + parseInt(document.getElementById(my1).style.width);
@@ -101,6 +116,7 @@
       );
     }
 
+    // Function to check hits and update game state
     function myCheckHit() {
       let character = document.getElementById("myImg01");
 
@@ -117,13 +133,23 @@
       }
     }
 
+    // Function to reset the game
     function resetGame() {
+      clearInterval(scrollInterval);
+      clearInterval(gravityInterval);
+
       let character = document.getElementById("myImg01");
       character.style.left = "50px";
       character.style.top = "190px";
       myVerticalSpeed = 0;
       myGlobalX = 0;
+
+      isGameRunning = false;
+      document.querySelector("h1").innerText = "Click Anywhere to Start";
     }
+
+    // Attach click listener to start the game
+    document.addEventListener("click", startGame, { once: true });
   </script>
 </body>
 </html>
