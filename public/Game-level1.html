@@ -9,18 +9,34 @@
       margin: 0;
       overflow: hidden;
       font-family: Arial, sans-serif;
+      position: relative;
+    }
+
+    #myBody {
+      background-image: url('https://user-images.githubusercontent.com/18351809/46888871-624a3900-ce7f-11e8-808e-99fd90c8a3f4.png');
+      background-repeat: repeat-x;
+      background-size: cover;
+      background-position: 0 0;
+      height: 100vh;
+    }
+
+    #myImg01 {
+      position: absolute;
+      width: 100px;
+      height: 80px;
+    }
+
+    .obstacle {
+      position: absolute;
+      background-color: red;
     }
   </style>
 </head>
-<body id="myBody" 
-  style="background-image: url('https://user-images.githubusercontent.com/18351809/46888871-624a3900-ce7f-11e8-808e-99fd90c8a3f4.png'); background-repeat: repeat-x; background-size: cover; background-position: 0 0;">
+<body id="myBody">
 
-  <h1 align="center" style="color: red;">Click Anywhere to Start</h1>
+  <h1 align="center" style="color: red; position: absolute; width: 100%; top: 50%; transform: translateY(-50%); text-align: center;">Click Anywhere to Start</h1>
 
-  <img id="myImg01" src="https://freepngimg.com/thumb/logo/109933-logo-bird-flappy-png-download-free.png" style="position:absolute; width:100px; height:80px; left:50px; top:190px;">
-  <img id="myImg02" src="myImgNew.jpg" style="position:absolute; width:10px; height:200px; left:350px; top:90px;">
-  <img id="myImg03" src="myImgNew.jpg" style="position:absolute; width:200px; height:10px; left:500px; top:400px;">
-  <img id="myImg04" src="myImgNew.jpg" style="position:absolute; width:100px; height:80px; left:800px; top:400px;">
+  <img id="myImg01" src="https://freepngimg.com/thumb/logo/109933-logo-bird-flappy-png-download-free.png">
 
   <script>
     // Global Variables
@@ -29,7 +45,16 @@
     let myGlobalX = 0; // Background scroll position
     let myVerticalSpeed = 0; // Speed of the character's vertical movement
     let isGameRunning = false; // Tracks if the game is running
-    let scrollInterval, gravityInterval;
+    let scrollInterval, gravityInterval, obstacleInterval;
+    let obstacles = []; // Array to store obstacles
+
+    const character = document.getElementById("myImg01");
+
+    // Position the main character in the center of the screen
+    function centerCharacter() {
+      character.style.left = `${window.innerWidth / 2 - 50}px`;
+      character.style.top = `${window.innerHeight / 2 - 40}px`;
+    }
 
     // Function to start the game on the first click
     function startGame() {
@@ -37,13 +62,16 @@
         isGameRunning = true;
 
         // Remove the "Click Anywhere to Start" message
-        document.querySelector("h1").innerText = "";
+        document.querySelector("h1").style.display = "none";
 
         // Start the background scrolling
         scrollBackground();
 
         // Start the gravity loop
         applyGravity();
+
+        // Generate obstacles
+        generateObstacles();
 
         // Add click listener for jumping
         document.addEventListener("click", jump);
@@ -64,7 +92,6 @@
     function applyGravity() {
       gravityInterval = setInterval(() => {
         if (isGameRunning) {
-          let character = document.getElementById("myImg01");
           let currentTop = parseInt(character.style.top);
 
           // Apply gravity to the vertical speed
@@ -72,9 +99,6 @@
 
           // Update character position
           character.style.top = `${currentTop + myVerticalSpeed}px`;
-
-          // Check for collisions or boundaries
-          myCheckHit();
 
           // Prevent character from falling below the screen
           if (currentTop + myVerticalSpeed >= window.innerHeight - 80) {
@@ -86,6 +110,9 @@
           if (currentTop + myVerticalSpeed <= 0) {
             character.style.top = `0px`;
           }
+
+          // Check collisions
+          myCheckHit();
         }
       }, 20);
     }
@@ -97,16 +124,70 @@
       }
     }
 
+    // Function to generate obstacles
+    function generateObstacles() {
+      obstacleInterval = setInterval(() => {
+        let obstacleHeight = Math.random() * 200 + 50; // Random height between 50 and 250
+        let gap = 150; // Gap between top and bottom obstacles
+
+        // Create top obstacle
+        let topObstacle = document.createElement("div");
+        topObstacle.classList.add("obstacle");
+        topObstacle.style.width = "50px";
+        topObstacle.style.height = `${obstacleHeight}px`;
+        topObstacle.style.left = `${window.innerWidth}px`;
+        topObstacle.style.top = "0px";
+
+        // Create bottom obstacle
+        let bottomObstacle = document.createElement("div");
+        bottomObstacle.classList.add("obstacle");
+        bottomObstacle.style.width = "50px";
+        bottomObstacle.style.height = `${window.innerHeight - obstacleHeight - gap}px`;
+        bottomObstacle.style.left = `${window.innerWidth}px`;
+        bottomObstacle.style.top = `${obstacleHeight + gap}px`;
+
+        // Append obstacles to the body
+        document.body.appendChild(topObstacle);
+        document.body.appendChild(bottomObstacle);
+
+        // Add to obstacles array
+        obstacles.push(topObstacle, bottomObstacle);
+
+        // Move obstacles
+        moveObstacles([topObstacle, bottomObstacle]);
+      }, 2000);
+    }
+
+    // Function to move obstacles
+    function moveObstacles(obstaclePair) {
+      let moveInterval = setInterval(() => {
+        if (isGameRunning) {
+          obstaclePair.forEach(obstacle => {
+            let currentLeft = parseInt(obstacle.style.left);
+            if (currentLeft < -50) {
+              // Remove obstacle if out of screen
+              obstacle.remove();
+              obstacles = obstacles.filter(item => item !== obstacle);
+            } else {
+              obstacle.style.left = `${currentLeft - 5}px`;
+            }
+          });
+        } else {
+          clearInterval(moveInterval);
+        }
+      }, 20);
+    }
+
     // Function to check collisions
     function myHitOther(my1, my2) {
-      let left1 = parseInt(document.getElementById(my1).style.left);
-      let right1 = left1 + parseInt(document.getElementById(my1).style.width);
-      let top1 = parseInt(document.getElementById(my1).style.top);
-      let bottom1 = top1 + parseInt(document.getElementById(my1).style.height);
-      let left2 = parseInt(document.getElementById(my2).style.left);
-      let right2 = left2 + parseInt(document.getElementById(my2).style.width);
-      let top2 = parseInt(document.getElementById(my2).style.top);
-      let bottom2 = top2 + parseInt(document.getElementById(my2).style.height);
+      let left1 = parseInt(my1.style.left);
+      let right1 = left1 + parseInt(my1.offsetWidth);
+      let top1 = parseInt(my1.style.top);
+      let bottom1 = top1 + parseInt(my1.offsetHeight);
+      let left2 = parseInt(my2.style.left);
+      let right2 = left2 + parseInt(my2.offsetWidth);
+      let top2 = parseInt(my2.style.top);
+      let bottom2 = top2 + parseInt(my2.offsetHeight);
 
       return (
         right1 >= left2 &&
@@ -116,37 +197,36 @@
       );
     }
 
-    // Function to check hits and update game state
+    // Function to check hits and reset game on collision
     function myCheckHit() {
-      let character = document.getElementById("myImg01");
-
-      // Check collision with obstacles
-      if (myHitOther("myImg01", "myImg02") || myHitOther("myImg01", "myImg03")) {
-        alert("You lose! Restarting...");
-        resetGame();
-      }
-
-      // Check collision with the winning element
-      if (myHitOther("myImg01", "myImg04")) {
-        alert("You win! Redirecting to the next level...");
-        location.href = "https://www.google.ca";
-      }
+      obstacles.forEach(obstacle => {
+        if (myHitOther(character, obstacle)) {
+          alert("You lose! Restarting...");
+          resetGame();
+        }
+      });
     }
 
     // Function to reset the game
     function resetGame() {
       clearInterval(scrollInterval);
       clearInterval(gravityInterval);
+      clearInterval(obstacleInterval);
 
-      let character = document.getElementById("myImg01");
-      character.style.left = "50px";
-      character.style.top = "190px";
-      myVerticalSpeed = 0;
-      myGlobalX = 0;
+      obstacles.forEach(obstacle => obstacle.remove());
+      obstacles = [];
 
       isGameRunning = false;
-      document.querySelector("h1").innerText = "Click Anywhere to Start";
+      myVerticalSpeed = 0;
+      myGlobalX = 0;
+      centerCharacter();
+
+      document.querySelector("h1").style.display = "block";
+      document.addEventListener("click", startGame, { once: true });
     }
+
+    // Center character on load
+    window.onload = centerCharacter;
 
     // Attach click listener to start the game
     document.addEventListener("click", startGame, { once: true });
