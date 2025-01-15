@@ -41,11 +41,40 @@
       font-size: 2rem;
       color: red;
     }
+
+    #modeButton {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      z-index: 1001;
+    }
+
+    #modeButton:hover {
+      background-color: #45a049;
+    }
+
+    #scoreDisplay {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 24px;
+      color: white;
+      z-index: 1001;
+    }
   </style>
 </head>
 <body id="myBody">
 
   <h1>Click Anywhere to Start</h1>
+  <button id="modeButton">Mr. Ellis Mode</button>
+  <div id="scoreDisplay">Score: 0</div>
   <img id="myImg01" src="https://freepngimg.com/thumb/logo/109933-logo-bird-flappy-png-download-free.png">
 
   <script>
@@ -55,10 +84,15 @@
     let myGlobalX = 0; // Background scroll position
     let myVerticalSpeed = 0; // Speed of the character's vertical movement
     let isGameRunning = false; // Tracks if the game is running
+    let isMrEllisMode = false; // Tracks if Mr. Ellis Mode is active
     let scrollInterval, gravityInterval, obstacleInterval;
     let obstacles = []; // Array to store obstacles
+    let score = 0; // Player's current score
+    let highScore = 0; // Highest score
 
     const character = document.getElementById("myImg01");
+    const modeButton = document.getElementById("modeButton");
+    const scoreDisplay = document.getElementById("scoreDisplay");
 
     // Position the main character in the center of the screen
     function centerCharacter() {
@@ -70,6 +104,8 @@
     function startGame() {
       if (!isGameRunning) {
         isGameRunning = true;
+        score = 0; // Reset the score
+        updateScoreDisplay();
 
         // Remove the "Click Anywhere to Start" message
         document.querySelector("h1").style.display = "none";
@@ -114,6 +150,7 @@
           if (currentTop + myVerticalSpeed >= window.innerHeight - 80) {
             character.style.top = `${window.innerHeight - 80}px`;
             myVerticalSpeed = 0; // Stop movement if at the bottom
+            resetGame();
           }
 
           // Prevent character from going above the screen
@@ -138,7 +175,7 @@
     function generateObstacles() {
       obstacleInterval = setInterval(() => {
         let obstacleHeight = Math.random() * 200 + 50; // Random height between 50 and 250
-        let gap = 300; // Larger gap between top and bottom obstacles
+        let gap = isMrEllisMode ? 500 : 300; // Wider gap for Mr. Ellis Mode
 
         // Create top obstacle
         let topObstacle = document.createElement("div");
@@ -182,6 +219,8 @@
               // Remove obstacle if out of screen
               obstacle.remove();
               obstacles = obstacles.filter(item => item !== obstacle);
+              score++; // Increase score when passing through a gap
+              updateScoreDisplay();
             } else {
               obstacle.style.left = `${currentLeft - 5}px`;
             }
@@ -215,7 +254,7 @@
     function myCheckHit() {
       obstacles.forEach(obstacle => {
         if (myHitOther(character, obstacle)) {
-          alert("You lose! Restarting...");
+          alert(`You lose! Your final score was: ${score}\nRestarting...`);
           resetGame();
         }
       });
@@ -235,9 +274,25 @@
       myGlobalX = 0;
       centerCharacter();
 
+      // Update high score
+      if (score > highScore) {
+        highScore = score;
+      }
+
       document.querySelector("h1").style.display = "block";
       document.addEventListener("click", startGame, { once: true });
     }
+
+    // Function to update the score display
+    function updateScoreDisplay() {
+      scoreDisplay.textContent = `Score: ${score} | High Score: ${highScore}`;
+    }
+
+    // Function to toggle Mr. Ellis Mode
+    modeButton.addEventListener("click", () => {
+      isMrEllisMode = !isMrEllisMode;
+      modeButton.textContent = isMrEllisMode ? "Normal Mode" : "Mr. Ellis Mode";
+    });
 
     // Center character on load
     window.onload = centerCharacter;
