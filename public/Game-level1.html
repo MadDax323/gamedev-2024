@@ -124,40 +124,42 @@
       }
     }
 
-    // Function to generate obstacles
-    function generateObstacles() {
-      obstacleInterval = setInterval(() => {
-        let obstacleHeight = Math.random() * 200 + 50; // Random height between 50 and 250
-        let gap = 150; // Gap between top and bottom obstacles
+function generateObstacles() {
+  obstacleInterval = setInterval(() => {
+    let obstacleHeight = Math.random() * 200 + 50; // Random height between 50 and 250
+    let gap = 250; // Wider gap between top and bottom obstacles
 
-        // Create top obstacle
-        let topObstacle = document.createElement("div");
-        topObstacle.classList.add("obstacle");
-        topObstacle.style.width = "50px";
-        topObstacle.style.height = `${obstacleHeight}px`;
-        topObstacle.style.left = `${window.innerWidth}px`;
-        topObstacle.style.top = "0px";
+    // Create top obstacle
+    let topObstacle = document.createElement("div");
+    topObstacle.classList.add("obstacle");
+    topObstacle.style.width = "50px";
+    topObstacle.style.height = `${obstacleHeight}px`;
+    topObstacle.style.left = `${window.innerWidth}px`;
+    topObstacle.style.top = "0px";
+    topObstacle.style.backgroundImage = "url('https://th.bing.com/th/id/R.2b1c4b11eaf8c45f8b40d12934b7180f?rik=iBe2s87PwgUxVQ&riu=http%3a%2f%2flanyan-only.github.io%2fcanvas-flappy-bird%2fimg%2fpipe.png&ehk=q8V4eQieMzlyrwOYA86EjJz2okC1pS39SCLZ3R2Gz0c%3d&risl=&pid=ImgRaw&r=0')";
+    topObstacle.style.backgroundSize = "cover";
 
-        // Create bottom obstacle
-        let bottomObstacle = document.createElement("div");
-        bottomObstacle.classList.add("obstacle");
-        bottomObstacle.style.width = "50px";
-        bottomObstacle.style.height = `${window.innerHeight - obstacleHeight - gap}px`;
-        bottomObstacle.style.left = `${window.innerWidth}px`;
-        bottomObstacle.style.top = `${obstacleHeight + gap}px`;
+    // Create bottom obstacle
+    let bottomObstacle = document.createElement("div");
+    bottomObstacle.classList.add("obstacle");
+    bottomObstacle.style.width = "50px";
+    bottomObstacle.style.height = `${window.innerHeight - obstacleHeight - gap}px`;
+    bottomObstacle.style.left = `${window.innerWidth}px`;
+    bottomObstacle.style.top = `${obstacleHeight + gap}px`;
+    bottomObstacle.style.backgroundImage = "url('https://th.bing.com/th/id/R.2b1c4b11eaf8c45f8b40d12934b7180f?rik=iBe2s87PwgUxVQ&riu=http%3a%2f%2flanyan-only.github.io%2fcanvas-flappy-bird%2fimg%2fpipe.png&ehk=q8V4eQieMzlyrwOYA86EjJz2okC1pS39SCLZ3R2Gz0c%3d&risl=&pid=ImgRaw&r=0')";
+    bottomObstacle.style.backgroundSize = "cover";
 
-        // Append obstacles to the body
-        document.body.appendChild(topObstacle);
-        document.body.appendChild(bottomObstacle);
+    // Append obstacles to the body
+    document.body.appendChild(topObstacle);
+    document.body.appendChild(bottomObstacle);
 
-        // Add to obstacles array
-        obstacles.push(topObstacle, bottomObstacle);
+    // Add to obstacles array
+    obstacles.push(topObstacle, bottomObstacle);
 
-        // Move obstacles
-        moveObstacles([topObstacle, bottomObstacle]);
-      }, 2000);
-    }
-
+    // Move obstacles
+    moveObstacles([topObstacle, bottomObstacle]);
+  }, 2000);
+}
     // Function to move obstacles
     function moveObstacles(obstaclePair) {
       let moveInterval = setInterval(() => {
