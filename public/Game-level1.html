@@ -8,8 +8,9 @@
     body {
       margin: 0;
       overflow: hidden;
-      font-family: Arial, sans-serif;
+      font-family: 'Press Start 2P', cursive; /* Pixel-art font */
       position: relative;
+      user-select: none; /* Disable text selection */
     }
 
     #myBody {
@@ -35,11 +36,11 @@
       position: absolute;
       z-index: 1000;
       width: 100%;
-      top: 50%;
+      top: 50px; /* Move above the main character */
       transform: translateY(-50%);
       text-align: center;
       font-size: 2rem;
-      color: red;
+      color: white; /* Change color to white */
     }
 
     #modeButton {
@@ -69,6 +70,8 @@
       z-index: 1001;
     }
   </style>
+  <!-- Pixel font import -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
 </head>
 <body id="myBody">
 
@@ -254,7 +257,7 @@
     function myCheckHit() {
       obstacles.forEach(obstacle => {
         if (myHitOther(character, obstacle)) {
-          alert(`You lose! Your final score was: ${score}\nRestarting...`);
+          alert(`You lose! Your final score was: ${score}`);
           resetGame();
         }
       });
