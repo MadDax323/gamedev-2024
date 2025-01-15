@@ -69,6 +69,24 @@
       color: white;
       z-index: 1001;
     }
+
+    #nextGameButton {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      z-index: 1001;
+    }
+
+    #nextGameButton:hover {
+      background-color: #0056b3;
+    }
   </style>
   <!-- Pixel font import -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
@@ -77,6 +95,7 @@
 
   <h1>Click Anywhere to Start</h1>
   <button id="modeButton">Mr. Ellis Mode</button>
+  <button id="nextGameButton">Next Game</button>
   <div id="scoreDisplay">Score: 0</div>
   <img id="myImg01" src="https://freepngimg.com/thumb/logo/109933-logo-bird-flappy-png-download-free.png">
 
@@ -95,6 +114,7 @@
 
     const character = document.getElementById("myImg01");
     const modeButton = document.getElementById("modeButton");
+    const nextGameButton = document.getElementById("nextGameButton");
     const scoreDisplay = document.getElementById("scoreDisplay");
 
     // Position the main character in the center of the screen
@@ -224,6 +244,12 @@
               obstacles = obstacles.filter(item => item !== obstacle);
               score++; // Increase score when passing through a gap
               updateScoreDisplay();
+
+              // Check for winning condition (score reaches 10000)
+              if (score >= 10000) {
+                alert("Congratulations! You won the game!");
+                window.location.href = "https://maddax323.github.io/gamedev-2024/public/Start-page.html"; // Redirect to new URL
+              }
             } else {
               obstacle.style.left = `${currentLeft - 5}px`;
             }
@@ -295,6 +321,11 @@
     modeButton.addEventListener("click", () => {
       isMrEllisMode = !isMrEllisMode;
       modeButton.textContent = isMrEllisMode ? "Normal Mode" : "Mr. Ellis Mode";
+    });
+
+    // Function to go to the next game page
+    nextGameButton.addEventListener("click", () => {
+      window.location.href = "https://maddax323.github.io/gamedev-2024/public/Start-page.html";
     });
 
     // Center character on load
