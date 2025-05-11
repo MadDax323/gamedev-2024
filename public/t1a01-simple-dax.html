@@ -27,8 +27,8 @@
             font-size: 24px;
         }
         .retro-container {
-            display: inline-block; /* Allows the border to wrap tightly */
-            padding: 1rem; /* Adjust padding to prevent excessive spacing */
+            display: inline-block; /* Allows border to tightly wrap around content */
+            padding: 1rem;
             border: 2px solid var(--pipboy-green);
             text-shadow: 0 0 0.5rem var(--pipboy-green);
             mask-image: linear-gradient(to bottom, #0005 50%, #000 50%);
@@ -47,7 +47,7 @@
             flex-direction: column;
             gap: 1rem;
             width: 250px;
-            height: 300px; /* Adjust for your preferred scroll height */
+            height: 300px;
             overflow-y: auto;
             border: 2px solid var(--pipboy-green);
             padding: 10px;
@@ -66,20 +66,58 @@
             color: var(--background-color);
         }
         .description-box {
-            display: inline-block; /* Allows border to tightly wrap content */
+            display: inline-block; /* Makes the border wrap tightly */
             border: 2px solid var(--pipboy-green);
             padding: 1rem;
             text-align: center;
-            height: auto; /* Dynamically adjusts based on content */
-            overflow: hidden; /* Prevents unnecessary scrollbars */
-            word-wrap: break-word; /* Ensures text wraps properly */
+            height: auto;
+            overflow: hidden;
+            word-wrap: break-word;
+            max-width: 700px;
         }
         .description-box img {
-            max-width: 250px; /* Restrict image size */
-            max-height: 250px; /* Prevents oversized images */
+            max-width: 250px;
+            max-height: 250px;
             width: auto;
             height: auto;
             border: 1px solid var(--pipboy-green);
+        }
+
+        /* Mobile Responsive Adjustments */
+        @media screen and (max-width: 768px) {
+            body {
+                font-size: 18px; /* Adjust text for mobile */
+                text-align: center;
+            }
+
+            .retro-container {
+                width: 95vw;
+                height: auto;
+                padding: 0.5rem;
+            }
+
+            .container {
+                flex-direction: column; /* Stack elements */
+                gap: 1rem;
+                align-items: center;
+                max-width: 90%;
+            }
+
+            .button-container {
+                width: 100%;
+                height: auto;
+                max-height: 300px;
+            }
+
+            .description-box {
+                width: 90%;
+                max-width: 400px;
+            }
+
+            .description-box img {
+                max-width: 200px;
+                max-height: 200px;
+            }
         }
     </style>
 </head>
