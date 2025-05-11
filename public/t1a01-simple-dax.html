@@ -129,9 +129,9 @@
         function updateDescription(title, description, imageSrc) {
             const infoBox = document.getElementById('info-box');
             infoBox.innerHTML = `
+                <img src="${imageSrc}" alt="${title}">
                 <h2>${title}</h2>
                 <p>${description}</p>
-                <img src="${imageSrc}" alt="${title}">
             `;
         }
     </script>
