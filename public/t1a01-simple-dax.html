@@ -41,8 +41,8 @@
             display: flex;
             gap: 2rem;
             margin-top: 2rem;
-            width: 80%; /* Restrict width */
-            max-width: 1000px; /* Ensures it doesn't get too wide */
+            width: auto; /* Adjust width dynamically */
+            max-width: 1000px; /* Prevent excessive stretching */
         }
         /* Scrollable button list */
         .button-container {
@@ -69,18 +69,17 @@
             color: var(--background-color);
         }
         .description-box {
-            flex-grow: 1; /* Allows it to expand */
-            max-width: 700px;
+            display: inline-block; /* Allows border to tightly wrap content */
             border: 2px solid var(--pipboy-green);
             padding: 1rem;
             text-align: center;
-            height: auto; /* Allows it to wrap dynamically */
+            height: auto; /* Dynamically adjusts based on content */
             overflow: hidden; /* Prevents unnecessary scrollbars */
             word-wrap: break-word; /* Ensures text wraps properly */
         }
         .description-box img {
             max-width: 250px; /* Restrict image size */
-            max-height: 250px; /* Prevents it from being too large */
+            max-height: 250px; /* Prevents oversized images */
             width: auto;
             height: auto;
             border: 1px solid var(--pipboy-green);
