@@ -41,6 +41,7 @@
             display: flex;
             gap: 2rem;
             margin-top: 2rem;
+            width: 100%;
         }
         /* Scrollable button list */
         .button-container {
@@ -66,21 +67,12 @@
             background-color: var(--pipboy-green);
             color: var(--background-color);
         }
-       .container {
-    display: flex;
-    gap: 2rem;
-    margin-top: 2rem;
-    width: 100%;
-}
-
-.description-box {
-    flex-grow: 1; /* This makes it expand with the screen */
-    max-width: 1000px; /* Set a limit so it doesn’t get too big */
-    border: 2px solid var(--pipboy-green);
-    padding: 1rem;
-    text-align: center;
-}
-
+        .description-box {
+            flex-grow: 1;
+            max-width: 1000px;
+            border: 2px solid var(--pipboy-green);
+            padding: 1rem;
+            text-align: center;
         }
         .description-box img {
             width: 100%;
@@ -98,18 +90,18 @@
         </header>
 
         <main class="container">
-            <!-- BUTTONS -->
+            <!-- SCROLLABLE BUTTON LIST -->
             <div class="button-container">
-                <button onclick="updateDescription('Comfirmed Bachelor', '+10% damage against male opponents Additional dialogue options with homosexual male characters and certain female characters', 'https://github.com/user-attachments/assets/d7e2564d-23ae-4f3d-b8ab-94df98bbe885')">Confirmed Bachelor</button>
+                <button onclick="updateDescription('Confirmed Bachelor', '+10% damage against male opponents. Additional dialogue options with certain characters.', 'https://static.wikia.nocookie.net/fallout/images/5/58/Confirmedbachelor.png')">Confirmed Bachelor</button>
                 <button onclick="updateDescription('Perception', 'Awareness and accuracy.', 'assets/perception.png')">Perception</button>
                 <button onclick="updateDescription('Endurance', 'Your resistance to damage.', 'assets/endurance.png')">Endurance</button>
             </div>
 
             <!-- DESCRIPTION BOX -->
             <div class="description-box" id="info-box">
-                <img src="assets/default.png" alt="Icon">
+                <img src="assets/default.png" alt="Default Icon">
                 <h2>Pick a Perk</h2>
-                <p>Select an option to see details</p>
+                <p>Select an option to see details.</p>
             </div>
         </main>
 
@@ -122,7 +114,7 @@
         function updateDescription(title, description, imageSrc) {
             const infoBox = document.getElementById('info-box');
             infoBox.innerHTML = `
-                <img src="${imageSrc}">
+                <img src="${imageSrc}" alt="${title} Icon">
                 <h2>${title}</h2>
                 <p>${description}</p>
             `;
@@ -131,5 +123,3 @@
 
 </body>
 </html>
-
-
