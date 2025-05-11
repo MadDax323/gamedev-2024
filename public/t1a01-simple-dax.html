@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NVMP PERK LIST</title>
+    <title>Retro Futuristic UI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -11,10 +11,10 @@
         :root {
             font-family: "VT323", monospace;
             font-weight: 400;
-            --primary-color: #4cff2c;
-            --secondary-color: #479101;
-            --tertiary-color: #9dc704;
-            --background-color: #111;
+            --primary-color: #00ff00; /* Pip-Boy Green */
+            --secondary-color: #007700;
+            --tertiary-color: #004400;
+            --background-color: #000000;
             scrollbar-color: var(--primary-color) var(--secondary-color);
             font-size: clamp(18px, 3vw, 30px);
         }
@@ -40,7 +40,9 @@
             padding: 0.5rem;
             border: 2px solid var(--primary-color);
             color: var(--primary-color);
-            text-shadow: 0 0 0.5rem;
+            text-shadow: 0 0 0.5rem var(--primary-color);
+            mask-image: linear-gradient(to bottom, #0005 50%, #000 50%);
+            mask-size: 100% 2px;
         }
         header, footer {
             display: flex;
@@ -78,7 +80,7 @@
 <body>
     <div class="retro-container scanline-effect">
         <header>
-            <h1>Retro UI</h1>
+            <h1>Pip-Boy UI</h1>
             <nav role="navigation">
                 <ul>
                     <li><a href="#screen-1">Screen 1</a></li>
@@ -92,7 +94,7 @@
                         <h2>Screen 1</h2>
                     </header>
                     <div class="content">
-                        <p>Welcome to the retro-futuristic interface!</p>
+                        <p>Welcome to the retro-futuristic, Fallout-inspired interface!</p>
                     </div>
                     <figure>
                         <img src="assets/illustration.png" alt="Retro Illustration">
@@ -101,7 +103,7 @@
             </section>
         </main>
         <footer>
-            <p>© 2025 Retro UI</p>
+            <p>© 2025 Pip-Boy UI</p>
         </footer>
     </div>
     <script>
@@ -123,3 +125,4 @@
     </script>
 </body>
 </html>
+
