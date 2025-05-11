@@ -3,20 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Retro Futuristic UI</title>
+    <title>Pip-Boy UI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         :root {
             font-family: "VT323", monospace;
-            font-weight: 400;
-            --primary-color: #00ff00; /* Pip-Boy Green */
-            --secondary-color: #007700;
-            --tertiary-color: #004400;
-            --background-color: #000000;
-            scrollbar-color: var(--primary-color) var(--secondary-color);
-            font-size: clamp(18px, 3vw, 30px);
+            --pipboy-green: #00ff00;
+            --dark-green: #004400;
+            --background-color: #000;
         }
         * {
             margin: 0;
@@ -24,23 +19,21 @@
             box-sizing: border-box;
         }
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             background-color: var(--background-color);
-            cursor: url('assets/mouse.svg'), auto;
+            color: var(--pipboy-green);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 24px;
         }
         .retro-container {
             width: 90vw;
             height: 90vh;
             display: grid;
             grid-template-rows: auto 1fr auto;
-            overflow: hidden;
             padding: 0.5rem;
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            text-shadow: 0 0 0.5rem var(--primary-color);
+            border: 2px solid var(--pipboy-green);
+            text-shadow: 0 0 0.5rem var(--pipboy-green);
             mask-image: linear-gradient(to bottom, #0005 50%, #000 50%);
             mask-size: 100% 2px;
         }
@@ -58,52 +51,53 @@
             overflow: auto;
             margin: 1rem 0;
         }
-        @keyframes crtAnimation {
-            0% { background-position: 0 0; }
-            100% { background-position: 0 10000%; }
+        .container {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
         }
-        .old-crt-monitor {
-            box-shadow: inset 0px 0px 2rem var(--tertiary-color);
-            background-image: linear-gradient(0deg, #0000 10%, #fff1 90%, #0000 100%);
-            animation: crtAnimation 100s linear infinite;
-            background-size: 100% 80%;
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
-        .alert {
-            animation: blink-bg 1s ease-out infinite;
+        button {
+            background-color: var(--dark-green);
+            color: var(--pipboy-green);
+            border: 2px solid var(--pipboy-green);
+            padding: 10px 20px;
+            font-size: 22px;
+            cursor: pointer;
         }
-        @keyframes blink-bg {
-            0%, 60% { text-shadow: 0 0 10.5rem var(--primary-color); color: var(--primary-color); }
-            70%, 100% { text-shadow: 0 0 20.5rem var(--tertiary-color); color: var(--tertiary-color); }
+        button:hover {
+            background-color: var(--pipboy-green);
+            color: var(--background-color);
+        }
+        .description-box {
+            width: 300px;
+            border: 2px solid var(--pipboy-green);
+            padding: 1rem;
+            text-align: center;
+        }
+        .description-box img {
+            width: 100%;
+            border: 1px solid var(--pipboy-green);
         }
     </style>
 </head>
 <body>
-    <div class="retro-container scanline-effect">
+
+    <h1>Pip-Boy Interface</h1>
+
+    <div class="retro-container">
         <header>
-            <h1>NVMP PERK LIST</h1>
-            <nav role="navigation">
-                <ul>
-                    <li><a href="#screen-1">Screen 1</a></li>
-                </ul>
-            </nav>
+            <h2>Select a Stat</h2>
         </header>
-        <main>
-            <section id="screen-1">
-                <article>
-                    <header>
-                        <h2>PERK LIST</h2>
-                    </header>
-                    <div class="content">
-                        <p>Welcome to the retro-futuristic, Fallout-inspired interface!</p>
-                    </div>
-                    <figure>
-                        <img src="assets/illustration.png" alt="Retro Illustration">
-                    </figure>
-                </article>
-                <div class="container">
+
+        <main class="container">
             <!-- BUTTONS -->
             <div class="button-container">
-                <button onclick="updateDescription('https://static.wikia.nocookie.net/fallout/images/5/58/Confirmedbachelor.png/revision/latest?cb=20130508223841', 'Confirmed Bachelor', 'Level 2', 'Rank 1', '+10% damage against male opponents
+                <button onclick="updateDescription('https://static.wikia.nocookie.net/fallout/images/5/58/Confirmedbachelor.png/revision/latest?cb=20130508223841', 'Confirmed Bachelor', '+10% damage against male opponents
 Additional dialogue options with homosexual male characters and certain female characters')">Confirmed Bachelor</button>
                 <button onclick="updateDescription('Perception', 'Awareness and accuracy.', 'assets/perception.png')">Perception</button>
                 <button onclick="updateDescription('Endurance', 'Your resistance to damage.', 'assets/endurance.png')">Endurance</button>
@@ -115,30 +109,25 @@ Additional dialogue options with homosexual male characters and certain female c
                 <p>Select an option to see details.</p>
                 <img src="assets/default.png" alt="Icon">
             </div>
-            </div>
-            </section>
         </main>
+
         <footer>
             <p>© 2025 Pip-Boy UI</p>
         </footer>
     </div>
-    <script>
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                const main = document.querySelector('main');
 
-                if (targetElement) {
-                    main.scrollTo({
-                        top: targetElement.offsetTop - main.offsetTop,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
+    <script>
+        function updateDescription(title, description, imageSrc) {
+            const infoBox = document.getElementById('info-box');
+            infoBox.innerHTML = `
+                <h2>${title}</h2>
+                <p>${description}</p>
+                <img src="${imageSrc}" alt="${title}">
+            `;
+        }
     </script>
+
 </body>
 </html>
+
 
