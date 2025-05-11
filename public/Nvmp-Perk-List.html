@@ -6,6 +6,7 @@
     <title>Pip-Boy UI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
             font-family: "VT323", monospace;
@@ -74,13 +75,14 @@
             scrollbar-color: var(--pipboy-green) var(--dark-green);
         }
         button {
+            font-family: "Press Start 2P", cursive;
             background-color: var(--dark-green);
             color: var(--pipboy-green);
             border: 2px solid var(--pipboy-green);
             padding: 10px 20px;
-            font-size: 22px;
+            font-size: 18px; /* Slightly smaller for better retro effect */
             cursor: pointer;
-        }
+}
         button:hover {
             background-color: var(--pipboy-green);
             color: var(--background-color);
