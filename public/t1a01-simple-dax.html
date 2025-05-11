@@ -1,48 +1,125 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webcam Capture</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Retro Futuristic UI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            font-family: "VT323", monospace;
+            font-weight: 400;
+            --primary-color: #ffd52c;
+            --secondary-color: #ff5c00;
+            --tertiary-color: #c72d04;
+            --background-color: #111;
+            scrollbar-color: var(--primary-color) var(--secondary-color);
+            font-size: clamp(18px, 3vw, 30px);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: var(--background-color);
+            cursor: url('assets/mouse.svg'), auto;
+        }
+        .retro-container {
+            width: 90vw;
+            height: 90vh;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            overflow: hidden;
+            padding: 0.5rem;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            text-shadow: 0 0 0.5rem;
+        }
+        header, footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+        main {
+            overflow: hidden;
+        }
+        section {
+            height: 100%;
+            overflow: auto;
+            margin: 1rem 0;
+        }
+        @keyframes crtAnimation {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 10000%; }
+        }
+        .old-crt-monitor {
+            box-shadow: inset 0px 0px 2rem var(--tertiary-color);
+            background-image: linear-gradient(0deg, #0000 10%, #fff1 90%, #0000 100%);
+            animation: crtAnimation 100s linear infinite;
+            background-size: 100% 80%;
+        }
+        .alert {
+            animation: blink-bg 1s ease-out infinite;
+        }
+        @keyframes blink-bg {
+            0%, 60% { text-shadow: 0 0 10.5rem var(--primary-color); color: var(--primary-color); }
+            70%, 100% { text-shadow: 0 0 20.5rem var(--tertiary-color); color: var(--tertiary-color); }
+        }
+    </style>
 </head>
 <body>
-    <div class="camera">
-        <video id="video" width="640" height="480" autoplay></video>
-        <button id="capture">Capture Photo</button>
+    <div class="retro-container scanline-effect">
+        <header>
+            <h1>Retro UI</h1>
+            <nav role="navigation">
+                <ul>
+                    <li><a href="#screen-1">Screen 1</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <section id="screen-1">
+                <article>
+                    <header>
+                        <h2>Screen 1</h2>
+                    </header>
+                    <div class="content">
+                        <p>Welcome to the retro-futuristic interface!</p>
+                    </div>
+                    <figure>
+                        <img src="assets/illustration.png" alt="Retro Illustration">
+                    </figure>
+                </article>
+            </section>
+        </main>
+        <footer>
+            <p>© 2025 Retro UI</p>
+        </footer>
     </div>
-    <canvas id="canvas" style="display:none;"></canvas>
-    <div class="output">
-        <img id="photo" alt="Captured Image">
-    </div>
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                const main = document.querySelector('main');
 
-    <script src="script.js">document.addEventListener("DOMContentLoaded", function() {
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const photo = document.getElementById('photo');
-    const captureButton = document.getElementById('capture');
-    const context = canvas.getContext('2d');
-
-    // Access the webcam
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then(function(stream) {
-            video.srcObject = stream;
-            video.play();
-        })
-        .catch(function(err) {
-            console.error("Error accessing webcam: " + err);
+                if (targetElement) {
+                    main.scrollTo({
+                        top: targetElement.offsetTop - main.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
         });
-
-    // Capture the photo
-    captureButton.addEventListener('click', function() {
-        const width = video.videoWidth;
-        const height = video.videoHeight;
-        canvas.width = width;
-        canvas.height = height;
-        context.drawImage(video, 0, 0, width, height);
-
-        // Convert the canvas to a JPEG image
-        const data = canvas.toDataURL('image/jpeg');
-        photo.setAttribute('src', data);
-    });
-});</script>
+    </script>
 </body>
 </html>
