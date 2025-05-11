@@ -19,8 +19,9 @@
             box-sizing: border-box;
         }
         html, body {
-            overflow: hidden; /* Prevents scrolling on all devices */
-            height: 100%;
+            overflow: hidden; /* Prevents scrolling */
+            height: 100vh; /* Fits everything within the screen */
+            width: 100vw;
         }
         body {
             background-color: var(--background-color);
@@ -28,10 +29,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             font-size: 24px;
         }
         .retro-container {
-            display: inline-block;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 90vw;
+            height: 90vh;
             padding: 1rem;
             border: 2px solid var(--pipboy-green);
             text-shadow: 0 0 0.5rem var(--pipboy-green);
@@ -40,17 +47,14 @@
         }
         .container {
             display: flex;
-            gap: 2rem;
-            margin-top: 2rem;
-            width: auto;
+            justify-content: space-between;
+            width: 100%;
             max-width: 1000px;
         }
         .button-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
             width: 250px;
-            height: 300px;
+            height: auto;
+            max-height: 60vh;
             overflow-y: auto;
             border: 2px solid var(--pipboy-green);
             padding: 10px;
@@ -70,17 +74,15 @@
         }
         .description-box {
             display: inline-block;
-            border: 2px solid var(--pipboy-green);
+            max-width: 700px;
+            max-height: 60vh;
             padding: 1rem;
-            text-align: center;
-            height: auto;
             overflow: hidden;
             word-wrap: break-word;
-            max-width: 700px;
         }
         .description-box img {
-            max-width: 250px;
-            max-height: 250px;
+            max-width: 200px;
+            max-height: 200px;
             width: auto;
             height: auto;
             border: 1px solid var(--pipboy-green);
@@ -92,34 +94,30 @@
                 font-size: 18px;
                 text-align: center;
             }
-
             .retro-container {
                 width: 95vw;
                 height: auto;
                 padding: 0.5rem;
             }
-
             .container {
                 flex-direction: column;
                 gap: 1rem;
                 align-items: center;
                 max-width: 90%;
             }
-
             .button-container {
                 width: 100%;
                 height: auto;
                 max-height: 300px;
             }
-
             .description-box {
                 width: 90%;
                 max-width: 400px;
+                max-height: 50vh;
             }
-
             .description-box img {
-                max-width: 200px;
-                max-height: 200px;
+                max-width: 150px;
+                max-height: 150px;
             }
         }
     </style>
@@ -168,3 +166,4 @@
     </script>
 
 </body>
+</html>
