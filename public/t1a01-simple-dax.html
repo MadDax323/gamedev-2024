@@ -18,28 +18,20 @@
             padding: 0;
             box-sizing: border-box;
         }
-        html, body {
-            overflow: hidden; /* Prevent scrolling */
-            height: 100vh; /* Fit within screen */
-            width: 100vw;
-        }
         body {
             background-color: var(--background-color);
             color: var(--pipboy-green);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             font-size: 24px;
         }
         .retro-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 80vw;
-            height: 85vh;
-            padding: 1rem;
+            width: 90vw;
+            height: 90vh;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            padding: 0.5rem;
             border: 2px solid var(--pipboy-green);
             text-shadow: 0 0 0.5rem var(--pipboy-green);
             mask-image: linear-gradient(to bottom, #0005 50%, #000 50%);
@@ -47,18 +39,22 @@
         }
         .container {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            max-width: 1100px; /* Increased width for PC */
+            gap: 2rem;
+            margin-top: 2rem;
+            width: 80%; /* Restrict width */
+            max-width: 1000px; /* Ensures it doesn't get too wide */
         }
+        /* Scrollable button list */
         .button-container {
-            width: 300px; /* Adjusted size */
-            height: auto;
-            max-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 250px;
+            height: 300px; /* Adjust for your preferred scroll height */
             overflow-y: auto;
             border: 2px solid var(--pipboy-green);
             padding: 10px;
+            scrollbar-color: var(--pipboy-green) var(--dark-green);
         }
         button {
             background-color: var(--dark-green);
@@ -73,51 +69,21 @@
             color: var(--background-color);
         }
         .description-box {
-            display: inline-block;
-            max-width: 750px; /* Adjusted size */
-            max-height: 70vh;
-            padding: 1.5rem;
-            overflow: hidden;
-            word-wrap: break-word;
+            flex-grow: 1; /* Allows it to expand */
+            max-width: 700px;
+            border: 2px solid var(--pipboy-green);
+            padding: 1rem;
+            text-align: center;
+            height: auto; /* Allows it to wrap dynamically */
+            overflow: hidden; /* Prevents unnecessary scrollbars */
+            word-wrap: break-word; /* Ensures text wraps properly */
         }
         .description-box img {
-            max-width: 220px;
-            max-height: 220px;
+            max-width: 250px; /* Restrict image size */
+            max-height: 250px; /* Prevents it from being too large */
             width: auto;
             height: auto;
             border: 1px solid var(--pipboy-green);
-        }
-
-        /* Mobile Adjustments */
-        @media screen and (max-width: 768px) {
-            body {
-                font-size: 18px;
-                text-align: center;
-            }
-            .retro-container {
-                width: 95vw;
-                height: auto;
-                padding: 0.5rem;
-            }
-            .container {
-                flex-direction: column;
-                align-items: center;
-                max-width: 90%;
-            }
-            .button-container {
-                width: 100%;
-                height: auto;
-                max-height: 300px;
-            }
-            .description-box {
-                width: 90%;
-                max-width: 400px;
-                max-height: 50vh;
-            }
-            .description-box img {
-                max-width: 150px;
-                max-height: 150px;
-            }
         }
     </style>
 </head>
