@@ -80,7 +80,7 @@
 <body>
     <div class="retro-container scanline-effect">
         <header>
-            <h1>Pip-Boy UI</h1>
+            <h1>NVMP PERK LIST</h1>
             <nav role="navigation">
                 <ul>
                     <li><a href="#screen-1">Screen 1</a></li>
@@ -91,7 +91,7 @@
             <section id="screen-1">
                 <article>
                     <header>
-                        <h2>Screen 1</h2>
+                        <h2>PERK LIST</h2>
                     </header>
                     <div class="content">
                         <p>Welcome to the retro-futuristic, Fallout-inspired interface!</p>
@@ -101,6 +101,20 @@
                     </figure>
                 </article>
             </section>
+<main class="container">
+            <!-- BUTTONS -->
+            <div class="button-container">
+                <button onclick="updateDescription('Strength', 'Your raw muscle power.', 'assets/strength.png')">Strength</button>
+                <button onclick="updateDescription('Perception', 'Awareness and accuracy.', 'assets/perception.png')">Perception</button>
+                <button onclick="updateDescription('Endurance', 'Your resistance to damage.', 'assets/endurance.png')">Endurance</button>
+            </div>
+
+            <!-- DESCRIPTION BOX -->
+            <div class="description-box" id="info-box">
+                <h2>Pick a Stat</h2>
+                <p>Select an option to see details.</p>
+                <img src="assets/default.png" alt="Icon">
+            </div>
         </main>
         <footer>
             <p>© 2025 Pip-Boy UI</p>
