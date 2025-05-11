@@ -38,11 +38,13 @@
             mask-size: 100% 2px;
         }
         .container {
-            display: flex;
-            gap: 2rem;
-            margin-top: 2rem;
-            width: 100%;
-        }
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    width: 80%; /* Restrict width */
+    max-width: 1000px; /* Ensures it doesn't get too wide */
+}
+
         /* Scrollable button list */
         .button-container {
             display: flex;
@@ -68,12 +70,15 @@
             color: var(--background-color);
         }
         .description-box {
-            flex-grow: 1;
-            max-width: 1000px;
-            border: 2px solid var(--pipboy-green);
-            padding: 1rem;
-            text-align: center;
-        }
+    flex-grow: 1;
+    max-width: 700px;
+    border: 2px solid var(--pipboy-green);
+    padding: 1rem;
+    text-align: center;
+    height: auto; /* Allows it to wrap dynamically */
+    overflow: hidden; /* Prevents unnecessary scrollbars */
+    word-wrap: break-word; /* Ensures text wraps properly */
+}
         .description-box img {
     max-width: 250px; /* Adjust to your preference */
     max-height: 250px; /* Ensures it doesn’t get too large */
