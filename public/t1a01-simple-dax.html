@@ -134,8 +134,8 @@
             <!-- SCROLLABLE BUTTON LIST -->
             <div class="button-container">
                 <P>Level 2:</P>
-                <button onclick="updateDescription('Confirmed Bachelor', 'In combat, you do +10% damage against male opponents. Outside of combat, you&#39;ll sometimes have access to unique dialogue options when dealing with the same sex. (DOES NOT WORK WITHIN PVP)', 'https://static.wikia.nocookie.net/fallout/images/5/58/Confirmedbachelor.png', '1', '2', 'N/A')">Confirmed Bachelor</button>
-                <button onclick="updateDescription('Perception', 'Awareness and accuracy.', 'assets/perception.png', '1', '1')">Perception</button>
+                <button onclick="updateDescription('Confirmed Bachelor', 'In combat, you do +10% damage against male opponents. Outside of combat, you&#39;ll sometimes have access to unique dialogue options when dealing with the same sex. (DOES NOT WORK WITHIN PVP)', 'https://static.wikia.nocookie.net/fallout/images/5/58/Confirmedbachelor.png', '1', '2', 'Charisma 5')">Confirmed Bachelor</button>
+                <button onclick="updateDescription('Placeholder Perk Name', 'placeholeder description', 'Placeholder Img', '1', '2', 'Placeholder requirement')">Placeholder</button>
                 <button onclick="updateDescription('Endurance', 'Your resistance to damage.', 'assets/endurance.png', '1', '1')">Endurance</button>
                 <button onclick="updateDescription('Perception', 'Awareness and accuracy.', 'assets/perception.png', '1', '1')">Perception</button>
                 <button onclick="updateDescription('Perception', 'Awareness and accuracy.', 'assets/perception.png', '1', '1')">Perception</button>
@@ -174,19 +174,19 @@
         </footer>
     </div>
 
-    <script>
-        function updateDescription(title, description, imageSrc, rank, level) {
-            const infoBox = document.getElementById('info-box');
-            infoBox.innerHTML = `
-                <img src="${imageSrc}" alt="${title} Icon">
-                <h2>${title}</h2>
-                <p><strong>Rank:</strong> ${rank}</p>
-                <p><strong>Level:</strong> ${level}</p>
-                <p><strong>Req:</strong> ${Req}</p>
-                <p>${description}</p>
-            `;
-        }
-    </script>
+   <script>
+    function updateDescription(title, description, imageSrc, rank, level, req) {
+        const infoBox = document.getElementById('info-box');
+        infoBox.innerHTML = `
+            <img src="${imageSrc}" alt="${title} Icon">
+            <h2>${title}</h2>
+            <p><strong>Rank:</strong> ${rank}</p>
+            <p><strong>Level:</strong> ${level}</p>
+            <p><strong>Requirements:</strong> ${req}</p>
+            <p>${description}</p>
+        `;
+    }
+</script>
 
 </body>
 </html>
