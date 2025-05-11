@@ -38,13 +38,12 @@
             mask-size: 100% 2px;
         }
         .container {
-    display: flex;
-    gap: 2rem;
-    margin-top: 2rem;
-    width: 80%; /* Restrict width */
-    max-width: 1000px; /* Ensures it doesn't get too wide */
-}
-
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+            width: 80%; /* Restrict width */
+            max-width: 1000px; /* Ensures it doesn't get too wide */
+        }
         /* Scrollable button list */
         .button-container {
             display: flex;
@@ -70,22 +69,22 @@
             color: var(--background-color);
         }
         .description-box {
-    flex-grow: 1;
-    max-width: 700px;
-    border: 2px solid var(--pipboy-green);
-    padding: 1rem;
-    text-align: center;
-    height: auto; /* Allows it to wrap dynamically */
-    overflow: hidden; /* Prevents unnecessary scrollbars */
-    word-wrap: break-word; /* Ensures text wraps properly */
-}
+            flex-grow: 1; /* Allows it to expand */
+            max-width: 700px;
+            border: 2px solid var(--pipboy-green);
+            padding: 1rem;
+            text-align: center;
+            height: auto; /* Allows it to wrap dynamically */
+            overflow: hidden; /* Prevents unnecessary scrollbars */
+            word-wrap: break-word; /* Ensures text wraps properly */
+        }
         .description-box img {
-    max-width: 250px; /* Adjust to your preference */
-    max-height: 250px; /* Ensures it doesn’t get too large */
-    width: auto; /* Maintain aspect ratio */
-    height: auto; /* Maintain aspect ratio */
-    border: 1px solid var(--pipboy-green);
-}
+            max-width: 250px; /* Restrict image size */
+            max-height: 250px; /* Prevents it from being too large */
+            width: auto;
+            height: auto;
+            border: 1px solid var(--pipboy-green);
+        }
     </style>
 </head>
 <body>
@@ -101,15 +100,14 @@
             <!-- SCROLLABLE BUTTON LIST -->
             <div class="button-container">
                 <button onclick="updateDescription('Confirmed Bachelor', '+10% damage against male opponents. Additional dialogue options with certain characters.', 'https://static.wikia.nocookie.net/fallout/images/5/58/Confirmedbachelor.png', '1', '1')">Confirmed Bachelor</button>
-                <button onclick="updateDescription('Endurance', 'Your resistance to damage.', 'assets/endurance.png')">Endurance</button>
+                <button onclick="updateDescription('Perception', 'Awareness and accuracy.', 'assets/perception.png', '1', '1')">Perception</button>
+                <button onclick="updateDescription('Endurance', 'Your resistance to damage.', 'assets/endurance.png', '1', '1')">Endurance</button>
             </div>
 
             <!-- DESCRIPTION BOX -->
             <div class="description-box" id="info-box">
                 <img src="assets/default.png" alt="Default Icon">
                 <h2>Pick a Perk</h2>
-                <p>Select an option to see details.</p>
-                <p>Select an option to see details.</p>
                 <p>Select an option to see details.</p>
             </div>
         </main>
@@ -119,19 +117,18 @@
         </footer>
     </div>
 
-<script>
-    function updateDescription(title, description, imageSrc, rank, level) {
-        const infoBox = document.getElementById('info-box');
-        infoBox.innerHTML = `
-            <img src="${imageSrc}" alt="${title} Icon">
-            <h2>${title}</h2>
-            <p><strong>Rank:</strong> ${rank}</p>
-            <p><strong>Level:</strong> ${level}</p>
-            <p>${description}</p>
-        `;
-    }
-</script>
-
+    <script>
+        function updateDescription(title, description, imageSrc, rank, level) {
+            const infoBox = document.getElementById('info-box');
+            infoBox.innerHTML = `
+                <img src="${imageSrc}" alt="${title} Icon">
+                <h2>${title}</h2>
+                <p><strong>Rank:</strong> ${rank}</p>
+                <p><strong>Level:</strong> ${level}</p>
+                <p>${description}</p>
+            `;
+        }
+    </script>
 
 </body>
 </html>
