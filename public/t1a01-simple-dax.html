@@ -66,67 +66,6 @@
             background-color: var(--pipboy-green);
             color: var(--background-color);
         }
-        .description-box {
-            width: 300px;
-            border: 2px solid var(--pipboy-green);
-            padding: 1rem;
-            text-align: center;
-        }
-        .description-box img {
-            width: 100%;
-            border: 1px solid var(--pipboy-green);
-        }
-    </style>
-</head>
-<body>
-
-    <h1>NVMP Perk List</h1>
-
-    <div class="retro-container">
-        <header>
-            <h2>Select a Perk</h2>
-        </header>
-
-        <main class="container">
-            <!-- SCROLLABLE BUTTON LIST -->
-            <div class="button-container">
-                <button onclick="updateDescription('Confirmed Bachelor', '+10% damage against male opponents. Additional dialogue options with homosexual male characters.', 'https://static.wikia.nocookie.net/fallout/images/5/58/Confirmedbachelor.png')">Confirmed Bachelor</button>
-                <button onclick="updateDescription('Perception', 'Awareness and accuracy.', 'assets/perception.png')">Perception</button>
-                <button onclick="updateDescription('Endurance', 'Your resistance to damage.', 'assets/endurance.png')">Endurance</button>
-                <button onclick="updateDescription('Charisma', 'Your ability to charm.', 'assets/charisma.png')">Charisma</button>
-                <button onclick="updateDescription('Intelligence', 'Your ability to learn.', 'assets/intelligence.png')">Intelligence</button>
-                <button onclick="updateDescription('Agility', 'Your reflexes and speed.', 'assets/agility.png')">Agility</button>
-                <button onclick="updateDescription('Luck', 'How fortunate you are.', 'assets/luck.png')">Luck</button>
-            </div>
-
-            <!-- DESCRIPTION BOX -->
-            <div class="description-box" id="info-box">
-                <h2>Pick a Perk</h2>
-                <p>Select an option to see details.</p>
-                <img src="assets/default.png" alt="Icon">
-            </div>
-        </main>
-
-        <footer>
-            <p>© 2025 Pip-Boy UI</p>
-        </footer>
-    </div>
-
-    <script>
-        function updateDescription(title, description, imageSrc) {
-            const infoBox = document.getElementById('info-box');
-            infoBox.innerHTML = `
-                <h2>${title}</h2>
-                <p>${description}</p>
-                <img src="${imageSrc}" alt="${title}">
-            `;
-        }
-    </script>
-
-</body>
-</html>
-
-        }
        .container {
     display: flex;
     gap: 2rem;
