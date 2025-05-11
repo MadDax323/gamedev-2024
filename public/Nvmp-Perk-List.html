@@ -26,6 +26,25 @@
             align-items: center;
             font-size: 24px;
         }
+        html, body {
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+        @keyframes crtAnimation {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 0 10000%;
+            }
+        }
+        .old-crt-monitor {
+            box-shadow: inset 0px 0px 2rem var(--dark-green);
+            background-image: linear-gradient(0deg, #0000 10%, #fff1 90%, #0000 100%);
+            animation: crtAnimation 100s linear infinite;
+            background-size: 100% 80%;
+        }
         .retro-container {
             display: inline-block; /* Allows border to tightly wrap around content */
             padding: 1rem;
