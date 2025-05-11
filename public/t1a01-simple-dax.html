@@ -27,11 +27,8 @@
             font-size: 24px;
         }
         .retro-container {
-            width: 90vw;
-            height: 90vh;
-            display: grid;
-            grid-template-rows: auto 1fr auto;
-            padding: 0.5rem;
+            display: inline-block; /* Allows the border to wrap tightly */
+            padding: 1rem; /* Adjust padding to prevent excessive spacing */
             border: 2px solid var(--pipboy-green);
             text-shadow: 0 0 0.5rem var(--pipboy-green);
             mask-image: linear-gradient(to bottom, #0005 50%, #000 50%);
