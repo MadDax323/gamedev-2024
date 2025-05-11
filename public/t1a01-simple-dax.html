@@ -26,8 +26,32 @@
             align-items: center;
             font-size: 24px;
         }
+        html, body {
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+        @keyframes crtAnimation {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 0 10000%;
+            }
+        }
+        .old-crt-monitor {
+            box-shadow: inset 0px 0px 2rem var(--dark-green);
+            background-image: linear-gradient(0deg, #0000 10%, #fff1 90%, #0000 100%);
+            animation: crtAnimation 100s linear infinite;
+            background-size: 100% 80%;
+        }
         .retro-container {
-            display: inline-block; /* Allows border to tightly wrap around content */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 80vw;
+            height: 85vh;
             padding: 1rem;
             border: 2px solid var(--pipboy-green);
             text-shadow: 0 0 0.5rem var(--pipboy-green);
@@ -36,22 +60,18 @@
         }
         .container {
             display: flex;
-            gap: 2rem;
-            margin-top: 2rem;
-            width: auto; /* Adjust width dynamically */
-            max-width: 1000px; /* Prevent excessive stretching */
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1100px;
         }
-        /* Scrollable button list */
         .button-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            width: 250px;
-            height: 300px;
+            width: 300px;
+            height: auto;
+            max-height: 70vh;
             overflow-y: auto;
             border: 2px solid var(--pipboy-green);
             padding: 10px;
-            scrollbar-color: var(--pipboy-green) var(--dark-green);
         }
         button {
             background-color: var(--dark-green);
@@ -66,18 +86,16 @@
             color: var(--background-color);
         }
         .description-box {
-            display: inline-block; /* Makes the border wrap tightly */
-            border: 2px solid var(--pipboy-green);
-            padding: 1rem;
-            text-align: center;
-            height: auto;
+            display: inline-block;
+            max-width: 750px;
+            max-height: 70vh;
+            padding: 1.5rem;
             overflow: hidden;
             word-wrap: break-word;
-            max-width: 700px;
         }
         .description-box img {
-            max-width: 250px;
-            max-height: 250px;
+            max-width: 220px;
+            max-height: 220px;
             width: auto;
             height: auto;
             border: 1px solid var(--pipboy-green);
@@ -86,37 +104,32 @@
         /* Mobile Responsive Adjustments */
         @media screen and (max-width: 768px) {
             body {
-                font-size: 18px; /* Adjust text for mobile */
+                font-size: 18px;
                 text-align: center;
             }
-
             .retro-container {
                 width: 95vw;
                 height: auto;
                 padding: 0.5rem;
             }
-
             .container {
-                flex-direction: column; /* Stack elements */
-                gap: 1rem;
+                flex-direction: column;
                 align-items: center;
                 max-width: 90%;
             }
-
             .button-container {
                 width: 100%;
                 height: auto;
                 max-height: 300px;
             }
-
             .description-box {
                 width: 90%;
                 max-width: 400px;
+                max-height: 50vh;
             }
-
             .description-box img {
-                max-width: 200px;
-                max-height: 200px;
+                max-width: 150px;
+                max-height: 150px;
             }
         }
     </style>
@@ -125,7 +138,7 @@
 
     <h1>NVMP Perk List</h1>
 
-    <div class="retro-container">
+    <div class="retro-container old-crt-monitor">
         <header>
             <h2>Select a Perk</h2>
         </header>
@@ -133,35 +146,14 @@
         <main class="container">
             <!-- SCROLLABLE BUTTON LIST -->
             <div class="button-container">
-                <P>Level 2:</P>
-                <button onclick="updateDescription('Confirmed Bachelor', 'In combat, you do +10% damage against male opponents Outside of combat, you\'ll sometimes have access to unique dialogue options when dealing with the same sex (DOES NOT WORK IN PVP)', 'https://static.wikia.nocookie.net/fallout/images/5/58/Confirmedbachelor.png', '1', '2', 'N/A')">Confirmed Bachelor</button>
-                <button onclick="updateDescription('Heave Ho', 'Quite an arm you\'ve got there. All thrown weapons fly farther and faster for you', 'https://static.wikia.nocookie.net/fallout/images/d/db/HeaveHo.png', '1', '2', 'Explosive 30, STR 5')">Heave Ho</button>
-                <button onclick="updateDescription('Intense Training', 'With the Intense Training perk, you can put a single point into any of your S.P.E.C.I.A.L. attributes', 'https://static.wikia.nocookie.net/fallout/images/a/af/Intense_Training.png', '10', '2', 'N/A')">Intense Training</button>
-                <button onclick="updateDescription('Lady Killer', 'In combat, you do +10% damage against female opponents. Outside of combat, you\'ll sometimes have access to unique dialogue options when dealing with the opposite sex', 'https://static.wikia.nocookie.net/fallout/images/5/53/LadyKiller.png', '1', '2', 'N/A')">Lady Killer</button>
-                <button onclick="updateDescription('Rapid Reload', 'Rapid Reload makes all of your weapon reloads 25% faster than normal', 'https://static.wikia.nocookie.net/fallout/images/1/19/RapidReload.png', '1', '2', 'GUNS 30, AGL 5')">Rapid Reload</button>
-                <button onclick="updateDescription('Junk Rounds', 'Survival is the mother of invention! Craft ammo at the Reloading Bench using alternate materials (Scrap Metal and Tin Cans)', 'https://static.wikia.nocookie.net/fallout/images/0/0b/Junk_Rounds.png', '1', '2', 'LUCK 6, REPAIR 45')">Junk Rounds</button>
-                <button onclick="updateDescription('Friend of the Night', 'You are a true friend of the night. Your eyes adapt quickly to low-light conditions indoors and when darkness falls across the wasteland', 'https://static.wikia.nocookie.net/fallout/images/8/88/FriendOfTheNight.png', '1', '2', 'PER 6, SNEAK 30')">Friend of the Night</button>
-                <button onclick="updateDescription('Hunter', 'In combat, you do +75% Critical Damage against animals and mutated animals', 'https://static.wikia.nocookie.net/fallout/images/f/f6/Perk_hunter.png', '1', '2', 'SURVIVAL 30')">Hunter</button>
-                <button onclick="updateDescription('Retention', 'With the Retention perk, the bonuses granted by skill magazines last three times as long', 'https://static.wikia.nocookie.net/fallout/images/4/41/Retention.png', '1', '2', 'INT 5')">Retention</button>
-                <button onclick="updateDescription('Swift Learner', 'With each rank in the Swift Learner perk, you gain an additional 3% to total Experience Points whenever Experience Points are earned', 'https://static.wikia.nocookie.net/fallout/images/b/bf/Swift_Learner_FO3.png', '3', '2', 'INT 3')">Swift Learner</button>
-                <P>Level 4:</P>
-                <P>Level 6:</P>
-                <P>Level 8:</P>
-                <P>Level 10:</P>
-                <P>Level 12:</P>
-                <P>Level 14:</P>
-                <P>Level 16:</P>
-                <P>Level 18:</P>
-                <P>Level 20:</P>
-                <P>Level 22:</P>
-                <P>Level 24:</P>
-                <P>Level 26:</P>
-                <P>Level 28:</P>
-                <P>Level 30:</P>
+                <p>Level 2:</p>
+                <button onclick="updateDescription('Confirmed Bachelor', 'In combat, you do +10% damage against male opponents. Outside of combat, you\'ll sometimes have access to unique dialogue options when dealing with the same sex. (DOES NOT WORK IN PVP)', 'https://static.wikia.nocookie.net/fallout/images/5/58/Confirmedbachelor.png', '1', '2', 'N/A')">Confirmed Bachelor</button>
+                <button onclick="updateDescription('Heave Ho', 'Quite an arm you\'ve got there. All thrown weapons fly farther and faster for you.', 'https://static.wikia.nocookie.net/fallout/images/d/db/HeaveHo.png', '1', '2', 'Explosive 30, STR 5')">Heave Ho</button>
+                <button onclick="updateDescription('Lady Killer', 'In combat, you do +10% damage against female opponents. Outside of combat, you\'ll sometimes have access to unique dialogue options when dealing with the opposite sex.', 'https://static.wikia.nocookie.net/fallout/images/5/53/LadyKiller.png', '1', '2', 'N/A')">Lady Killer</button>
             </div>
 
             <!-- DESCRIPTION BOX -->
-            <div class="description-box" id="info-box">
+            <div class="description-box old-crt-monitor" id="info-box">
                 <img src="assets/default.png" alt="Default Icon">
                 <h2>Pick a Perk</h2>
                 <p>Select an option to see details.</p>
