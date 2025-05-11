@@ -73,11 +73,21 @@
             background-color: var(--pipboy-green);
             color: var(--background-color);
         }
-        .description-box {
-            width: 300px;
-            border: 2px solid var(--pipboy-green);
-            padding: 1rem;
-            text-align: center;
+       .container {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.description-box {
+    flex-grow: 1; /* This makes it expand with the screen */
+    max-width: 1000px; /* Set a limit so it doesn’t get too big */
+    border: 2px solid var(--pipboy-green);
+    padding: 1rem;
+    text-align: center;
+}
+
         }
         .description-box img {
             width: 100%;
